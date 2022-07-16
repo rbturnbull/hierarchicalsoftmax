@@ -10,7 +10,7 @@ Welcome to hierarchicalsoftmax's documentation!
    :start-after: start-badges
    :end-before: end-badges
 
-A Hiearchical Softmax Framework for PyTorch.
+A Hierarchical Softmax Framework for PyTorch.
 
 .. toctree::
    :maxdepth: 2
