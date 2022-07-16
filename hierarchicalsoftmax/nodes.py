@@ -19,6 +19,7 @@ class SoftmaxNode(Node):
         self.weight = weight
         self.label_smoothing = label_smoothing
         self.readonly = readonly
+        self.children_dict = dict()
         super().__init__(*args, **kwargs)
 
     def __str__(self):
@@ -58,3 +59,14 @@ class SoftmaxNode(Node):
     def _pre_detach(self, parent):
         if self.readonly or parent.readonly:
             raise ReadOnlyError()
+
+    def _post_attach(self, parent):
+        """Method call after attaching to `parent`."""
+        parent.children_dict[self.name] = self
+
+    def _post_detach(self, parent):
+        """Method call after detaching from `parent`."""
+        del parent.children_dict[self.name]
+
+    def get_child_by_name(self, name):
+        return self.children_dict.get(name, None)

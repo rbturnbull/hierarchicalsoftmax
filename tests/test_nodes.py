@@ -72,3 +72,18 @@ def test_read_only():
 
     with pytest.raises(ReadOnlyError):
         a.parent = None
+
+
+def test_get_child_by_name():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+
+    assert root.get_child_by_name("a") is a
+    assert a.get_child_by_name("a") is None
+    assert aa.get_child_by_name("root") is None
+    assert a.get_child_by_name("aa") is aa
+
+    # Test detachment
+    aa.parent = None
+    assert a.get_child_by_name("aa") is None
