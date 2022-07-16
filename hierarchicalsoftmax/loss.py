@@ -7,14 +7,11 @@ class HierarchicalSoftmaxLoss(nn.Module):
     def __init__(
         self,
         root,
-        prediction_nodes,
+        prediction_nodes, # is this necessary?
         **kwargs
     ):
         super().__init__(**kwargs)
         self.root = root
-        self.prediction_nodes = prediction_nodes
-
-        self.la
 
     def forward(self, batch_predictions: Tensor, targets: Tensor) -> Tensor:
         target_nodes = (self.prediction_nodes[target] for target in targets)

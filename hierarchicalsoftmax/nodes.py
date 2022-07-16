@@ -1,6 +1,4 @@
-from pathlib import Path
-from torch import nn
-from anytree import Node, RenderTree
+from anytree import Node, RenderTree, PreOrderIter
 
 from rich.console import Console
 console = Console()
@@ -40,8 +38,13 @@ class SoftmaxNode(Node):
                 current_index = child.set_indexes(child_index, current_index)
 
             self.children_softmax_end_index = current_index
+        
+        # If this is the root, then traverse the tree and make an index of all children
+        if self.softmax_start_index == 0:
+            self.node_list = list(PreOrderIter(self))
+            self.node_to_id = {node:index for index, node in enumerate(self.node_list)}
+        
         self.readonly = True
-        print('self.readonly', 'set_indexes', self.readonly)
         return current_index
 
     def render(self, *args, attr=None, print=False, **kwargs):
@@ -70,3 +73,4 @@ class SoftmaxNode(Node):
 
     def get_child_by_name(self, name):
         return self.children_dict.get(name, None)
+
