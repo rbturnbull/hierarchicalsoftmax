@@ -104,3 +104,5 @@ def test_node_list():
     assert node_names == ['root', 'a', 'aa', 'ab', 'b', 'ba', 'bb']
     assert root.node_to_id[root] == 0
     assert root.node_to_id[bb] == 6
+
+    assert root.get_node_ids( [bb, aa, ab] ) == [6,2,3]

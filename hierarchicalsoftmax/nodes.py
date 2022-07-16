@@ -1,5 +1,5 @@
 from anytree import Node, RenderTree, PreOrderIter
-
+from typing import List, Optional
 from rich.console import Console
 console = Console()
 
@@ -9,7 +9,7 @@ class ReadOnlyError(RuntimeError):
 
 
 class SoftmaxNode(Node):
-    def __init__(self, *args, alpha=1.0, weight=None, label_smoothing=0.0, readonly=False, **kwargs):
+    def __init__(self, *args, alpha:float=1.0, weight=None, label_smoothing:float=0.0, readonly:bool=False, **kwargs):
         self.softmax_start_index = None
         self.softmax_end_index = None
         self.children_softmax_end_index = None
@@ -26,7 +26,7 @@ class SoftmaxNode(Node):
     def __repr__(self):
         return str(self)
         
-    def set_indexes(self, index_in_parent=None, current_index=0):
+    def set_indexes(self, index_in_parent:Optional[int]=None, current_index:int=0):
         assert self.softmax_start_index is None
         self.index_in_parent = index_in_parent
         if self.children:
@@ -47,7 +47,7 @@ class SoftmaxNode(Node):
         self.readonly = True
         return current_index
 
-    def render(self, *args, attr=None, print=False, **kwargs):
+    def render(self, *args, attr:Optional[str]=None, print:bool=False, **kwargs):
         rendered = RenderTree(self, *args, **kwargs)
         if attr:
             rendered = rendered.by_attr(attr)
@@ -55,22 +55,24 @@ class SoftmaxNode(Node):
             console.print(rendered)
         return rendered
 
-    def _pre_attach(self, parent):
+    def _pre_attach(self, parent:Node):
         if self.readonly or parent.readonly:
             raise ReadOnlyError()
 
-    def _pre_detach(self, parent):
+    def _pre_detach(self, parent:Node):
         if self.readonly or parent.readonly:
             raise ReadOnlyError()
 
-    def _post_attach(self, parent):
+    def _post_attach(self, parent:Node):
         """Method call after attaching to `parent`."""
         parent.children_dict[self.name] = self
 
-    def _post_detach(self, parent):
+    def _post_detach(self, parent:Node):
         """Method call after detaching from `parent`."""
         del parent.children_dict[self.name]
 
-    def get_child_by_name(self, name):
+    def get_child_by_name(self, name:str):
         return self.children_dict.get(name, None)
 
+    def get_node_ids(self, nodes:List):
+        return [self.node_to_id[node] for node in nodes]
