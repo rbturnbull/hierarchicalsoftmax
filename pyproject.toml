@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "hierarchicalsoftmax"
+version = "0.1.0"
+description = "A Hierarchical Softmax Framework for PyTorch."
+authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
+license = "Apache-2.0"
+readme = "README.rst"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+anytree = "^2.8.0"
+torch = "^1.12.0"
+rich = "^12.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+ipykernel = "^6.6.1"
+coverage = "^5.5"
+autopep8 = "^1.5.7"
+Sphinx = "^4.2.0"
+nbsphinx = "^0.8.7"
+sphinx-rtd-theme = "^1.0.0"
+sphinx-autobuild = "^2021.3.14"
+myst-parser = "^0.15.2"
+pre-commit = "^2.15.0"
+sphinx-copybutton = "^0.4.0"
+black = "^21.10b0"
+sphinx-click = {git = "https://github.com/rbturnbull/sphinx-click.git"}
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "tests",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

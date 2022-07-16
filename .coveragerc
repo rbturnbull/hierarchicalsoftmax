@@ -1,0 +1,5 @@
+[run]
+source = hierarchicalsoftmax
+
+[report]
+precision = 2
