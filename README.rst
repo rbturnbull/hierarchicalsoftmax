@@ -23,7 +23,7 @@ hierarchicalsoftmax
     
 .. end-badges
 
-A Hiearchical Softmax Framework for PyTorch.
+A Hierarchical Softmax Framework for PyTorch.
 
 Credits
 ==================================
