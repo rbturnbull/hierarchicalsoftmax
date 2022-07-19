@@ -21,6 +21,6 @@ def test_greedy_predictions():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    node_predictions = greedy_predictions(root=root, all_predictions=predictions)
+    node_predictions = greedy_predictions(root=root, prediction_tensor=predictions)
 
     assert node_predictions == targets
