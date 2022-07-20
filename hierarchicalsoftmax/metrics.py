@@ -10,7 +10,7 @@ def greedy_accuracy(prediction_tensor, target_tensor, root):
     Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
 
     Args:
-        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)
+        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)
         target_tensor (torch.Tensor): A tensor with the target node indexes. Shape: (samples,).
         root (SoftmaxNode): The root of the hierarchy tree.
 
@@ -30,7 +30,7 @@ def greedy_f1_score(prediction_tensor:torch.Tensor, target_tensor:torch.Tensor, 
     Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
 
     Args:
-        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)
+        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)
         target_tensor (torch.Tensor): A tensor with the target node indexes. Shape: (samples,).
         root (SoftmaxNode): The root of the hierarchy tree.
         average (str, optional): The type of averaging over the different classes.

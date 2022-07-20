@@ -18,7 +18,7 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
 
     Args:
         root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.
-        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.children_softmax_end_index)
+        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.layer_size)
 
     Returns:
         List[nodes.SoftmaxNode]: A list of nodes predicted for each sample.
@@ -28,10 +28,10 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     if root.softmax_start_index is None:
         raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
 
-    if prediction_tensor.shape[-1] != root.children_softmax_end_index:
+    if prediction_tensor.shape[-1] != root.layer_size:
         raise ShapeError(
             f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
-            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.children_softmax_end_index}."
+            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
     for predictions in prediction_tensor:

@@ -48,7 +48,7 @@ def test_simple_tree():
             ├── None
             └── None
     """)
-    assert root.children_softmax_end_index == 6
+    assert root.layer_size == 6
 
 
 

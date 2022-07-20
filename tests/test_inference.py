@@ -16,7 +16,7 @@ def test_greedy_predictions():
 
     targets = [aa,ba,bb, ab]
 
-    predictions = torch.zeros( (len(targets), root.children_softmax_end_index) )
+    predictions = torch.zeros( (len(targets), root.layer_size) )
     for target_index, target in enumerate(targets):
         while target.parent:
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
@@ -57,6 +57,6 @@ def test_greedy_predictions():
 
     targets = [aa,ba,bb, ab]
 
-    predictions = torch.zeros( (len(targets), root.children_softmax_end_index + 1) )
+    predictions = torch.zeros( (len(targets), root.layer_size + 1) )
     with pytest.raises(ShapeError):
         node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)

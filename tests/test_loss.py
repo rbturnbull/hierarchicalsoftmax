@@ -18,7 +18,7 @@ def test_loss():
     targets = [aa,ba,bb, ab]
     target_tensor = root.get_node_ids_tensor(targets)
 
-    predictions = torch.zeros( (len(targets), root.children_softmax_end_index) )
+    predictions = torch.zeros( (len(targets), root.layer_size) )
 
     # Test blank is inaccurate
     value = loss(predictions, target_tensor)

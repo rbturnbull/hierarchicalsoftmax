@@ -16,7 +16,7 @@ def test_greedy_accuracy():
     targets = [aa,ba,bb, ab]
     target_tensor = root.get_node_ids_tensor(targets)
 
-    predictions = torch.zeros( (len(targets), root.children_softmax_end_index) )
+    predictions = torch.zeros( (len(targets), root.layer_size) )
     for target_index, target in enumerate(targets):
         while target.parent:
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
@@ -44,7 +44,7 @@ def test_greedy_f1_score():
     targets = [aa,ba,bb, ab]
     target_tensor = root.get_node_ids_tensor(targets)
 
-    predictions = torch.zeros( (len(targets), root.children_softmax_end_index) )
+    predictions = torch.zeros( (len(targets), root.layer_size) )
     for target_index, target in enumerate(targets):
         while target.parent:
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0

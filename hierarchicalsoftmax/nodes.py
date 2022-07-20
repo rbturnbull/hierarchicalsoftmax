@@ -180,3 +180,10 @@ class SoftmaxNode(Node):
             torch.Tensor: A tensor which contains the indexes for the descendant nodes requested.
         """
         return torch.as_tensor( self.get_node_ids(nodes), dtype=int)
+    
+    @property
+    def layer_size(self) -> int:
+        if self.node_to_id is None:
+            self.set_indexes()
+
+        return self.children_softmax_end_index
