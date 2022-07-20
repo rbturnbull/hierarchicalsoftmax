@@ -20,7 +20,7 @@ def greedy_accuracy(prediction_tensor, target_tensor, root):
     prediction_nodes = inference.greedy_predictions(prediction_tensor=prediction_tensor, root=root)
     prediction_node_ids = root.get_node_ids_tensor(prediction_nodes)
 
-    return (prediction_node_ids == target_tensor).float().mean()
+    return (prediction_node_ids.cpu() == target_tensor.cpu()).float().mean()
 
 
 def greedy_f1_score(prediction_tensor:torch.Tensor, target_tensor:torch.Tensor, root:nodes.SoftmaxNode, average:str="macro") -> float:
