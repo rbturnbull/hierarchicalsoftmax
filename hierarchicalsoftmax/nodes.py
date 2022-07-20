@@ -34,7 +34,7 @@ class SoftmaxNode(Node):
     def set_indexes(self, index_in_parent:Optional[int]=None, current_index:int=0):
         assert self.softmax_start_index is None
         self.index_in_parent = index_in_parent
-        self.index_in_parent_tensor = torch.as_tensor(index_in_parent, dtype=torch.long) if index_in_parent else None
+        self.index_in_parent_tensor = torch.as_tensor(index_in_parent, dtype=torch.long) if index_in_parent is not None else None
         if self.children:
             self.softmax_start_index = current_index
             current_index += len(self.children)
