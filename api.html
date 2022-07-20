@@ -81,9 +81,23 @@
 <section id="module-hierarchicalsoftmax.nodes">
 <span id="nodes"></span><h2>Nodes<a class="headerlink" href="#module-hierarchicalsoftmax.nodes" title="Permalink to this headline"></a></h2>
 <dl class="py exception">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.AlreadyIndexedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">AlreadyIndexedError</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.AlreadyIndexedError" title="Permalink to this definition"></a></dt>
+<dd><p>Raised when set_indexes run more than once on a node.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.AlreadyIndexedError.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.AlreadyIndexedError.with_traceback" title="Permalink to this definition"></a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.IndexNotSetError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">IndexNotSetError</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.IndexNotSetError" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
+<dd><p>Raised when set_indexes not set for the SoftmaxNode root.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.IndexNotSetError.with_traceback">
 <span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.IndexNotSetError.with_traceback" title="Permalink to this definition"></a></dt>
 <dd><p>Exception.with_traceback(tb) –
@@ -95,11 +109,400 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.ReadOnlyError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">ReadOnlyError</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.ReadOnlyError" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
+<dd><p>Raised when trying to edit a SoftmaxNode tree after it has been set to read only.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.ReadOnlyError.with_traceback">
 <span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.ReadOnlyError.with_traceback" title="Permalink to this definition"></a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">SoftmaxNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_smoothing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonly</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a hierarchical tree to perform a softmax at each level.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.ancestors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ancestors</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.ancestors" title="Permalink to this definition"></a></dt>
+<dd><p>All parent nodes and their parent nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">(Node(&#39;/Udo&#39;),)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.anchestors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anchestors</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.anchestors" title="Permalink to this definition"></a></dt>
+<dd><p>All parent nodes and their parent nodes - see <a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode.ancestors" title="hierarchicalsoftmax.nodes.SoftmaxNode.ancestors"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">ancestors</span></code></a>.</p>
+<p>The attribute <cite>anchestors</cite> is just a typo of <cite>ancestors</cite>. Please use <cite>ancestors</cite>.
+This attribute will be removed in the 3.0.0 release.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.children" title="Permalink to this definition"></a></dt>
+<dd><p>All child nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/c&#39;))</span>
+</pre></div>
+</div>
+<p>Modifying the children attribute modifies the tree.</p>
+<p><strong>Detach</strong></p>
+<p>The children attribute can be updated by setting to an iterable.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;))</span>
+</pre></div>
+</div>
+<p>Node <cite>c</cite> is removed from the tree.
+In case of an existing reference, the node <cite>c</cite> does not vanish and is the root of its own tree.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">Node(&#39;/c&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Attach</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">Node(&#39;/d&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/d&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">Node(&#39;/n/d&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Duplicate</strong></p>
+<p>A node can just be the children once. Duplicates cause a <code class="xref any docutils literal notranslate"><span class="pre">TreeError</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">anytree.node.exceptions.TreeError</span>: <span class="n">Cannot add node Node(&#39;/n/a&#39;) multiple times as child.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.depth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">depth</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.depth" title="Permalink to this definition"></a></dt>
+<dd><p>Number of edges to the root <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.descendants">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descendants</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.descendants" title="Permalink to this definition"></a></dt>
+<dd><p>All child nodes and all their child nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">soe</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Soe&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">lian</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian/Soe&#39;),)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.get_child_by_name">
+<span class="sig-name descname"><span class="pre">get_child_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></a></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.get_child_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the child node that has the same name as what is given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the child node requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The child node that has the same name as what is given. If not child node exists with this name then <cite>None</cite> is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode">SoftmaxNode</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.get_node_ids">
+<span class="sig-name descname"><span class="pre">get_node_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.get_node_ids" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the index values for descendant nodes.</p>
+<p>This should only be used for root nodes.
+If <cite>set_indexes</cite> has been yet called on this object then it is performed as part of this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>List</em>) – A list of descendant nodes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of indexes for the descendant nodes requested.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.height">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.height" title="Permalink to this definition"></a></dt>
+<dd><p>Number of edges on the longest path to a leaf <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">height</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">height</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">height</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.is_leaf">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_leaf</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.is_leaf" title="Permalink to this definition"></a></dt>
+<dd><p><cite>Node</cite> has no children (External Node).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.is_root">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_root</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.is_root" title="Permalink to this definition"></a></dt>
+<dd><p><cite>Node</cite> is tree root.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.iter_path_reverse">
+<span class="sig-name descname"><span class="pre">iter_path_reverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.iter_path_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate up the tree from the current node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">udo</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">marc</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">lian</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc/Lian&#39;)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.leaves">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">leaves</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.leaves" title="Permalink to this definition"></a></dt>
+<dd><p>Tuple of all leaf nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lazy</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lazy&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">leaves</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">leaves</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.parent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.parent" title="Permalink to this definition"></a></dt>
+<dd><p>Parent Node.</p>
+<p>On set, the node is detached from any previous parent node and attached
+to the new node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">RenderTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">udo</span><span class="p">))</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">marc</span><span class="p">))</span>
+<span class="go">Node(&#39;/Marc&#39;)</span>
+<span class="go">└── Node(&#39;/Marc/Lian&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Attach</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">udo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">udo</span><span class="p">))</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="go">└── Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">    └── Node(&#39;/Udo/Marc/Lian&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Detach</strong></p>
+<p>To make a node to a root node, just set this attribute to <cite>None</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.path" title="Permalink to this definition"></a></dt>
+<dd><p>Path of this <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;),)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.render.RenderTree</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.render" title="Permalink to this definition"></a></dt>
+<dd><p>Renders this node and all its descendants in a tree format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<em>str</em><em>, </em><em>optional</em>) – An attribute to print for this rendering of the tree. If None, then the name of each node is used.</p></li>
+<li><p><strong>print</strong> (<em>bool</em>) – Whether or not the tree should be printed. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The tree rendered by anytree.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RenderTree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.root">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.root" title="Permalink to this definition"></a></dt>
+<dd><p>Tree Root Node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.set_indexes">
+<span class="sig-name descname"><span class="pre">set_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_in_parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.set_indexes" title="Permalink to this definition"></a></dt>
+<dd><p>Sets all the indexes for this node and its descendants so that each node can be referenced by the root.</p>
+<p>This should be called without arguments only on the root of a hierarchy tree.
+After calling this function the tree from the root down will be read only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_in_parent</strong> (<em>int</em><em>, </em><em>optional</em>) – The index of this node in the parent’s list of children.
+Defaults to None which is appropriate for the root of a tree.</p></li>
+<li><p><strong>current_index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index value for the root node to reference this node.
+Defaults to 0 which is appropriate for the root of a tree.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the current_index</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.siblings">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">siblings</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.siblings" title="Permalink to this definition"></a></dt>
+<dd><p>Tuple of nodes with the same parent.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lazy</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lazy&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">(Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -110,7 +513,8 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.loss.</span></span><span class="sig-name descname"><span class="pre">HierarchicalSoftmaxLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
+<dd><p>A module which sums the loss for each level of a hiearchical tree.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.add_module">
 <span class="sig-name descname"><span class="pre">add_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.add_module" title="Permalink to this definition"></a></dt>
 <dd><p>Adds a child module to the current module.</p>
@@ -1204,7 +1608,8 @@ See <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 <dl class="py exception">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.inference.ShapeError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.inference.</span></span><span class="sig-name descname"><span class="pre">ShapeError</span></span><a class="headerlink" href="#hierarchicalsoftmax.inference.ShapeError" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
+<dd><p>Raised when the shape of a tensor is different to what is expected.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.inference.ShapeError.with_traceback">
 <span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.inference.ShapeError.with_traceback" title="Permalink to this definition"></a></dt>
 <dd><p>Exception.with_traceback(tb) –
@@ -1215,20 +1620,21 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.inference.greedy_predictions">
-<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.inference.</span></span><span class="sig-name descname"><span class="pre">greedy_predictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hierarchicalsoftmax.inference.greedy_predictions" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.inference.</span></span><span class="sig-name descname"><span class="pre">greedy_predictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hierarchicalsoftmax.inference.greedy_predictions" title="Permalink to this definition"></a></dt>
 <dd><p>Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.</p>
+<p>Predictions use the <cite>greedy</cite> method which means that it chooses the greatest prediction score at each level of the tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>root</strong> (<em>SoftmaxNode</em>) – The root softmax node. Needs <cite>set_indexes</cite> to have been called.</p></li>
-<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – The predictions coming from the softmax layer. Size (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root softmax node. Needs <cite>set_indexes</cite> to have been called.</p></li>
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – The predictions coming from the softmax layer. Shape (samples, root.children_softmax_end_index)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of nodes predicted for each sample.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>List[nodes.SoftmaxNode]</p>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode">nodes.SoftmaxNode</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1237,9 +1643,51 @@ set self.__traceback__ to tb and return self.</p>
 <section id="module-hierarchicalsoftmax.metrics">
 <span id="metrics"></span><h2>Metrics<a class="headerlink" href="#module-hierarchicalsoftmax.metrics" title="Permalink to this headline"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.metrics.greedy_accuracy">
+<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.metrics.</span></span><span class="sig-name descname"><span class="pre">greedy_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.metrics.greedy_accuracy" title="Permalink to this definition"></a></dt>
+<dd><p>Gives the accuracy of predicting the target in a hierarchy tree.</p>
+<p>Predictions use the <cite>greedy</cite> method which means that it chooses the greatest prediction score at each level of the tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>target_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the target node indexes. Shape: (samples,).</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root of the hierarchy tree.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The accuracy value (i.e. the number that are correct divided by the total number of samples)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.metrics.greedy_f1_score">
-<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.metrics.</span></span><span class="sig-name descname"><span class="pre">greedy_f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.metrics.greedy_f1_score" title="Permalink to this definition"></a></dt>
-<dd><p>Gives the f1 score of predicting the target.</p>
+<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.metrics.</span></span><span class="sig-name descname"><span class="pre">greedy_f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.metrics.greedy_f1_score" title="Permalink to this definition"></a></dt>
+<dd><p>Gives the f1 score of predicting the target i.e. a harmonic mean of the precision and recall.</p>
+<p>Predictions use the <cite>greedy</cite> method which means that it chooses the greatest prediction score at each level of the tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>target_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the target node indexes. Shape: (samples,).</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root of the hierarchy tree.</p></li>
+<li><p><strong>average</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of averaging over the different classes.
+Options are: ‘micro’, ‘macro’, ‘samples’, ‘weighted’, ‘binary’ or None.
+See <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html">https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html</a> for details.
+Defaults to “macro”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The f1 score</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
