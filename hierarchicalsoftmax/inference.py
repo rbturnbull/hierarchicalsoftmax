@@ -8,7 +8,7 @@ class ShapeError(RuntimeError):
     pass
 
 
-def greedy_predictions(root:nodes.SoftmaxNode, prediction_tensor:torch.Tensor) -> List[nodes.SoftmaxNode]:
+def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 

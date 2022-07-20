@@ -25,15 +25,12 @@ class HierarchicalSoftmaxLoss(nn.Module):
         for prediction, target_node in zip(batch_predictions, target_nodes):
             node = target_node
             while node.parent:
-                print('loss', loss)
-                print('node', node)
                 loss += node.parent.alpha * F.cross_entropy(
                     prediction[node.parent.softmax_start_index:node.parent.softmax_end_index],
-                    torch.as_tensor(node.index_in_parent, dtype=torch.long), # should be created once
+                    node.index_in_parent_tensor,
                     weight=node.parent.weight,
                     label_smoothing=node.parent.label_smoothing,
                 )
-                print('loss after x entropy', loss)
                 node = node.parent
                 
 

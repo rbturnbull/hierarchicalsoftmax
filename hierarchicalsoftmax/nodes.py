@@ -1,3 +1,4 @@
+import torch
 from anytree import Node, RenderTree, PreOrderIter
 from typing import List, Optional
 from rich.console import Console
@@ -5,6 +6,10 @@ console = Console()
 
 
 class ReadOnlyError(RuntimeError):
+    pass
+
+
+class IndexNotSetError(RuntimeError):
     pass
 
 
@@ -29,6 +34,7 @@ class SoftmaxNode(Node):
     def set_indexes(self, index_in_parent:Optional[int]=None, current_index:int=0):
         assert self.softmax_start_index is None
         self.index_in_parent = index_in_parent
+        self.index_in_parent_tensor = torch.as_tensor(index_in_parent, dtype=torch.long) if index_in_parent else None
         if self.children:
             self.softmax_start_index = current_index
             current_index += len(self.children)
@@ -74,5 +80,8 @@ class SoftmaxNode(Node):
     def get_child_by_name(self, name:str):
         return self.children_dict.get(name, None)
 
-    def get_node_ids(self, nodes:List):
+    def get_node_ids(self, nodes:List) -> List[int]:
         return [self.node_to_id[node] for node in nodes]
+
+    def get_node_ids_tensor(self, nodes:List) -> torch.Tensor:
+        return torch.as_tensor( self.get_node_ids(nodes), dtype=int )

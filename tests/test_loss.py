@@ -16,11 +16,9 @@ def test_loss():
     loss = HierarchicalSoftmaxLoss(root)
 
     targets = [aa,ba,bb, ab]
-    targets = [aa]
-    target_ids = root.get_node_ids(targets)
-    target_tensor = torch.as_tensor(target_ids)
+    target_tensor = root.get_node_ids_tensor(targets)
 
-    predictions = torch.zeros( (len(target_ids), root.children_softmax_end_index) )
+    predictions = torch.zeros( (len(targets), root.children_softmax_end_index) )
 
     # Test blank is inaccurate
     value = loss(predictions, target_tensor)
