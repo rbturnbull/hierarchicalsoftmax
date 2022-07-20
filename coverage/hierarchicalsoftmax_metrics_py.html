@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for hierarchicalsoftmax/metrics.py: 72.73%</title>
+    <title>Coverage for hierarchicalsoftmax/metrics.py: 100.00%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>hierarchicalsoftmax/metrics.py</b> :
-            <span class="pc_cov">72.73%</span>
+            <span class="pc_cov">100.00%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             11 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">8 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">3 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">11 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -68,17 +68,17 @@
     <p id="t14" class="pln"><span class="n"><a href="#t14">14</a></span><span class="t">    <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t15" class="pln"><span class="n"><a href="#t15">15</a></span><span class="t"><span class="str">    Gives the f1 score of predicting the target.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t17" class="mis show_mis"><span class="n"><a href="#t17">17</a></span><span class="t">    <span class="nam">prediction_nodes</span> <span class="op">=</span> <span class="nam">inference</span><span class="op">.</span><span class="nam">greedy_predictions</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">=</span><span class="nam">prediction_tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">=</span><span class="nam">root</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t18" class="mis show_mis"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">prediction_node_ids</span> <span class="op">=</span> <span class="nam">root</span><span class="op">.</span><span class="nam">get_node_ids_tensor</span><span class="op">(</span><span class="nam">prediction_nodes</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t">    <span class="nam">prediction_nodes</span> <span class="op">=</span> <span class="nam">inference</span><span class="op">.</span><span class="nam">greedy_predictions</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">=</span><span class="nam">prediction_tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">=</span><span class="nam">root</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">prediction_node_ids</span> <span class="op">=</span> <span class="nam">root</span><span class="op">.</span><span class="nam">get_node_ids_tensor</span><span class="op">(</span><span class="nam">prediction_nodes</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t19" class="pln"><span class="n"><a href="#t19">19</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t20" class="mis show_mis"><span class="n"><a href="#t20">20</a></span><span class="t">    <span class="key">return</span> <span class="nam">f1_score</span><span class="op">(</span><span class="nam">target_tensor</span><span class="op">.</span><span class="nam">cpu</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">prediction_node_ids</span><span class="op">.</span><span class="nam">cpu</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">average</span><span class="op">=</span><span class="nam">average</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="run"><span class="n"><a href="#t20">20</a></span><span class="t">    <span class="key">return</span> <span class="nam">f1_score</span><span class="op">(</span><span class="nam">target_tensor</span><span class="op">.</span><span class="nam">cpu</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">prediction_node_ids</span><span class="op">.</span><span class="nam">cpu</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">average</span><span class="op">=</span><span class="nam">average</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t21" class="pln"><span class="n"><a href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-07-20 00:28 +0000
+            created at 2022-07-20 00:31 +0000
         </p>
     </div>
 </div>
