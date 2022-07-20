@@ -17,7 +17,6 @@ A Hierarchical Softmax Framework for PyTorch.
    :caption: Contents:
 
    api
-   cli
    credits
 
 Indices and tables
