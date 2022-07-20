@@ -32,6 +32,8 @@ class SoftmaxNode(Node):
         self.softmax_start_index = None
         self.softmax_end_index = None
         self.children_softmax_end_index = None
+        self.node_to_id = None
+        self.node_list = None
         self.alpha = alpha
         self.weight = weight
         self.label_smoothing = label_smoothing

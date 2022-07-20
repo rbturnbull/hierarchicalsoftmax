@@ -1,6 +1,6 @@
 import re
 import pytest
-from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError
+from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 
 def assert_rendered( rendered, target ):
     # Remove indents
@@ -106,3 +106,31 @@ def test_node_list():
     assert root.node_to_id[bb] == 6
 
     assert root.get_node_ids( [bb, aa, ab] ) == [6,2,3]
+
+
+def test_already_indexed():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+    root.set_indexes()
+    with pytest.raises(AlreadyIndexedError):
+        root.set_indexes()
+
+
+def test_get_node_ids_does_index():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+    node_ids = root.get_node_ids([aa])
+    with pytest.raises(AlreadyIndexedError):
+        root.set_indexes()
