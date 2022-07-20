@@ -1,4 +1,7 @@
 from __future__ import annotations
+from anytree.dotexport import RenderTreeGraph
+from typing import Union
+from pathlib import Path
 import torch
 from anytree import Node, RenderTree, PreOrderIter
 from typing import List, Optional
@@ -86,13 +89,14 @@ class SoftmaxNode(Node):
         self.readonly = True
         return current_index
 
-    def render(self, attr:Optional[str]=None, print:bool=False, **kwargs) -> RenderTree:
+    def render(self, attr:Optional[str]=None, print:bool=False, filepath:Union[str, Path, None] = None, **kwargs) -> RenderTree:
         """
         Renders this node and all its descendants in a tree format.
 
         Args:
             attr (str, optional): An attribute to print for this rendering of the tree. If None, then the name of each node is used.
             print (bool): Whether or not the tree should be printed. Defaults to False.
+            filepath: (str, Path, optional): A path to save the tree to using graphviz. Requires graphviz to be installed.
 
         Returns:
             RenderTree: The tree rendered by anytree.
@@ -102,6 +106,18 @@ class SoftmaxNode(Node):
             rendered = rendered.by_attr(attr)
         if print:
             console.print(rendered)
+
+        if filepath:
+            filepath = Path(filepath)
+            filepath.parent.mkdir(exist_ok=True, parents=True)
+
+            rendered_tree_graph = RenderTreeGraph(self)
+            
+            if filepath.suffix == ".dot":
+                rendered_tree_graph.to_dotfile(str(filepath))
+            else:
+                rendered_tree_graph.to_picture(str(filepath))
+
         return rendered
 
     def _pre_attach(self, parent:Node):
@@ -137,7 +153,7 @@ class SoftmaxNode(Node):
         Gets the index values for descendant nodes.
 
         This should only be used for root nodes. 
-        If `set_indexes` has been yet called on this object then it is performed as part of this function.
+        If `set_indexes` has been yet called on this object then it is performed as part of this function call.
 
         Args:
             nodes (List): A list of descendant nodes.
@@ -151,4 +167,16 @@ class SoftmaxNode(Node):
         return [self.node_to_id[node] for node in nodes]
 
     def get_node_ids_tensor(self, nodes:List) -> torch.Tensor:
-        return torch.as_tensor( self.get_node_ids(nodes), dtype=int )
+        """
+        Gets the index values for descendant nodes.
+
+        This should only be used for root nodes. 
+        If `set_indexes` has been yet called on this object then it is performed as part of this function call.
+
+        Args:
+            nodes (List): A list of descendant nodes.
+
+        Returns:
+            torch.Tensor: A tensor which contains the indexes for the descendant nodes requested.
+        """
+        return torch.as_tensor( self.get_node_ids(nodes), dtype=int)

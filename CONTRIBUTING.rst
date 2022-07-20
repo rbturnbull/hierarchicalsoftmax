@@ -2,8 +2,6 @@
 Contributing
 =======================
 
-These practices are subject to change based on the decisions of the team.
-
 - Use clear and explicit variable names.
 - Python code should be formatted using black with the settings in pyproject.toml. The maximum line length is 120 characters.
 - Contributions should be commited to a new branch and will be merged with main only after tests and documentation are complete.

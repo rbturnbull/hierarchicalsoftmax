@@ -16,6 +16,7 @@ A Hierarchical Softmax Framework for PyTorch.
    :maxdepth: 2
    :caption: Contents:
 
+   quickstart
    api
    credits
 
