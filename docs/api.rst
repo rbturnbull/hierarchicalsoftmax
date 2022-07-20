@@ -5,6 +5,7 @@ API Reference
 Nodes
 =======================
 
+
 .. automodule:: hierarchicalsoftmax.nodes
     :members:
     :inherited-members:

@@ -5,6 +5,9 @@ import torch.nn.functional as F
 
 
 class HierarchicalSoftmaxLoss(nn.Module):
+    """
+    A module which sums the loss for each level of a hiearchical tree.
+    """
     def __init__(
         self,
         root,

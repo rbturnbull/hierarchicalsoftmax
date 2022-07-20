@@ -5,16 +5,20 @@ from . import nodes
 
 
 class ShapeError(RuntimeError):
-    pass
+    """
+    Raised when the shape of a tensor is different to what is expected.
+    """
 
 
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 
+    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
+
     Args:
         root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.
-        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Size (samples, root.children_softmax_end_index)
+        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.children_softmax_end_index)
 
     Returns:
         List[nodes.SoftmaxNode]: A list of nodes predicted for each sample.

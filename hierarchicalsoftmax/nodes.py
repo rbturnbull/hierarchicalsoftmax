@@ -1,3 +1,4 @@
+from __future__ import annotations
 import torch
 from anytree import Node, RenderTree, PreOrderIter
 from typing import List, Optional
@@ -6,14 +7,27 @@ console = Console()
 
 
 class ReadOnlyError(RuntimeError):
-    pass
+    """
+    Raised when trying to edit a SoftmaxNode tree after it has been set to read only.
+    """
 
 
 class IndexNotSetError(RuntimeError):
-    pass
+    """
+    Raised when set_indexes not set for the SoftmaxNode root.
+    """
+
+
+class AlreadyIndexedError(RuntimeError):
+    """
+    Raised when set_indexes run more than once on a node.
+    """
 
 
 class SoftmaxNode(Node):
+    """
+    Creates a hierarchical tree to perform a softmax at each level.
+    """
     def __init__(self, *args, alpha:float=1.0, weight=None, label_smoothing:float=0.0, readonly:bool=False, **kwargs):
         self.softmax_start_index = None
         self.softmax_end_index = None
@@ -31,8 +45,25 @@ class SoftmaxNode(Node):
     def __repr__(self):
         return str(self)
         
-    def set_indexes(self, index_in_parent:Optional[int]=None, current_index:int=0):
-        assert self.softmax_start_index is None
+    def set_indexes(self, index_in_parent:Optional[int]=None, current_index:int=0) -> int:
+        """
+        Sets all the indexes for this node and its descendants so that each node can be referenced by the root.
+
+        This should be called without arguments only on the root of a hierarchy tree.
+        After calling this function the tree from the root down will be read only.
+
+        Args:
+            index_in_parent (int, optional): The index of this node in the parent's list of children. 
+                Defaults to None which is appropriate for the root of a tree.
+            current_index (int, optional): An index value for the root node to reference this node. 
+                Defaults to 0 which is appropriate for the root of a tree.
+
+        Returns:
+            int: Returns the current_index
+        """
+        if self.softmax_start_index is not None:
+            raise AlreadyIndexedError(f"Node {self} already has been indexed. It cannot be indexed again.")
+
         self.index_in_parent = index_in_parent
         self.index_in_parent_tensor = torch.as_tensor(index_in_parent, dtype=torch.long) if index_in_parent is not None else None
         if self.children:
@@ -53,8 +84,18 @@ class SoftmaxNode(Node):
         self.readonly = True
         return current_index
 
-    def render(self, *args, attr:Optional[str]=None, print:bool=False, **kwargs):
-        rendered = RenderTree(self, *args, **kwargs)
+    def render(self, attr:Optional[str]=None, print:bool=False, **kwargs) -> RenderTree:
+        """
+        Renders this node and all its descendants in a tree format.
+
+        Args:
+            attr (str, optional): An attribute to print for this rendering of the tree. If None, then the name of each node is used.
+            print (bool): Whether or not the tree should be printed. Defaults to False.
+
+        Returns:
+            RenderTree: The tree rendered by anytree.
+        """
+        rendered = RenderTree(self, **kwargs)
         if attr:
             rendered = rendered.by_attr(attr)
         if print:
@@ -77,10 +118,34 @@ class SoftmaxNode(Node):
         """Method call after detaching from `parent`."""
         del parent.children_dict[self.name]
 
-    def get_child_by_name(self, name:str):
+    def get_child_by_name(self, name:str) -> SoftmaxNode:
+        """
+        Returns the child node that has the same name as what is given.
+
+        Args:
+            name (str): The name of the child node requested.
+
+        Returns:
+            SoftmaxNode: The child node that has the same name as what is given. If not child node exists with this name then `None` is returned.
+        """
         return self.children_dict.get(name, None)
 
     def get_node_ids(self, nodes:List) -> List[int]:
+        """
+        Gets the index values for descendant nodes.
+
+        This should only be used for root nodes. 
+        If `set_indexes` has been yet called on this object then it is performed as part of this function.
+
+        Args:
+            nodes (List): A list of descendant nodes.
+
+        Returns:
+            List[int]: A list of indexes for the descendant nodes requested.
+        """
+        if self.node_to_id is None:
+            self.set_indexes()
+
         return [self.node_to_id[node] for node in nodes]
 
     def get_node_ids_tensor(self, nodes:List) -> torch.Tensor:
