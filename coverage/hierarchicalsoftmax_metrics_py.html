@@ -64,7 +64,7 @@
     <p id="t10" class="pln"><span class="n"><a href="#t10">10</a></span><span class="t"><span class="str">    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t11" class="pln"><span class="n"><a href="#t11">11</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t13" class="pln"><span class="n"><a href="#t13">13</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t13" class="pln"><span class="n"><a href="#t13">13</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t14" class="pln"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="str">        target_tensor (torch.Tensor): A tensor with the target node indexes. Shape: (samples,).</span>&nbsp;</span><span class="r"></span></p>
     <p id="t15" class="pln"><span class="n"><a href="#t15">15</a></span><span class="t"><span class="str">        root (SoftmaxNode): The root of the hierarchy tree.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -84,7 +84,7 @@
     <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t"><span class="str">    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t32" class="pln"><span class="n"><a href="#t32">32</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t"><span class="str">        target_tensor (torch.Tensor): A tensor with the target node indexes. Shape: (samples,).</span>&nbsp;</span><span class="r"></span></p>
     <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t"><span class="str">        root (SoftmaxNode): The root of the hierarchy tree.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t36" class="pln"><span class="n"><a href="#t36">36</a></span><span class="t"><span class="str">        average (str, optional): The type of averaging over the different classes.</span>&nbsp;</span><span class="r"></span></p>
@@ -105,7 +105,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-07-20 03:09 +0000
+            created at 2022-07-20 04:51 +0000
         </p>
     </div>
 </div>

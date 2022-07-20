@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for hierarchicalsoftmax/nodes.py: 92.31%</title>
+    <title>Coverage for hierarchicalsoftmax/nodes.py: 91.57%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>hierarchicalsoftmax/nodes.py</b> :
-            <span class="pc_cov">92.31%</span>
+            <span class="pc_cov">91.57%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            78 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">72 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">6 missing</button>
+            83 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">76 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">7 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -234,12 +234,19 @@
     <p id="t180" class="pln"><span class="n"><a href="#t180">180</a></span><span class="t"><span class="str">            torch.Tensor: A tensor which contains the indexes for the descendant nodes requested.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t181" class="pln"><span class="n"><a href="#t181">181</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t182" class="run"><span class="n"><a href="#t182">182</a></span><span class="t">        <span class="key">return</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">as_tensor</span><span class="op">(</span> <span class="nam">self</span><span class="op">.</span><span class="nam">get_node_ids</span><span class="op">(</span><span class="nam">nodes</span><span class="op">)</span><span class="op">,</span> <span class="nam">dtype</span><span class="op">=</span><span class="nam">int</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t183" class="pln"><span class="n"><a href="#t183">183</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t184" class="run"><span class="n"><a href="#t184">184</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t185" class="run"><span class="n"><a href="#t185">185</a></span><span class="t">    <span class="key">def</span> <span class="nam">layer_size</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span> <span class="op">-></span> <span class="nam">int</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t186" class="run"><span class="n"><a href="#t186">186</a></span><span class="t">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">node_to_id</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t187" class="mis show_mis"><span class="n"><a href="#t187">187</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">set_indexes</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t188" class="pln"><span class="n"><a href="#t188">188</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t189" class="run"><span class="n"><a href="#t189">189</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">children_softmax_end_index</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-07-20 03:09 +0000
+            created at 2022-07-20 04:51 +0000
         </p>
     </div>
 </div>

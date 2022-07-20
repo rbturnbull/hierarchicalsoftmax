@@ -72,7 +72,7 @@
     <p id="t18" class="pln"><span class="n"><a href="#t18">18</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t19" class="pln"><span class="n"><a href="#t19">19</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t"><span class="str">        root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t21" class="pln"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.children_softmax_end_index)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="pln"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.layer_size)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t22" class="pln"><span class="n"><a href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t23" class="pln"><span class="n"><a href="#t23">23</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t"><span class="str">        List[nodes.SoftmaxNode]: A list of nodes predicted for each sample.</span>&nbsp;</span><span class="r"></span></p>
@@ -82,10 +82,10 @@
     <p id="t28" class="run"><span class="n"><a href="#t28">28</a></span><span class="t">    <span class="key">if</span> <span class="nam">root</span><span class="op">.</span><span class="nam">softmax_start_index</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t29" class="run"><span class="n"><a href="#t29">29</a></span><span class="t">        <span class="key">raise</span> <span class="nam">nodes</span><span class="op">.</span><span class="nam">IndexNotSetError</span><span class="op">(</span><span class="str">f"The index of the root node {root} has not been set. Call `set_indexes` on this object."</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t">    <span class="key">if</span> <span class="nam">prediction_tensor</span><span class="op">.</span><span class="nam">shape</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">!=</span> <span class="nam">root</span><span class="op">.</span><span class="nam">children_softmax_end_index</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t">    <span class="key">if</span> <span class="nam">prediction_tensor</span><span class="op">.</span><span class="nam">shape</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">!=</span> <span class="nam">root</span><span class="op">.</span><span class="nam">layer_size</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">        <span class="key">raise</span> <span class="nam">ShapeError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t">            <span class="str">f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">            <span class="str">"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.children_softmax_end_index}."</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">            <span class="str">"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."</span>&nbsp;</span><span class="r"></span></p>
     <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t36" class="pln"><span class="n"><a href="#t36">36</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t37" class="run"><span class="n"><a href="#t37">37</a></span><span class="t">    <span class="key">for</span> <span class="nam">predictions</span> <span class="key">in</span> <span class="nam">prediction_tensor</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -102,7 +102,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-07-20 03:09 +0000
+            created at 2022-07-20 04:51 +0000
         </p>
     </div>
 </div>

@@ -1648,7 +1648,7 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root softmax node. Needs <cite>set_indexes</cite> to have been called.</p></li>
-<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – The predictions coming from the softmax layer. Shape (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – The predictions coming from the softmax layer. Shape (samples, root.layer_size)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1671,7 +1671,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)</p></li>
 <li><p><strong>target_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the target node indexes. Shape: (samples,).</p></li>
 <li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root of the hierarchy tree.</p></li>
 </ul>
@@ -1693,7 +1693,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.children_softmax_end_index)</p></li>
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)</p></li>
 <li><p><strong>target_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the target node indexes. Shape: (samples,).</p></li>
 <li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root of the hierarchy tree.</p></li>
 <li><p><strong>average</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of averaging over the different classes.
