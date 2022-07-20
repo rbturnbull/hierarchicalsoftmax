@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Credits" href="credits.html" />
-    <link rel="prev" title="Welcome to hierarchicalsoftmax’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,6 +42,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-hierarchicalsoftmax.nodes">Nodes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hierarchicalsoftmax.loss">Loss</a></li>
@@ -257,7 +258,7 @@ In case of an existing reference, the node <cite>c</cite> does not vanish and is
 <span class="sig-name descname"><span class="pre">get_node_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.get_node_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the index values for descendant nodes.</p>
 <p>This should only be used for root nodes.
-If <cite>set_indexes</cite> has been yet called on this object then it is performed as part of this function.</p>
+If <cite>set_indexes</cite> has been yet called on this object then it is performed as part of this function call.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>nodes</strong> (<em>List</em>) – A list of descendant nodes.</p>
@@ -267,6 +268,25 @@ If <cite>set_indexes</cite> has been yet called on this object then it is perfor
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.get_node_ids_tensor">
+<span class="sig-name descname"><span class="pre">get_node_ids_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.get_node_ids_tensor" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the index values for descendant nodes.</p>
+<p>This should only be used for root nodes.
+If <cite>set_indexes</cite> has been yet called on this object then it is performed as part of this function call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>List</em>) – A list of descendant nodes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor which contains the indexes for the descendant nodes requested.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -423,13 +443,14 @@ to the new node.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.render.RenderTree</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.render" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.render.RenderTree</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.render" title="Permalink to this definition"></a></dt>
 <dd><p>Renders this node and all its descendants in a tree format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>attr</strong> (<em>str</em><em>, </em><em>optional</em>) – An attribute to print for this rendering of the tree. If None, then the name of each node is used.</p></li>
 <li><p><strong>print</strong> (<em>bool</em>) – Whether or not the tree should be printed. Defaults to False.</p></li>
+<li><p><strong>filepath</strong> – (str, Path, optional): A path to save the tree to using graphviz. Requires graphviz to be installed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1697,7 +1718,7 @@ Defaults to “macro”.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hierarchicalsoftmax’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="credits.html" class="btn btn-neutral float-right" title="Credits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
