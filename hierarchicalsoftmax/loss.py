@@ -33,7 +33,6 @@ class HierarchicalSoftmaxLoss(nn.Module):
                 )
                 node = node.parent
                 
-
         batch_size = len(targets)
         loss /= batch_size
         return loss
