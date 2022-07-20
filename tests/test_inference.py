@@ -1,6 +1,7 @@
 import torch
-from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError
-from hierarchicalsoftmax.inference import greedy_predictions
+import pytest
+from hierarchicalsoftmax.nodes import SoftmaxNode, IndexNotSetError
+from hierarchicalsoftmax.inference import greedy_predictions, ShapeError
 
 def test_greedy_predictions():
     root = SoftmaxNode("root")
@@ -24,3 +25,38 @@ def test_greedy_predictions():
     node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)
 
     assert node_predictions == targets
+
+
+def test_unset_indexes():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+    targets = [aa,ba,bb, ab]
+
+    predictions = torch.zeros( (len(targets), 10) )
+
+    with pytest.raises(IndexNotSetError):
+        node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)
+
+
+def test_greedy_predictions():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+    root.set_indexes()
+
+    targets = [aa,ba,bb, ab]
+
+    predictions = torch.zeros( (len(targets), root.children_softmax_end_index + 1) )
+    with pytest.raises(ShapeError):
+        node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)
