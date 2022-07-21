@@ -1,5 +1,7 @@
+from pathlib import Path
 import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
+import tempfile
 from .util import seven_node_tree, assert_multiline_strings
 
 def test_simple_tree():
@@ -118,3 +120,27 @@ def test_get_node_ids_does_index():
     node_ids = root.get_node_ids([aa])
     with pytest.raises(AlreadyIndexedError):
         root.set_indexes()
+
+
+def test_render_svg():
+    root = seven_node_tree()
+
+    with tempfile.NamedTemporaryFile(suffix=".svg") as f:
+        path = Path(f.name)
+        root.render(filepath=path)
+        assert path.exists()
+        text = path.read_text()
+        assert 3800 < path.stat().st_size < 3900
+        assert text.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+
+
+def test_render_dot():
+    root = seven_node_tree()
+
+    with tempfile.NamedTemporaryFile(suffix=".dot") as f:
+        path = Path(f.name)
+        root.render(filepath=path)
+        assert path.exists()
+        text = path.read_text()
+        assert 180 < path.stat().st_size < 200
+        assert text.startswith('digraph tree {\n    "root";\n    "a";\n')
