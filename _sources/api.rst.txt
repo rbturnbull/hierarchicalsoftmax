@@ -11,6 +11,14 @@ Nodes
     :inherited-members:
 
 
+Layers
+=======================
+
+.. automodule:: hierarchicalsoftmax.layers
+    :members:
+    :inherited-members:
+
+
 Loss
 =======================
 
