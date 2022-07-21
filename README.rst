@@ -81,6 +81,48 @@ The tree can also be rendered to a file using `graphviz` if it is installed:
 .. image:: https://raw.githubusercontent.com/rbturnbull/hierarchicalsoftmax/main/docs/images/example-tree.svg
     :alt: An example tree rendering.
 
+
+Then you can add a final layer to your network that has the right size of outputs for the softmax layers.
+You can do that manually by setting the output number of features to `root.layer_size`. 
+Alternatively you can use the `HierarchicalSoftmaxLinear` or `HierarchicalSoftmaxLazyLinear` classes:
+
+.. code-block:: python
+
+    from torch import nn
+    from hierarchicalsoftmax import HierarchicalSoftmaxLinear
+
+    model = nn.Sequential(
+        nn.Linear(in_features=20, out_features=100),
+        nn.ReLU(),
+        HierarchicalSoftmaxLinear(in_features=100, root=root)
+    )
+
+Once you have the hierarchy tree, then you can use the `HierarchicalSoftmaxLoss` module:
+
+.. code-block:: python
+
+    from hierarchicalsoftmax import HierarchicalSoftmaxLoss
+
+    loss = HierarchicalSoftmaxLoss(root=self.metadata.root)
+
+Metric functions are provided to show accuracy and the F1 score:
+
+.. code-block:: python
+
+    from hierarchicalsoftmax import greedy_accuracy, greedy_f1_score
+
+    accuracy = greedy_accuracy(predictions, targets, root=root)
+    f1 = greedy_f1_score(predictions, targets, root=root)
+
+The nodes predicted from the final layer of the model can be inferred using the `greedy_predictions` function which provides a list of the predicted nodes:
+
+.. code-block:: python
+
+    from hierarchicalsoftmax import greedy_predictions
+
+    outputs = model(inputs)
+    inferred_nodes = greedy_predictions(outputs)
+
 .. end-quickstart
 
 
