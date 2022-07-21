@@ -89,6 +89,15 @@ class SoftmaxNode(Node):
         self.readonly = True
         return current_index
 
+    def set_indexes_if_unset(self) -> None:
+        """ 
+        Calls set_indexes if it has not been called yet.
+        
+        This is only appropriate for the root node.
+        """
+        if self.root.softmax_start_index is None:
+            self.root.set_indexes()
+
     def render(self, attr:Optional[str]=None, print:bool=False, filepath:Union[str, Path, None] = None, **kwargs) -> RenderTree:
         """
         Renders this node and all its descendants in a tree format.
@@ -183,7 +192,6 @@ class SoftmaxNode(Node):
     
     @property
     def layer_size(self) -> int:
-        if self.node_to_id is None:
-            self.set_indexes()
+        self.root.set_indexes_if_unset()
 
         return self.children_softmax_end_index

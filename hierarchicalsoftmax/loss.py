@@ -17,8 +17,8 @@ class HierarchicalSoftmaxLoss(nn.Module):
         self.root = root
 
         # Set the indexes of the tree if necessary
-        if self.root.softmax_start_index is None:
-            self.root.set_indexes()
+        self.root.set_indexes_if_unset()
+
         assert len(self.root.node_list) > 0
 
     def forward(self, batch_predictions: Tensor, targets: Tensor) -> Tensor:
