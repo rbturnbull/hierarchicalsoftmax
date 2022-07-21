@@ -118,7 +118,40 @@ which means that you can use methods from that library to build and interact wit
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="s2">&quot;tree.svg&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="An example tree rendering." src="https://raw.githubusercontent.com/rbturnbull/hierarchicalsoftmax/main/docs/images/example-tree.svg" /></section>
+<img alt="An example tree rendering." src="https://raw.githubusercontent.com/rbturnbull/hierarchicalsoftmax/main/docs/images/example-tree.svg" /><p>Then you can add a final layer to your network that has the right size of outputs for the softmax layers.
+You can do that manually by setting the output number of features to <cite>root.layer_size</cite>.
+Alternatively you can use the <cite>HierarchicalSoftmaxLinear</cite> or <cite>HierarchicalSoftmaxLazyLinear</cite> classes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">hierarchicalsoftmax</span> <span class="kn">import</span> <span class="n">HierarchicalSoftmaxLinear</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">HierarchicalSoftmaxLinear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Once you have the hierarchy tree, then you can use the <cite>HierarchicalSoftmaxLoss</cite> module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hierarchicalsoftmax</span> <span class="kn">import</span> <span class="n">HierarchicalSoftmaxLoss</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="n">HierarchicalSoftmaxLoss</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Metric functions are provided to show accuracy and the F1 score:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hierarchicalsoftmax</span> <span class="kn">import</span> <span class="n">greedy_accuracy</span><span class="p">,</span> <span class="n">greedy_f1_score</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">greedy_accuracy</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+<span class="n">f1</span> <span class="o">=</span> <span class="n">greedy_f1_score</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The nodes predicted from the final layer of the model can be inferred using the <cite>greedy_predictions</cite> function which provides a list of the predicted nodes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hierarchicalsoftmax</span> <span class="kn">import</span> <span class="n">greedy_predictions</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">inferred_nodes</span> <span class="o">=</span> <span class="n">greedy_predictions</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
