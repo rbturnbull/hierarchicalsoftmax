@@ -2,10 +2,10 @@ from pathlib import Path
 import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 import tempfile
-from .util import seven_node_tree, assert_multiline_strings
+from .util import depth_two_tree, assert_multiline_strings
 
 def test_simple_tree():
-    root = seven_node_tree()
+    root = depth_two_tree()
     root.set_indexes()
     assert_multiline_strings( root.render(print=True), """
         root
@@ -123,7 +123,7 @@ def test_get_node_ids_does_index():
 
 
 def test_render_svg():
-    root = seven_node_tree()
+    root = depth_two_tree()
 
     with tempfile.NamedTemporaryFile(suffix=".svg") as f:
         path = Path(f.name)
@@ -135,7 +135,7 @@ def test_render_svg():
 
 
 def test_render_dot():
-    root = seven_node_tree()
+    root = depth_two_tree()
 
     with tempfile.NamedTemporaryFile(suffix=".dot") as f:
         path = Path(f.name)
