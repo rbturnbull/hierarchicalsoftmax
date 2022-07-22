@@ -25,11 +25,14 @@ class HierarchicalSoftmaxLoss(nn.Module):
         target_nodes = (self.root.node_list[target] for target in targets)
 
         loss = 0.0
+        device = targets.device
+
         for prediction, target_node in zip(batch_predictions, target_nodes):
             node = target_node
             while node.parent:
+                node.index_in_parent_tensor = node.index_in_parent_tensor.to(device) # can this be done elsewhere?
                 loss += node.parent.alpha * F.cross_entropy(
-                    prediction[node.parent.softmax_start_index:node.parent.softmax_end_index],
+                    torch.unsqueeze(prediction[node.parent.softmax_start_index:node.parent.softmax_end_index], dim=0),
                     node.index_in_parent_tensor,
                     weight=node.parent.weight,
                     label_smoothing=node.parent.label_smoothing,
