@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hierarchicalsoftmax"
-version = "0.1.3"
+version = "0.1.4"
 description = "A Hierarchical Softmax Framework for PyTorch."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
 license = "Apache-2.0"
