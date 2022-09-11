@@ -5,6 +5,17 @@ description = "A Hierarchical Softmax Framework for PyTorch."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
 license = "Apache-2.0"
 readme = "README.rst"
+homepage = "https://github.com/rbturnbull/hierarchicalsoftmax"
+repository = "https://github.com/rbturnbull/hierarchicalsoftmax"
+documentation = "https://rbturnbull.github.io/hierarchicalsoftmax/"
+keywords = ["pytorch", "softmax"]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
