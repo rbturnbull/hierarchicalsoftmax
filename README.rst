@@ -103,7 +103,7 @@ Once you have the hierarchy tree, then you can use the `HierarchicalSoftmaxLoss`
 
     from hierarchicalsoftmax import HierarchicalSoftmaxLoss
 
-    loss = HierarchicalSoftmaxLoss(root=self.metadata.root)
+    loss = HierarchicalSoftmaxLoss(root=root)
 
 Metric functions are provided to show accuracy and the F1 score:
 
