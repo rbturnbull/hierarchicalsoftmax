@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for hierarchicalsoftmax/loss.py: 95.74%</title>
+    <title>Coverage for hierarchicalsoftmax/loss.py: 100.00%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>hierarchicalsoftmax/loss.py</b> :
-            <span class="pc_cov">95.74%</span>
+            <span class="pc_cov">100.00%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             47 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">45 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">2 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">47 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -66,7 +66,7 @@
     <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t">    <span class="nam">log_probabilities</span> <span class="op">=</span> <span class="nam">F</span><span class="op">.</span><span class="nam">log_softmax</span><span class="op">(</span><span class="nam">logits</span><span class="op">,</span> <span class="nam">dim</span><span class="op">=</span><span class="op">-</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t">    <span class="nam">label</span> <span class="op">=</span> <span class="nam">label</span><span class="op">.</span><span class="nam">view</span><span class="op">(</span><span class="op">-</span><span class="num">1</span><span class="op">,</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t">    <span class="nam">log_probability</span> <span class="op">=</span> <span class="nam">log_probabilities</span><span class="op">.</span><span class="nam">gather</span><span class="op">(</span><span class="num">1</span><span class="op">,</span><span class="nam">label</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t">    <span class="nam">log_probability</span> <span class="op">=</span> <span class="nam">log_probabilities</span><span class="op">.</span><span class="nam">gather</span><span class="op">(</span><span class="num">1</span><span class="op">,</span><span class="nam">label</span><span class="op">)</span><span class="op">.</span><span class="nam">squeeze</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="run"><span class="n"><a href="#t16">16</a></span><span class="t">    <span class="nam">n_classes</span> <span class="op">=</span> <span class="nam">logits</span><span class="op">.</span><span class="nam">size</span><span class="op">(</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t">    <span class="nam">uniform_probability</span> <span class="op">=</span> <span class="nam">label_smoothing</span> <span class="op">/</span> <span class="nam">n_classes</span>&nbsp;</span><span class="r"></span></p>
     <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">label_distribution</span> <span class="op">=</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">full_like</span><span class="op">(</span><span class="nam">logits</span><span class="op">,</span> <span class="nam">uniform_probability</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -78,8 +78,8 @@
     <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t25" class="pln"><span class="n"><a href="#t25">25</a></span><span class="t">    <span class="com"># Weights</span>&nbsp;</span><span class="r"></span></p>
     <p id="t26" class="run"><span class="n"><a href="#t26">26</a></span><span class="t">    <span class="key">if</span> <span class="nam">weight</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t27" class="mis show_mis"><span class="n"><a href="#t27">27</a></span><span class="t">        <span class="nam">weight</span> <span class="op">=</span> <span class="nam">weight</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">logits</span><span class="op">.</span><span class="nam">device</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t28" class="mis show_mis"><span class="n"><a href="#t28">28</a></span><span class="t">        <span class="nam">loss</span> <span class="op">*=</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">gather</span><span class="op">(</span><span class="nam">weight</span><span class="op">,</span> <span class="op">-</span><span class="num">1</span><span class="op">,</span> <span class="nam">label</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t">        <span class="nam">weight</span> <span class="op">=</span> <span class="nam">weight</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">logits</span><span class="op">.</span><span class="nam">device</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t28" class="run"><span class="n"><a href="#t28">28</a></span><span class="t">        <span class="nam">loss</span> <span class="op">*=</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">gather</span><span class="op">(</span><span class="nam">weight</span><span class="op">,</span> <span class="op">-</span><span class="num">1</span><span class="op">,</span> <span class="nam">label</span><span class="op">.</span><span class="nam">squeeze</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="nam">weight</span><span class="op">.</span><span class="nam">mean</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="run"><span class="n"><a href="#t30">30</a></span><span class="t">    <span class="key">return</span> <span class="nam">loss</span><span class="op">.</span><span class="nam">mean</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -186,7 +186,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2023-06-08 14:04 +0000
+            created at 2023-06-08 14:29 +0000
         </p>
     </div>
 </div>
