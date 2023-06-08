@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> hierarchicalsoftmax
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            hierarchicalsoftmax
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,8 +71,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>API Reference</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -123,7 +127,7 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">SoftmaxNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_smoothing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonly</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.nodes.</span></span><span class="sig-name descname"><span class="pre">SoftmaxNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_smoothing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonly</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a hierarchical tree to perform a softmax at each level.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.ancestors">
@@ -193,7 +197,7 @@ In case of an existing reference, the node <cite>c</cite> does not vanish and is
 <p>A node can just be the children once. Duplicates cause a <code class="xref any docutils literal notranslate"><span class="pre">TreeError</span></code>:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span>
 <span class="gt">Traceback (most recent call last):</span>
-    <span class="o">...</span>
+<span class="w">    </span><span class="o">...</span>
 <span class="gr">anytree.node.exceptions.TreeError</span>: <span class="n">Cannot add node Node(&#39;/n/a&#39;) multiple times as child.</span>
 </pre></div>
 </div>
@@ -565,7 +569,7 @@ The <cite>in_features</cite> will be inferred from the previous layer at runtime
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the child module. The child module can be
+<li><p><strong>name</strong> (<em>str</em>) – name of the child module. The child module can be
 accessed from this module using the given name</p></li>
 <li><p><strong>module</strong> (<em>Module</em>) – child module to be added to the module.</p></li>
 </ul>
@@ -601,16 +605,12 @@ as well as self. Typical use includes initializing the parameters of a model
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
-<span class="go">Sequential(</span>
-<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">)</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -652,7 +652,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -1038,7 +1039,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -1064,11 +1065,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, torch.Tensor)</em> – Tuple containing the name and buffer</p>
+<dd class="field-even"><p><em>(str, torch.Tensor)</em> – Tuple containing the name and buffer</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -1082,11 +1084,12 @@ are direct members of this module.</p></li>
 the name of the module as well as the module itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
-<dd class="field-odd"><p><em>(string, Module)</em> – Tuple containing a name and child module</p>
+<dd class="field-odd"><p><em>(str, Module)</em> – Tuple containing a name and child module</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;conv4&#39;</span><span class="p">,</span> <span class="s1">&#39;conv5&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 </pre></div>
@@ -1108,7 +1111,7 @@ or not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Module)</em> – Tuple of name and module</p>
+<dd class="field-even"><p><em>(str, Module)</em> – Tuple of name and module</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1120,7 +1123,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; (&#39;&#39;, Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -1146,11 +1149,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Parameter)</em> – Tuple containing the name and parameter</p>
+<dd class="field-even"><p><em>(str, Parameter)</em> – Tuple containing the name and parameter</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -1173,7 +1177,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -1214,7 +1219,7 @@ is that the latter will not be a part of this module’s
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the buffer. The buffer can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the buffer. The buffer can be accessed
 from this module using the given name</p></li>
 <li><p><strong>tensor</strong> (<em>Tensor</em><em> or </em><em>None</em>) – buffer to be registered. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations
 that run on buffers, such as <a class="reference internal" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.cuda" title="hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>, are ignored. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
@@ -1225,7 +1230,8 @@ the buffer is <strong>not</strong> included in the module’s <a class="referenc
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1284,8 +1290,10 @@ if a single value is returned(unless that value is already a tuple).</p>
 <dt class="sig sig-object py" id="hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.register_full_backward_hook">
 <span class="sig-name descname"><span class="pre">register_full_backward_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.utils.hooks.RemovableHandle</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.register_full_backward_hook" title="Permalink to this definition"></a></dt>
 <dd><p>Registers a backward hook on the module.</p>
-<p>The hook will be called every time the gradients with respect to module
-inputs are computed. The hook should have the following signature:</p>
+<p>The hook will be called every time the gradients with respect to a module
+are computed, i.e. the hook will execute if and only if the gradients with
+respect to module outputs are computed. The hook should have the following
+signature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_input</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Tensor</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 </pre></div>
 </div>
@@ -1361,7 +1369,7 @@ clearning out both missing and unexpected keys will avoid an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the parameter. The parameter can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the parameter. The parameter can be accessed
 from this module using the given name</p></li>
 <li><p><strong>param</strong> (<em>Parameter</em><em> or </em><em>None</em>) – parameter to be added to the module. If
 <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations that run on parameters, such as <a class="reference internal" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.cuda" title="hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>,
@@ -1420,10 +1428,15 @@ found within the <cite>state_dict</cite>. Implement this function and a correspo
 <dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.state_dict">
 <span class="sig-name descname"><span class="pre">state_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLazyLinear.state_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a dictionary containing a whole state of the module.</p>
+<dd><p>Returns a dictionary containing references to the whole state of the module.</p>
 <p>Both parameters and persistent buffers (e.g. running averages) are
 included. Keys are corresponding parameter and buffer names.
 Parameters and buffers set to <code class="docutils literal notranslate"><span class="pre">None</span></code> are not included.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The returned object is a shallow copy. It contains references
+to the module’s parameters and buffers.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Currently <code class="docutils literal notranslate"><span class="pre">state_dict()</span></code> also accepts positional arguments for
@@ -1459,7 +1472,8 @@ Default: <code class="docutils literal notranslate"><span class="pre">False</spa
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">[&#39;bias&#39;, &#39;weight&#39;]</span>
 </pre></div>
 </div>
@@ -1525,7 +1539,8 @@ only argument)</p></li>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +IGNORE_WANT(&quot;non-deterministic&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
@@ -1536,6 +1551,7 @@ only argument)</p></li>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
 <span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +REQUIRES(env:TORCH_DOCTEST_CUDA1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
@@ -1678,7 +1694,7 @@ See <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the child module. The child module can be
+<li><p><strong>name</strong> (<em>str</em>) – name of the child module. The child module can be
 accessed from this module using the given name</p></li>
 <li><p><strong>module</strong> (<em>Module</em>) – child module to be added to the module.</p></li>
 </ul>
@@ -1714,16 +1730,12 @@ as well as self. Typical use includes initializing the parameters of a model
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
-<span class="go">Sequential(</span>
-<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">)</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -1765,7 +1777,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -2131,7 +2144,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -2157,11 +2170,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, torch.Tensor)</em> – Tuple containing the name and buffer</p>
+<dd class="field-even"><p><em>(str, torch.Tensor)</em> – Tuple containing the name and buffer</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -2175,11 +2189,12 @@ are direct members of this module.</p></li>
 the name of the module as well as the module itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
-<dd class="field-odd"><p><em>(string, Module)</em> – Tuple containing a name and child module</p>
+<dd class="field-odd"><p><em>(str, Module)</em> – Tuple containing a name and child module</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;conv4&#39;</span><span class="p">,</span> <span class="s1">&#39;conv5&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 </pre></div>
@@ -2201,7 +2216,7 @@ or not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Module)</em> – Tuple of name and module</p>
+<dd class="field-even"><p><em>(str, Module)</em> – Tuple of name and module</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -2213,7 +2228,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; (&#39;&#39;, Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -2239,11 +2254,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Parameter)</em> – Tuple containing the name and parameter</p>
+<dd class="field-even"><p><em>(str, Parameter)</em> – Tuple containing the name and parameter</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -2266,7 +2282,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -2307,7 +2324,7 @@ is that the latter will not be a part of this module’s
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the buffer. The buffer can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the buffer. The buffer can be accessed
 from this module using the given name</p></li>
 <li><p><strong>tensor</strong> (<em>Tensor</em><em> or </em><em>None</em>) – buffer to be registered. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations
 that run on buffers, such as <a class="reference internal" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.cuda" title="hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>, are ignored. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
@@ -2318,7 +2335,8 @@ the buffer is <strong>not</strong> included in the module’s <a class="referenc
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2377,8 +2395,10 @@ if a single value is returned(unless that value is already a tuple).</p>
 <dt class="sig sig-object py" id="hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.register_full_backward_hook">
 <span class="sig-name descname"><span class="pre">register_full_backward_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.utils.hooks.RemovableHandle</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.register_full_backward_hook" title="Permalink to this definition"></a></dt>
 <dd><p>Registers a backward hook on the module.</p>
-<p>The hook will be called every time the gradients with respect to module
-inputs are computed. The hook should have the following signature:</p>
+<p>The hook will be called every time the gradients with respect to a module
+are computed, i.e. the hook will execute if and only if the gradients with
+respect to module outputs are computed. The hook should have the following
+signature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_input</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Tensor</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 </pre></div>
 </div>
@@ -2454,7 +2474,7 @@ clearning out both missing and unexpected keys will avoid an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the parameter. The parameter can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the parameter. The parameter can be accessed
 from this module using the given name</p></li>
 <li><p><strong>param</strong> (<em>Parameter</em><em> or </em><em>None</em>) – parameter to be added to the module. If
 <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations that run on parameters, such as <a class="reference internal" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.cuda" title="hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>,
@@ -2513,10 +2533,15 @@ found within the <cite>state_dict</cite>. Implement this function and a correspo
 <dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.state_dict">
 <span class="sig-name descname"><span class="pre">state_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.layers.HierarchicalSoftmaxLinear.state_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a dictionary containing a whole state of the module.</p>
+<dd><p>Returns a dictionary containing references to the whole state of the module.</p>
 <p>Both parameters and persistent buffers (e.g. running averages) are
 included. Keys are corresponding parameter and buffer names.
 Parameters and buffers set to <code class="docutils literal notranslate"><span class="pre">None</span></code> are not included.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The returned object is a shallow copy. It contains references
+to the module’s parameters and buffers.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Currently <code class="docutils literal notranslate"><span class="pre">state_dict()</span></code> also accepts positional arguments for
@@ -2552,7 +2577,8 @@ Default: <code class="docutils literal notranslate"><span class="pre">False</spa
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">[&#39;bias&#39;, &#39;weight&#39;]</span>
 </pre></div>
 </div>
@@ -2618,7 +2644,8 @@ only argument)</p></li>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +IGNORE_WANT(&quot;non-deterministic&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
@@ -2629,6 +2656,7 @@ only argument)</p></li>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
 <span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +REQUIRES(env:TORCH_DOCTEST_CUDA1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
@@ -2773,7 +2801,7 @@ See <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the child module. The child module can be
+<li><p><strong>name</strong> (<em>str</em>) – name of the child module. The child module can be
 accessed from this module using the given name</p></li>
 <li><p><strong>module</strong> (<em>Module</em>) – child module to be added to the module.</p></li>
 </ul>
@@ -2809,16 +2837,12 @@ as well as self. Typical use includes initializing the parameters of a model
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 1.,  1.],</span>
-<span class="go">        [ 1.,  1.]])</span>
-<span class="go">Sequential(</span>
-<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="go">)</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]], requires_grad=True)</span>
 <span class="go">Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
 <span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -2860,7 +2884,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -3226,7 +3251,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -3252,11 +3277,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, torch.Tensor)</em> – Tuple containing the name and buffer</p>
+<dd class="field-even"><p><em>(str, torch.Tensor)</em> – Tuple containing the name and buffer</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -3270,11 +3296,12 @@ are direct members of this module.</p></li>
 the name of the module as well as the module itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
-<dd class="field-odd"><p><em>(string, Module)</em> – Tuple containing a name and child module</p>
+<dd class="field-odd"><p><em>(str, Module)</em> – Tuple containing a name and child module</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;conv4&#39;</span><span class="p">,</span> <span class="s1">&#39;conv5&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 </pre></div>
@@ -3296,7 +3323,7 @@ or not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Module)</em> – Tuple of name and module</p>
+<dd class="field-even"><p><em>(str, Module)</em> – Tuple of name and module</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -3308,7 +3335,7 @@ example, <code class="docutils literal notranslate"><span class="pre">l</span></
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
-<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="go">0 -&gt; (&#39;&#39;, Sequential(</span>
 <span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
@@ -3334,11 +3361,12 @@ are direct members of this module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>(string, Parameter)</em> – Tuple containing the name and parameter</p>
+<dd class="field-even"><p><em>(str, Parameter)</em> – Tuple containing the name and parameter</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]:</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
@@ -3361,7 +3389,8 @@ are direct members of this module.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L,)</span>
 <span class="go">&lt;class &#39;torch.Tensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
@@ -3402,7 +3431,7 @@ is that the latter will not be a part of this module’s
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the buffer. The buffer can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the buffer. The buffer can be accessed
 from this module using the given name</p></li>
 <li><p><strong>tensor</strong> (<em>Tensor</em><em> or </em><em>None</em>) – buffer to be registered. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations
 that run on buffers, such as <a class="reference internal" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.cuda" title="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>, are ignored. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
@@ -3413,7 +3442,8 @@ the buffer is <strong>not</strong> included in the module’s <a class="referenc
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -3472,8 +3502,10 @@ if a single value is returned(unless that value is already a tuple).</p>
 <dt class="sig sig-object py" id="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.register_full_backward_hook">
 <span class="sig-name descname"><span class="pre">register_full_backward_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.utils.hooks.RemovableHandle</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.register_full_backward_hook" title="Permalink to this definition"></a></dt>
 <dd><p>Registers a backward hook on the module.</p>
-<p>The hook will be called every time the gradients with respect to module
-inputs are computed. The hook should have the following signature:</p>
+<p>The hook will be called every time the gradients with respect to a module
+are computed, i.e. the hook will execute if and only if the gradients with
+respect to module outputs are computed. The hook should have the following
+signature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_input</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Tensor</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 </pre></div>
 </div>
@@ -3549,7 +3581,7 @@ clearning out both missing and unexpected keys will avoid an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – name of the parameter. The parameter can be accessed
+<li><p><strong>name</strong> (<em>str</em>) – name of the parameter. The parameter can be accessed
 from this module using the given name</p></li>
 <li><p><strong>param</strong> (<em>Parameter</em><em> or </em><em>None</em>) – parameter to be added to the module. If
 <code class="docutils literal notranslate"><span class="pre">None</span></code>, then operations that run on parameters, such as <a class="reference internal" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.cuda" title="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.cuda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cuda</span></code></a>,
@@ -3608,10 +3640,15 @@ found within the <cite>state_dict</cite>. Implement this function and a correspo
 <dl class="py method">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.state_dict">
 <span class="sig-name descname"><span class="pre">state_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.loss.HierarchicalSoftmaxLoss.state_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a dictionary containing a whole state of the module.</p>
+<dd><p>Returns a dictionary containing references to the whole state of the module.</p>
 <p>Both parameters and persistent buffers (e.g. running averages) are
 included. Keys are corresponding parameter and buffer names.
 Parameters and buffers set to <code class="docutils literal notranslate"><span class="pre">None</span></code> are not included.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The returned object is a shallow copy. It contains references
+to the module’s parameters and buffers.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Currently <code class="docutils literal notranslate"><span class="pre">state_dict()</span></code> also accepts positional arguments for
@@ -3647,7 +3684,8 @@ Default: <code class="docutils literal notranslate"><span class="pre">False</spa
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +SKIP(&quot;undefined vars&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">[&#39;bias&#39;, &#39;weight&#39;]</span>
 </pre></div>
 </div>
@@ -3713,7 +3751,8 @@ only argument)</p></li>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +IGNORE_WANT(&quot;non-deterministic&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
@@ -3724,6 +3763,7 @@ only argument)</p></li>
 <span class="go">Parameter containing:</span>
 <span class="go">tensor([[ 0.1913, -0.3420],</span>
 <span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +REQUIRES(env:TORCH_DOCTEST_CUDA1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
@@ -3851,6 +3891,13 @@ See <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.loss.focal_loss_with_smoothing">
+<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.loss.</span></span><span class="sig-name descname"><span class="pre">focal_loss_with_smoothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.loss.focal_loss_with_smoothing" title="Permalink to this definition"></a></dt>
+<dd><p>Adapted from <a class="reference external" href="https://github.com/Kageshimasu/focal-loss-with-smoothing">https://github.com/Kageshimasu/focal-loss-with-smoothing</a>
+and <a class="reference external" href="https://github.com/clcarwin/focal_loss_pytorch">https://github.com/clcarwin/focal_loss_pytorch</a></p>
 </dd></dl>
 
 </section>

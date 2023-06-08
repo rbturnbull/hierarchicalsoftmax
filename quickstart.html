@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> hierarchicalsoftmax
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            hierarchicalsoftmax
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -45,6 +49,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#relative-contributions-to-the-loss">Relative contributions to the loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#label-smoothing">Label Smoothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#focal-loss">Focal Loss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
@@ -64,8 +71,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Quickstart</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quickstart</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,8 +86,12 @@
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h1>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
-<p>hierarchicalsoftmax can be installed using pip from the git repository:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/rbturnbull/hierarchicalsoftmax.git
+<p>hierarchicalsoftmax can be installed from PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>hierarchicalsoftmax
+</pre></div>
+</div>
+<p>Alternatively, hierarchicalsoftmax can be installed using pip from the git repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/rbturnbull/hierarchicalsoftmax.git
 </pre></div>
 </div>
 </section>
@@ -151,6 +162,31 @@ Alternatively you can use the <cite>HierarchicalSoftmaxLinear</cite> or <cite>Hi
 <span class="n">inferred_nodes</span> <span class="o">=</span> <span class="n">greedy_predictions</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="relative-contributions-to-the-loss">
+<h2>Relative contributions to the loss<a class="headerlink" href="#relative-contributions-to-the-loss" title="Permalink to this headline"></a></h2>
+<p>The loss for each node can be weighted relative to each other by setting the <cite>alpha</cite> value for each parent node.
+By default the <cite>alpha</cite> value of a node is 1.</p>
+<p>For example, the loss for the first level of classification (under the <cite>root</cite> node) will contribute twice as much to the loss than under the <cite>a</cite> or <cite>b</cite> nodes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hierarchicalsoftmax</span> <span class="kn">import</span> <span class="n">SoftmaxNode</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+<span class="n">aa</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;aa&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+<span class="n">ab</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;ab&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+<span class="n">ba</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;ba&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="n">bb</span> <span class="o">=</span> <span class="n">SoftmaxNode</span><span class="p">(</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="label-smoothing">
+<h2>Label Smoothing<a class="headerlink" href="#label-smoothing" title="Permalink to this headline"></a></h2>
+<p>You can add label smoothing to the loss by setting the <cite>label_smoothing</cite> parameter to any of the nodes.</p>
+</section>
+<section id="focal-loss">
+<h2>Focal Loss<a class="headerlink" href="#focal-loss" title="Permalink to this headline"></a></h2>
+<p>You can use the Focal Loss instead of a basic cross-entropy loss for any of the nodes by setting the <cite>gamma</cite> parameter to any of the nodes.</p>
 </section>
 </section>
 
