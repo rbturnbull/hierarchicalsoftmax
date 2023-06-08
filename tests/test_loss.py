@@ -117,3 +117,35 @@ def test_focal_loss_with_smoothing():
     assert focal_loss_with_smoothing(logits, target, gamma=gamma) > focal_loss_with_smoothing(logits, target, gamma=gamma, label_smoothing=0.1)
 
     assert focal_loss_with_smoothing(logits, target, gamma=gamma, label_smoothing=0.2) < focal_loss_with_smoothing(logits, target, gamma=gamma, label_smoothing=0.1)
+
+
+def test_focal_loss_with_smoothing_and_weights():
+    target = torch.as_tensor([0, 1], dtype=int).long()
+    logits = torch.as_tensor([[0.0, 1.0], [0.0, 0.5]])
+    
+    assert_close(
+        F.cross_entropy(logits, target),
+        focal_loss_with_smoothing(logits, target)
+    )
+
+    weight = torch.as_tensor([1.0, 1.0], dtype=torch.float32)
+    assert_close(
+        F.cross_entropy(logits, target), # 0.8937
+        focal_loss_with_smoothing(logits, target, weight=weight)
+    )
+    assert_close(
+        F.cross_entropy(logits, target, weight=weight), # 0.8937
+        focal_loss_with_smoothing(logits, target, weight=weight)
+    )
+
+    weight = torch.as_tensor([0.5, 1.0], dtype=torch.float32)
+    assert_close(
+        F.cross_entropy(logits, target, weight=weight),
+        focal_loss_with_smoothing(logits, target, weight=weight)
+    )
+
+    weight = torch.as_tensor([1.35, 0.9], dtype=torch.float32)
+    assert_close(
+        F.cross_entropy(logits, target, weight=weight),
+        focal_loss_with_smoothing(logits, target, weight=weight)
+    )

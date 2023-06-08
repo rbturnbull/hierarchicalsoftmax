@@ -12,7 +12,7 @@ def focal_loss_with_smoothing(logits, label, weight=None, gamma=0.0, label_smoot
     """
     log_probabilities = F.log_softmax(logits, dim=-1)
     label = label.view(-1,1)
-    log_probability = log_probabilities.gather(1,label)
+    log_probability = log_probabilities.gather(1,label).squeeze()
     n_classes = logits.size(1)
     uniform_probability = label_smoothing / n_classes
     label_distribution = torch.full_like(logits, uniform_probability)
@@ -25,7 +25,7 @@ def focal_loss_with_smoothing(logits, label, weight=None, gamma=0.0, label_smoot
     # Weights
     if weight is not None:
         weight = weight.to(logits.device)
-        loss *= torch.gather(weight, -1, label)
+        loss *= torch.gather(weight, -1, label.squeeze())/weight.mean()
 
     return loss.mean()
 
