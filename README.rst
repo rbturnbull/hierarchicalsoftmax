@@ -29,7 +29,14 @@ A Hierarchical Softmax Framework for PyTorch.
 Installation
 ==================================
 
-hierarchicalsoftmax can be installed using pip from the git repository:
+hierarchicalsoftmax can be installed from PyPI:
+
+.. code-block:: bash
+
+    pip install hierarchicalsoftmax
+
+
+Alternatively, hierarchicalsoftmax can be installed using pip from the git repository:
 
 .. code-block:: bash
 
