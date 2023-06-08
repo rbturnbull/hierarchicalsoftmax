@@ -130,6 +130,39 @@ The nodes predicted from the final layer of the model can be inferred using the 
     outputs = model(inputs)
     inferred_nodes = greedy_predictions(outputs)
 
+
+Relative contributions to the loss
+==================================
+
+The loss for each node can be weighted relative to each other by setting the `alpha` value for each parent node. 
+By default the `alpha` value of a node is 1.
+
+For example, the loss for the first level of classification (under the `root` node) will contribute twice as much to the loss than under the `a` or `b` nodes.
+
+.. code-block:: python
+
+    from hierarchicalsoftmax import SoftmaxNode
+
+    root = SoftmaxNode("root", alpha=2.0)
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+
+Label Smoothing
+==================================
+
+You can add label smoothing to the loss by setting the `label_smoothing` parameter to any of the nodes.
+
+Focal Loss
+==================================
+
+You can use the Focal Loss instead of a basic cross-entropy loss for any of the nodes by setting the `gamma` parameter to any of the nodes.
+
+
 .. end-quickstart
 
 
