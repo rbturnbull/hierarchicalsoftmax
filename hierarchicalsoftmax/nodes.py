@@ -31,7 +31,7 @@ class SoftmaxNode(Node):
     """
     Creates a hierarchical tree to perform a softmax at each level.
     """
-    def __init__(self, *args, alpha:float=1.0, weight=None, label_smoothing:float=0.0, readonly:bool=False, **kwargs):
+    def __init__(self, *args, alpha:float=1.0, weight=None, label_smoothing:float=0.0, gamma:float = None, readonly:bool=False, **kwargs):
         self.softmax_start_index = None
         self.softmax_end_index = None
         self.children_softmax_end_index = None
@@ -41,6 +41,7 @@ class SoftmaxNode(Node):
         self.weight = weight
         self.label_smoothing = label_smoothing
         self.readonly = readonly
+        self.gamma = gamma # for Focal Loss
         self.children_dict = dict()
         super().__init__(*args, **kwargs)
 
