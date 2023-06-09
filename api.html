@@ -3964,6 +3964,28 @@ set self.__traceback__ to tb and return self.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.metrics.greedy_accuracy_parent">
+<span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.metrics.</span></span><span class="sig-name descname"><span class="pre">greedy_accuracy_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hierarchicalsoftmax.metrics.greedy_accuracy_parent" title="Permalink to this definition"></a></dt>
+<dd><p>Gives the accuracy of predicting the parent of the target in a hierarchy tree.</p>
+<p>Predictions use the <cite>greedy</cite> method which means that it chooses the greatest prediction score at each level of the tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prediction_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)</p></li>
+<li><p><strong>target_tensor</strong> (<em>torch.Tensor</em>) – A tensor with the target node indexes. Shape: (samples,).</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><em>SoftmaxNode</em></a>) – The root of the hierarchy tree.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The accuracy value (i.e. the number that are correct divided by the total number of samples)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.metrics.greedy_f1_score">
 <span class="sig-prename descclassname"><span class="pre">hierarchicalsoftmax.metrics.</span></span><span class="sig-name descname"><span class="pre">greedy_f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#hierarchicalsoftmax.nodes.SoftmaxNode" title="hierarchicalsoftmax.nodes.SoftmaxNode"><span class="pre">hierarchicalsoftmax.nodes.SoftmaxNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.metrics.greedy_f1_score" title="Permalink to this definition"></a></dt>
 <dd><p>Gives the f1 score of predicting the target i.e. a harmonic mean of the precision and recall.</p>
