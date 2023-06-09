@@ -21,8 +21,8 @@ def greedy_accuracy(prediction_tensor, target_tensor, root, max_depth=None):
     prediction_node_ids = root.get_node_ids_tensor(prediction_nodes)
 
     if max_depth:
-        target_node_max_depths = [root.node_list[target].path[:max_depth+1][-1] for target in target_tensor]
-        target_tensor = root.get_node_ids_tensor(target_node_max_depths)
+        max_depth_target_nodes = [root.node_list[target].path[:max_depth+1][-1] for target in target_tensor]
+        target_tensor = root.get_node_ids_tensor(max_depth_target_nodes)
 
     return (prediction_node_ids.to(target_tensor.device) == target_tensor).float().mean()
 
@@ -57,4 +57,29 @@ def greedy_f1_score(prediction_tensor:torch.Tensor, target_tensor:torch.Tensor, 
     prediction_node_ids = root.get_node_ids_tensor(prediction_nodes)
 
     return f1_score(target_tensor.cpu(), prediction_node_ids.cpu(), average=average)
+
+
+def greedy_accuracy_parent(prediction_tensor, target_tensor, root, max_depth=None):
+    """
+    Gives the accuracy of predicting the parent of the target in a hierarchy tree.
+
+    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
+
+    Args:
+        prediction_tensor (torch.Tensor): A tensor with the raw scores for each node in the tree. Shape: (samples, root.layer_size)
+        target_tensor (torch.Tensor): A tensor with the target node indexes. Shape: (samples,).
+        root (SoftmaxNode): The root of the hierarchy tree.
+
+    Returns:
+        float: The accuracy value (i.e. the number that are correct divided by the total number of samples)
+    """    
+    prediction_nodes = inference.greedy_predictions(prediction_tensor=prediction_tensor, root=root, max_depth=max_depth)
+    prediction_parents = [node.parent for node in prediction_nodes]
+    prediction_parent_ids = root.get_node_ids_tensor(prediction_parents)
+
+    target_parents = [root.node_list[target].parent for target in target_tensor]
+    target_parent_ids = root.get_node_ids_tensor(target_parents)
+
+    return (prediction_parent_ids.to(target_parent_ids.device) == target_parent_ids).float().mean()
+
 
