@@ -19,7 +19,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         cache: 'poetry'
-    - run: poetry install
+      run: |
+        poetry env use "${{ matrix.python-version }}"
+        poetry install
     - name: Testing
       run: |
         poetry run pytest
