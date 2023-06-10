@@ -6,15 +6,18 @@ from hierarchicalsoftmax.metrics import (
     greedy_accuracy_depth_one, 
     greedy_accuracy_depth_two,
     greedy_accuracy_parent,
+    greedy_precision,
+    greedy_recall,
 )
+from torch.testing import assert_allclose
 
-from .util import depth_two_tree_and_targets, depth_three_tree_and_targets
+from .util import depth_two_tree_and_targets, depth_three_tree_and_targets, depth_two_tree_and_targets_three_children
 
 def test_greedy_accuracy():
-    root, targets = depth_two_tree_and_targets()
+    root, targets = depth_two_tree_and_targets_three_children()
 
     root.set_indexes()
-
+    targets *= 2
     target_tensor = root.get_node_ids_tensor(targets)
 
     predictions = torch.zeros( (len(targets), root.layer_size) )
@@ -23,16 +26,57 @@ def test_greedy_accuracy():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert greedy_accuracy(predictions, target_tensor, root=root) > 0.99 
+    assert_allclose(greedy_accuracy(predictions, target_tensor, root=root), 1.0)
 
-    for target_index, target in enumerate(targets[:2]):
+    for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert 0.49 < greedy_accuracy(predictions, target_tensor, root=root) < 0.51
+    assert_allclose(greedy_accuracy(predictions, target_tensor, root=root), 0.75)
 
 
 def test_greedy_f1_score():
-    root, targets = depth_two_tree_and_targets()
+    root, targets = depth_two_tree_and_targets_three_children()
+
+    root.set_indexes()
+    targets *= 2
+    target_tensor = root.get_node_ids_tensor(targets)
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    assert_allclose(greedy_f1_score(predictions, target_tensor, root=root), 1.0)
+
+    for target_index, target in enumerate(targets[:3]):
+        predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
+
+    assert_allclose(greedy_f1_score(predictions, target_tensor, root=root), 0.7611111111111111)
+
+
+def test_greedy_precision():
+    root, targets = depth_two_tree_and_targets_three_children()
+    root.set_indexes()
+    targets *= 2
+    target_tensor = root.get_node_ids_tensor(targets)
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    assert_allclose(greedy_precision(predictions, target_tensor, root=root), 1.0)
+
+    for target_index, target in enumerate(targets[:3]):
+        predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
+
+    assert_allclose(greedy_precision(predictions, target_tensor, root=root), 0.8055555555555555)
+
+
+def test_greedy_recall():
+    root, targets = depth_two_tree_and_targets_three_children()
 
     root.set_indexes()
 
@@ -44,12 +88,12 @@ def test_greedy_f1_score():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert greedy_f1_score(predictions, target_tensor, root=root) > 0.99 
+    assert_allclose(greedy_recall(predictions, target_tensor, root=root), 1.0)
 
-    for target_index, target in enumerate(targets[:2]):
+    for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert 0.49 < greedy_f1_score(predictions, target_tensor, root=root) < 0.51
+    assert_allclose(greedy_recall(predictions, target_tensor, root=root), 0.5)
 
 
 def test_greedy_accuracy_max_depth_simple():

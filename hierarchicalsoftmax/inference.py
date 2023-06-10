@@ -50,3 +50,26 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
         prediction_nodes.append(node)
     
     return prediction_nodes
+
+
+def greedy_prediction_node_ids(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None) -> List[int]:
+    """
+    Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
+
+    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
+
+    Args:
+        root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.
+        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.layer_size)
+        max_depth (int, optional): If set, then it only gives predictions at a maximum of this number of levels from the root.
+
+    Returns:
+        List[int]: A list of node IDs predicted for each sample.
+    """
+    prediction_nodes = greedy_predictions(prediction_tensor=prediction_tensor, root=root, max_depth=max_depth)
+    return root.get_node_ids(prediction_nodes)
+
+
+def greedy_prediction_node_ids_tensor(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None) -> torch.Tensor:
+    node_ids = greedy_prediction_node_ids(prediction_tensor=prediction_tensor, root=root, max_depth=max_depth)
+    return torch.as_tensor( node_ids, dtype=int)

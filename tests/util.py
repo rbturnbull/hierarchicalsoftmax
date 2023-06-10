@@ -14,6 +14,21 @@ def depth_two_tree_and_targets():
 
     return root, targets
 
+def depth_two_tree_and_targets_three_children():
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    ac = SoftmaxNode("ac", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+    bc = SoftmaxNode("bc", parent=b)
+
+    targets = [aa, ab, ac, ba, bb, bc]
+
+    return root, targets
+
 def depth_two_tree():
     root, _ = depth_two_tree_and_targets()
     return root
