@@ -14,14 +14,16 @@ jobs:
       run: pipx install poetry
     - name: Setup Graphviz
       uses: ts-graphviz/setup-graphviz@v1
-    - name: Install dependencies for Python ${{ matrix.python-version }}
+    - name: Initialise Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-        cache: 'poetry'
+        cache: "poetry"
+    - name: Install dependencies for Python ${{ matrix.python-version }}
       run: |
         poetry env use "${{ matrix.python-version }}"
         poetry install
     - name: Testing
       run: |
+        poetry env info
         poetry run pytest
