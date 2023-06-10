@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            21 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">21 run</button>
+            27 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">27 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -104,12 +104,35 @@
     <p id="t50" class="run"><span class="n"><a href="#t50">50</a></span><span class="t">        <span class="nam">prediction_nodes</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="nam">node</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">    <span class="key">return</span> <span class="nam">prediction_nodes</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="pln"><span class="n"><a href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t54" class="pln"><span class="n"><a href="#t54">54</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t55" class="run"><span class="n"><a href="#t55">55</a></span><span class="t"><span class="key">def</span> <span class="nam">greedy_prediction_node_ids</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">:</span><span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">:</span><span class="nam">nodes</span><span class="op">.</span><span class="nam">SoftmaxNode</span><span class="op">,</span> <span class="nam">max_depth</span><span class="op">:</span><span class="nam">Optional</span><span class="op">[</span><span class="nam">int</span><span class="op">]</span><span class="op">=</span><span class="key">None</span><span class="op">)</span> <span class="op">-></span> <span class="nam">List</span><span class="op">[</span><span class="nam">int</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t56" class="pln"><span class="n"><a href="#t56">56</a></span><span class="t">    <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t"><span class="str">    Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t"><span class="str">    Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="pln"><span class="n"><a href="#t61">61</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t"><span class="str">        root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t"><span class="str">        prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.layer_size)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="pln"><span class="n"><a href="#t64">64</a></span><span class="t"><span class="str">        max_depth (int, optional): If set, then it only gives predictions at a maximum of this number of levels from the root.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="pln"><span class="n"><a href="#t65">65</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="pln"><span class="n"><a href="#t66">66</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t"><span class="str">        List[int]: A list of node IDs predicted for each sample.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="pln"><span class="n"><a href="#t68">68</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="run"><span class="n"><a href="#t69">69</a></span><span class="t">    <span class="nam">prediction_nodes</span> <span class="op">=</span> <span class="nam">greedy_predictions</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">=</span><span class="nam">prediction_tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">=</span><span class="nam">root</span><span class="op">,</span> <span class="nam">max_depth</span><span class="op">=</span><span class="nam">max_depth</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="run"><span class="n"><a href="#t70">70</a></span><span class="t">    <span class="key">return</span> <span class="nam">root</span><span class="op">.</span><span class="nam">get_node_ids</span><span class="op">(</span><span class="nam">prediction_nodes</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t71" class="pln"><span class="n"><a href="#t71">71</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t72" class="pln"><span class="n"><a href="#t72">72</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t73" class="run"><span class="n"><a href="#t73">73</a></span><span class="t"><span class="key">def</span> <span class="nam">greedy_prediction_node_ids_tensor</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">:</span><span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">:</span><span class="nam">nodes</span><span class="op">.</span><span class="nam">SoftmaxNode</span><span class="op">,</span> <span class="nam">max_depth</span><span class="op">:</span><span class="nam">Optional</span><span class="op">[</span><span class="nam">int</span><span class="op">]</span><span class="op">=</span><span class="key">None</span><span class="op">)</span> <span class="op">-></span> <span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t74" class="run"><span class="n"><a href="#t74">74</a></span><span class="t">    <span class="nam">node_ids</span> <span class="op">=</span> <span class="nam">greedy_prediction_node_ids</span><span class="op">(</span><span class="nam">prediction_tensor</span><span class="op">=</span><span class="nam">prediction_tensor</span><span class="op">,</span> <span class="nam">root</span><span class="op">=</span><span class="nam">root</span><span class="op">,</span> <span class="nam">max_depth</span><span class="op">=</span><span class="nam">max_depth</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t75" class="run"><span class="n"><a href="#t75">75</a></span><span class="t">    <span class="key">return</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">as_tensor</span><span class="op">(</span> <span class="nam">node_ids</span><span class="op">,</span> <span class="nam">dtype</span><span class="op">=</span><span class="nam">int</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2023-06-09 07:24 +0000
+            created at 2023-06-10 10:32 +0000
         </p>
     </div>
 </div>
