@@ -9,6 +9,44 @@ class ShapeError(RuntimeError):
     Raised when the shape of a tensor is different to what is expected.
     """
 
+def tree_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+    """
+    """
+    probabilities = torch.zeros_like(prediction_tensor)
+
+    if root.softmax_start_index is None:
+        raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
+
+    if prediction_tensor.shape[-1] != root.layer_size:
+        raise ShapeError(
+            f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
+            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
+        )
+
+    for node in root.node_list:
+        if node.is_leaf:
+            continue
+        elif node == root:
+            my_probability = 1.0
+        else :
+            my_probability = probabilities[:,node.index_in_softmax_layer]
+            my_probability = my_probability[:,None]
+        
+        softmax_probabilities = torch.softmax(
+            prediction_tensor[:,node.softmax_start_index:node.softmax_end_index], 
+            dim=1,
+        )
+        probabilities[:,node.softmax_start_index:node.softmax_end_index] = softmax_probabilities * my_probability
+    
+    return probabilities
+
+
+def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+    """
+    """
+    probabilities = tree_probabilities(prediction_tensor, root=root)
+    return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
+
 
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None) -> List[nodes.SoftmaxNode]:
     """
