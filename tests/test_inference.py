@@ -3,6 +3,7 @@ import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, IndexNotSetError
 from hierarchicalsoftmax.inference import (
     ShapeError, 
+    full_softmax,
     greedy_predictions,
     node_probabilities, 
     leaf_probabilities, 
@@ -132,3 +133,23 @@ def test_render_probabilities():
             assert filepath.exists()
             with pytest.raises(UnicodeDecodeError):
                 filepath.read_text()
+
+
+def test_full_softmax_shape_error():
+    root, targets = depth_two_tree_and_targets()
+
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size + 1) )
+    with pytest.raises(ShapeError):
+        full_softmax(prediction_tensor=predictions, root=root)
+
+
+def test_full_softmax_index_error():
+    root, targets = depth_two_tree_and_targets()
+
+    predictions = torch.zeros( (len(targets), 10) )
+
+    with pytest.raises(IndexNotSetError):
+        full_softmax(prediction_tensor=predictions, root=root)
+
