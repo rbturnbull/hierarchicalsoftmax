@@ -3,8 +3,23 @@ import torch
 from anytree.exporter import DotExporter
 from pathlib import Path
 from anytree import PreOrderIter
+from functools import partial
 
 from . import nodes
+
+def node_attributes(node:nodes.SoftmaxNode, greedy_nodes, prediction_color="red"):
+    return f"color={prediction_color}" if node in greedy_nodes else ""
+
+def edge_attributes(
+    parent:nodes.SoftmaxNode, 
+    child:nodes.SoftmaxNode, 
+    greedy_nodes, 
+    my_probabilities, 
+    prediction_color="red", 
+    non_prediction_color="gray",
+):
+    color = prediction_color if child in greedy_nodes else non_prediction_color
+    return f"label={my_probabilities[child.index_in_softmax_layer]:.2f},color={color}"
 
 
 class ShapeError(RuntimeError):
@@ -126,6 +141,7 @@ def render_probabilities(
         prediction_tensor:torch.Tensor=None,
         probabilities:torch.Tensor=None,
         predictions:List[nodes.SoftmaxNode]=None,
+        horizontal:bool=True,
     ) -> List[DotExporter]:
     """
     Renders the probabilities of each node in the tree as a graphviz graph.
@@ -152,17 +168,29 @@ def render_probabilities(
         assert prediction_tensor is not None, "Either `prediction_tensor` or `node_probabilities` must be given."
         predictions = greedy_predictions(prediction_tensor, root=root)
 
+    options = []
+    if horizontal:
+        options.append('rankdir="LR";')
+
     graphs = []
     for my_probabilities, my_prediction in zip(probabilities, predictions):
-        greedy_nodes = my_prediction.ancestors + (my_prediction,)
-        def node_attributes(node:nodes.SoftmaxNode):
-            return f"color={prediction_color}" if node in greedy_nodes else ""
-        
-        def edge_attributes(parent:nodes.SoftmaxNode, child:nodes.SoftmaxNode):
-            color = prediction_color if child in greedy_nodes else non_prediction_color
-            return f"label={my_probabilities[child.index_in_softmax_layer]:.2f},color={color}"
-        
-        graphs.append(DotExporter(root, nodeattrfunc=node_attributes, edgeattrfunc=edge_attributes))
+        greedy_nodes = my_prediction.ancestors + (my_prediction,)        
+        graphs.append(DotExporter(
+            root, 
+            nodeattrfunc=partial(
+                node_attributes,
+                greedy_nodes=greedy_nodes, 
+                prediction_color=prediction_color,
+            ),
+            edgeattrfunc=partial(
+                edge_attributes, 
+                greedy_nodes=greedy_nodes, 
+                my_probabilities=my_probabilities,
+                prediction_color=prediction_color,
+                non_prediction_color=non_prediction_color,
+            ),
+            options=options,
+        ))
 
     if filepaths:
         for graph, filepath in zip(graphs, filepaths):
