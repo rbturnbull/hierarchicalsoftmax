@@ -2,6 +2,7 @@ from typing import List, Optional
 import torch
 from anytree.exporter import DotExporter
 from pathlib import Path
+from anytree import PreOrderIter
 
 from . import nodes
 
@@ -11,7 +12,7 @@ class ShapeError(RuntimeError):
     Raised when the shape of a tensor is different to what is expected.
     """
 
-def full_softmax(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
     probabilities = torch.zeros_like(prediction_tensor)
@@ -25,7 +26,7 @@ def full_softmax(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torc
             "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
-    for node in root.node_list:
+    for node in PreOrderIter(root):
         if node.is_leaf:
             continue
         elif node == root:
@@ -43,15 +44,10 @@ def full_softmax(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torc
     return probabilities
 
 
-def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
-    probabilities = full_softmax(prediction_tensor, root=root)
-    return torch.index_select(probabilities, 1, root.node_indexes_in_softmax_layer)
-
-
 def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
-    probabilities = full_softmax(prediction_tensor, root=root)
+    probabilities = node_probabilities(prediction_tensor, root=root)
     return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
 
 
@@ -123,11 +119,13 @@ def greedy_prediction_node_ids_tensor(prediction_tensor:torch.Tensor, root:nodes
 
 
 def render_probabilities(
-        prediction_tensor:torch.Tensor, 
         root:nodes.SoftmaxNode, 
         filepaths:List[Path]=None, 
         prediction_color="red", 
         non_prediction_color="gray",
+        prediction_tensor:torch.Tensor=None,
+        probabilities:torch.Tensor=None,
+        predictions:List[nodes.SoftmaxNode]=None,
     ) -> List[DotExporter]:
     """
     Renders the probabilities of each node in the tree as a graphviz graph.
@@ -146,8 +144,14 @@ def render_probabilities(
     Returns:
         List[DotExporter]: The list of rendered graphs.
     """
-    probabilities = full_softmax(prediction_tensor, root=root)
-    predictions = greedy_predictions(prediction_tensor, root=root)
+    if probabilities is None:
+        assert prediction_tensor is not None, "Either `prediction_tensor` or `probabilities` must be given."
+        probabilities = node_probabilities(prediction_tensor, root=root)
+
+    if predictions is None:
+        assert prediction_tensor is not None, "Either `prediction_tensor` or `node_probabilities` must be given."
+        predictions = greedy_predictions(prediction_tensor, root=root)
+
     graphs = []
     for my_probabilities, my_prediction in zip(probabilities, predictions):
         greedy_nodes = my_prediction.ancestors + (my_prediction,)
