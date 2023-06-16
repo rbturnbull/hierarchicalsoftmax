@@ -1,25 +1,11 @@
 from typing import List, Optional
 import torch
-from anytree.exporter import DotExporter
 from pathlib import Path
 from anytree import PreOrderIter
 from functools import partial
 
 from . import nodes
-
-def node_attributes(node:nodes.SoftmaxNode, greedy_nodes, prediction_color="red"):
-    return f"color={prediction_color}" if node in greedy_nodes else ""
-
-def edge_attributes(
-    parent:nodes.SoftmaxNode, 
-    child:nodes.SoftmaxNode, 
-    greedy_nodes, 
-    my_probabilities, 
-    prediction_color="red", 
-    non_prediction_color="gray",
-):
-    color = prediction_color if child in greedy_nodes else non_prediction_color
-    return f"label={my_probabilities[child.index_in_softmax_layer]:.2f},color={color}"
+from .dotexporter import ThresholdDotExporter
 
 
 class ShapeError(RuntimeError):
@@ -97,8 +83,8 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
         node = root
         depth = 1
         while (node.children):
-            prediction_chlid_index = torch.argmax(predictions[node.softmax_start_index:node.softmax_end_index])
-            node = node.children[prediction_chlid_index]
+            prediction_child_index = torch.argmax(predictions[node.softmax_start_index:node.softmax_end_index])
+            node = node.children[prediction_child_index]
 
             # Stop if we have reached the maximum depth
             if max_depth and depth >= max_depth:
@@ -142,7 +128,8 @@ def render_probabilities(
         probabilities:torch.Tensor=None,
         predictions:List[nodes.SoftmaxNode]=None,
         horizontal:bool=True,
-    ) -> List[DotExporter]:
+        threshold:float=0.005,
+    ) -> List[ThresholdDotExporter]:
     """
     Renders the probabilities of each node in the tree as a graphviz graph.
 
@@ -168,28 +155,17 @@ def render_probabilities(
         assert prediction_tensor is not None, "Either `prediction_tensor` or `node_probabilities` must be given."
         predictions = greedy_predictions(prediction_tensor, root=root)
 
-    options = []
-    if horizontal:
-        options.append('rankdir="LR";')
-
     graphs = []
     for my_probabilities, my_prediction in zip(probabilities, predictions):
         greedy_nodes = my_prediction.ancestors + (my_prediction,)        
-        graphs.append(DotExporter(
+        graphs.append(ThresholdDotExporter(
             root, 
-            nodeattrfunc=partial(
-                node_attributes,
-                greedy_nodes=greedy_nodes, 
-                prediction_color=prediction_color,
-            ),
-            edgeattrfunc=partial(
-                edge_attributes, 
-                greedy_nodes=greedy_nodes, 
-                my_probabilities=my_probabilities,
-                prediction_color=prediction_color,
-                non_prediction_color=non_prediction_color,
-            ),
-            options=options,
+            probabilities=my_probabilities,
+            greedy_nodes=greedy_nodes,
+            horizontal=horizontal,
+            prediction_color=prediction_color,
+            non_prediction_color=non_prediction_color,
+            threshold=threshold,
         ))
 
     if filepaths:
