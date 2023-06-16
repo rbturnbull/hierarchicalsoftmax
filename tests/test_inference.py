@@ -1,7 +1,15 @@
 import torch
 import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, IndexNotSetError
-from hierarchicalsoftmax.inference import greedy_predictions, ShapeError, node_probabilities, leaf_probabilities
+from hierarchicalsoftmax.inference import (
+    ShapeError, 
+    greedy_predictions,
+    node_probabilities, 
+    leaf_probabilities, 
+    render_probabilities,
+)
+from pathlib import Path
+import tempfile
 
 from .util import depth_two_tree_and_targets, depth_three_tree_and_targets
 
@@ -97,3 +105,30 @@ def test_leaf_probabilities():
     assert probabilities.shape == (len(targets), 8)
     assert torch.allclose(probabilities.sum(dim=1), torch.ones(len(targets)))
 
+
+def test_render_probabilities():
+    root, targets = depth_three_tree_and_targets()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        tmpdir = Path(tmpdirname)
+        
+        # Test DOT generation
+        filepaths = [tmpdir/f'test_render_probabilities_{i}.dot' for i in range(len(targets))]
+        render_probabilities(prediction_tensor=predictions, root=root, filepaths=filepaths)
+        for filepath in filepaths:
+            assert filepath.exists()
+            assert "digraph tree {" in filepath.read_text()
+
+        # Test PNG rendering
+        filepaths = [tmpdir/f'test_render_probabilities_{i}.png' for i in range(len(targets))]
+        render_probabilities(prediction_tensor=predictions, root=root, filepaths=filepaths)
+        for filepath in filepaths:
+            assert filepath.exists()
+            with pytest.raises(UnicodeDecodeError):
+                filepath.read_text()
