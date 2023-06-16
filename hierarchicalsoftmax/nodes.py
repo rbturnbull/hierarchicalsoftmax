@@ -1,5 +1,5 @@
 from __future__ import annotations
-from anytree.dotexport import RenderTreeGraph
+from anytree.exporter import DotExporter
 from typing import Union
 from pathlib import Path
 import torch
@@ -96,6 +96,7 @@ class SoftmaxNode(Node):
                 node.node_id = index
 
             self.leaf_indexes_in_softmax_layer = torch.as_tensor([leaf.index_in_softmax_layer for leaf in self.leaves])
+            self.node_indexes_in_softmax_layer = torch.as_tensor([node.index_in_softmax_layer for node in self.node_list if not node.is_root])
         
         self.readonly = True
         return current_index
@@ -131,7 +132,7 @@ class SoftmaxNode(Node):
             filepath = Path(filepath)
             filepath.parent.mkdir(exist_ok=True, parents=True)
 
-            rendered_tree_graph = RenderTreeGraph(self)
+            rendered_tree_graph = DotExporter(self)
             
             if filepath.suffix == ".dot":
                 rendered_tree_graph.to_dotfile(str(filepath))

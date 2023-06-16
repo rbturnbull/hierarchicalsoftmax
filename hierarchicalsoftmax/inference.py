@@ -9,7 +9,7 @@ class ShapeError(RuntimeError):
     Raised when the shape of a tensor is different to what is expected.
     """
 
-def tree_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+def full_softmax(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
     probabilities = torch.zeros_like(prediction_tensor)
@@ -41,10 +41,15 @@ def tree_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     return probabilities
 
 
+def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+    probabilities = full_softmax(prediction_tensor, root=root)
+    return torch.index_select(probabilities, 1, root.node_indexes_in_softmax_layer)
+
+
 def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
-    probabilities = tree_probabilities(prediction_tensor, root=root)
+    probabilities = full_softmax(prediction_tensor, root=root)
     return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
 
 
