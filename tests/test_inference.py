@@ -91,6 +91,33 @@ def test_node_probabilities():
     assert torch.allclose(probabilities.sum(dim=1), 3.0*torch.ones(len(targets)))
 
 
+def test_greedy_predictions_threshold():
+    root, targets = depth_three_tree_and_targets()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 1.0
+            target = target.parent
+
+    probabilities = node_probabilities(prediction_tensor=predictions, root=root)
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.5)
+    assert [str(node) for node in node_predictions] == ["aa", "aa", "ab", "ab", "ba", "ba", "bb", "bb"]
+
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.1)
+    assert [str(node) for node in node_predictions] == ["aaa", "aab", "aba", "abb", "baa", "bab", "bba", "bbb"]
+
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.70)
+    assert [str(node) for node in node_predictions] == ["a", "a", "a", "a", "b", "b", "b", "b"]
+
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.9)
+    assert [str(node) for node in node_predictions] == ["root", "root", "root", "root", "root", "root", "root", "root"]
+
+
+
+
+
+
 def test_leaf_probabilities():
     root, targets = depth_three_tree_and_targets()
 

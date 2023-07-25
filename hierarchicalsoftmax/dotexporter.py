@@ -2,7 +2,6 @@ from anytree.exporter import DotExporter
 from anytree import PreOrderIter
 
 class ThresholdDotExporter(DotExporter):
-
     def __init__(
         self, 
         node, 

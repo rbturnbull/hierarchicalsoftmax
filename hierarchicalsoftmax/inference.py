@@ -53,17 +53,21 @@ def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
 
 
 
-def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None) -> List[nodes.SoftmaxNode]:
+def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 
     Predictions use the `greedy` method which means that it chooses the greatest prediction score at each level of the tree.
 
     Args:
-        prediction_tensor (torch.Tensor): The output activations from the softmax layer. Shape (samples, root.layer_size)
+        prediction_tensor (torch.Tensor): The output from the softmax layer. 
+            Shape (samples, root.layer_size)
+            Works with raw scores or probabilities.
         root (SoftmaxNode): The root softmax node. Needs `set_indexes` to have been called.
         prediction_tensor (torch.Tensor): The predictions coming from the softmax layer. Shape (samples, root.layer_size)
         max_depth (int, optional): If set, then it only gives predictions at a maximum of this number of levels from the root.
+        threshold (int, optional): If set, then it only gives predictions where the value at the node is greater than this threshold.
+            Designed for use with probabilities.
 
     Returns:
         List[nodes.SoftmaxNode]: A list of nodes predicted for each sample.
@@ -84,11 +88,17 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
         depth = 1
         while (node.children):
             prediction_child_index = torch.argmax(predictions[node.softmax_start_index:node.softmax_end_index])
+
+            # Stop if the prediction is below the threshold
+            if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:
+                break
+            
             node = node.children[prediction_child_index]
 
             # Stop if we have reached the maximum depth
             if max_depth and depth >= max_depth:
                 break
+
             depth += 1
 
         prediction_nodes.append(node)
