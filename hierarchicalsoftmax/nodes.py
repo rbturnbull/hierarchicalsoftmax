@@ -207,3 +207,24 @@ class SoftmaxNode(Node):
         self.root.set_indexes_if_unset()
 
         return self.children_softmax_end_index
+    
+    def render_equal(self, string_representation:str, **kwargs) -> bool:
+        """
+        Checks if the string representation of this node and its descendants matches the given string.
+
+        Args:
+            string_representation (str): The string representation to compare to.
+        """
+        my_render = str(self.render(**kwargs))
+        lines1 = str(my_render).strip().split("\n")
+        lines2 = str(string_representation).strip().split("\n")
+
+        if len(lines1) != len(lines2):
+            return False
+
+        for line1, line2 in zip(lines1, lines2):
+            if line1.strip() != line2.strip():
+                return False
+            
+        return True
+

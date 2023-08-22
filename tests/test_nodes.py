@@ -2,30 +2,34 @@ from pathlib import Path
 import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 import tempfile
-from .util import depth_two_tree, assert_multiline_strings
+from .util import depth_two_tree
 
 def test_simple_tree():
     root = depth_two_tree()
     root.set_indexes()
-    assert_multiline_strings( root.render(print=True), """
-        root
-        ├── a
-        │   ├── aa
-        │   └── ab
-        └── b
-            ├── ba
-            └── bb    
-    """)
-    assert_multiline_strings( root.render(attr="softmax_start_index", print=True), """
-        0
-        ├── 2
-        │   ├── None
-        │   └── None
-        └── 4
-            ├── None
-            └── None
-    """)
-    assert_multiline_strings( root.render(attr="softmax_end_index", print=True), """
+    assert root.render_equal("""
+            root
+            ├── a
+            │   ├── aa
+            │   └── ab
+            └── b
+                ├── ba
+                └── bb    
+        """,
+        print=True,
+    )
+    assert root.render_equal("""
+            0
+            ├── 2
+            │   ├── None
+            │   └── None
+            └── 4
+                ├── None
+                └── None
+        """,
+        attr="softmax_start_index"
+    )
+    assert root.render_equal("""
         2
         ├── 4
         │   ├── None
@@ -33,7 +37,10 @@ def test_simple_tree():
         └── 6
             ├── None
             └── None
-    """)
+        """,
+        attr="softmax_end_index"
+    )
+
     assert root.layer_size == 6
 
 
@@ -44,13 +51,14 @@ def test_read_only():
     aa = SoftmaxNode("aa", parent=a)
     ab = SoftmaxNode("ab", parent=a)
 
-    assert_multiline_strings( root.render(print=True), """
+    assert root.render_equal("""
         root
         └── a
             ├── aa
             └── ab
-    """)
-    
+        """,
+    )
+
     root.set_indexes()
 
     with pytest.raises(ReadOnlyError):
@@ -144,3 +152,28 @@ def test_render_dot():
         text = path.read_text()
         assert 180 < path.stat().st_size < 200
         assert text.startswith('digraph tree {\n    "root";\n    "a";\n')
+
+
+def test_render_equal_false():
+    root = depth_two_tree()
+    assert not root.render_equal("""
+        root
+        ├── a
+        │   ├── aa!
+        │   └── ab
+        └── b
+            ├── ba
+            └── bb    
+    """
+    )
+    assert not root.render_equal("""
+        root
+        ├── a
+        │   ├── aa
+        │   └── ab
+        └── b
+            ├── ba
+            ├── bab
+            └── bb    
+    """
+    )
