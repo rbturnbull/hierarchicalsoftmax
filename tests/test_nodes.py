@@ -239,3 +239,9 @@ def test_zig_zag_group_iter():
     assert str(list(root.zig_zag_group_iter(depth=1))) == '[(root,), (b, a)]'
 
 
+def test_pre_order_iter_non_root():
+    root, _ = depth_two_tree_and_targets_three_children()
+    node = root.get_child_by_name("a")
+    assert isinstance(node.pre_order_iter(), PreOrderIter)
+    assert [n.name for n in node.pre_order_iter()] == ['a', 'aa', 'ab', 'ac']
+    assert [n.name for n in node.pre_order_iter(depth=1)] == ['a', 'aa', 'ab', 'ac']
