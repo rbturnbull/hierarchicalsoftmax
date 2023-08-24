@@ -3,7 +3,7 @@ from anytree.exporter import DotExporter
 from typing import Union
 from pathlib import Path
 import torch
-from anytree import Node, RenderTree, PreOrderIter
+from anytree import Node, RenderTree, PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
 from typing import List, Optional
 from rich.console import Console
 console = Console()
@@ -227,4 +227,54 @@ class SoftmaxNode(Node):
                 return False
             
         return True
+
+    def pre_order_iter(self, depth=None, **kwargs) -> PreOrderIter:
+        """ 
+        Returns a pre-order iterator.
+        
+        See https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.preorderiter.PreOrderIter
+        """
+        if depth is not None:
+            kwargs["maxlevel"] = depth + 1
+        return PreOrderIter(self, **kwargs)
+    
+    def post_order_iter(self, depth=None, **kwargs) -> PostOrderIter:
+        """ 
+        Returns a post-order iterator.
+        
+        See https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.postorderiter.PostOrderIter
+        """
+        if depth is not None:
+            kwargs["maxlevel"] = depth + 1
+        return PostOrderIter(self, **kwargs)
+
+    def level_order_iter(self, depth=None, **kwargs) -> LevelOrderIter:
+        """ 
+        Returns a level-order iterator.
+        
+        See https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelorderiter.LevelOrderIter
+        """
+        if depth is not None:
+            kwargs["maxlevel"] = depth + 1
+        return LevelOrderIter(self, **kwargs)
+
+    def level_order_group_iter(self, depth=None, **kwargs) -> LevelOrderGroupIter:
+        """ 
+        Returns a level-order iterator with grouping starting at this node.
+        
+        https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelordergroupiter.LevelOrderGroupIter
+        """
+        if depth is not None:
+            kwargs["maxlevel"] = depth + 1
+        return LevelOrderGroupIter(self, **kwargs)
+
+    def zig_zag_group_iter(self, depth=None, **kwargs) -> ZigZagGroupIter:
+        """ 
+        Returns a zig-zag iterator with grouping starting at this node.
+        
+        https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.zigzaggroupiter.ZigZagGroupIter
+        """
+        if depth is not None:
+            kwargs["maxlevel"] = depth + 1
+        return ZigZagGroupIter(self, **kwargs)
 

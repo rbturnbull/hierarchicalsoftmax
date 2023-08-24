@@ -1,5 +1,5 @@
 from hierarchicalsoftmax import SoftmaxNode
-
+import torch
 
 def depth_two_tree_and_targets():
     root = SoftmaxNode("root")
@@ -73,3 +73,11 @@ def depth_three_tree():
     return root
 
 
+def correct_predictions(root, targets):
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    return predictions

@@ -87,7 +87,10 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
         node = root
         depth = 1
         while (node.children):
-            prediction_child_index = torch.argmax(predictions[node.softmax_start_index:node.softmax_end_index])
+            # This would be better if we could use torch.argmax but it doesn't work with MPS in the production version of pytorch
+            # See https://github.com/pytorch/pytorch/issues/98191
+            # https://github.com/pytorch/pytorch/pull/104374
+            prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
 
             # Stop if the prediction is below the threshold
             if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:

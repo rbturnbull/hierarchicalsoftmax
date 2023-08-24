@@ -2,7 +2,10 @@ from pathlib import Path
 import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 import tempfile
-from .util import depth_two_tree
+import torch
+from .util import depth_two_tree, depth_two_tree_and_targets_three_children, correct_predictions
+from anytree import PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
+
 
 def test_simple_tree():
     root = depth_two_tree()
@@ -177,3 +180,62 @@ def test_render_equal_false():
             └── bb    
     """
     )
+
+
+def test_node_indexes():
+    root, targets = depth_two_tree_and_targets_three_children()
+    root.set_indexes()
+
+    predictions = correct_predictions(root, targets)
+
+    for node in root.pre_order_iter():
+        if node != root:
+            assert node.index_in_softmax_layer == node.index_in_parent + node.parent.softmax_start_index
+        else:
+            assert node.index_in_softmax_layer is None
+            assert node.index_in_parent is None
+            assert node.parent is None
+
+        if node.is_leaf:
+            assert node.softmax_start_index is None
+            assert node.softmax_end_index is None
+        else:
+            cropped = predictions[:, node.softmax_start_index:node.softmax_end_index]    
+            assert cropped.shape[-1] == len(node.children)
+
+
+def test_pre_order_iter():
+    root, _ = depth_two_tree_and_targets_three_children()
+    assert isinstance(root.pre_order_iter(), PreOrderIter)
+    assert [node.name for node in root.pre_order_iter()] == ['root', 'a', 'aa', 'ab', 'ac', 'b', 'ba', 'bb', 'bc']
+    assert [node.name for node in root.pre_order_iter(depth=1)] == ['root', 'a', 'b']
+
+
+def test_post_order_iter():
+    root, _ = depth_two_tree_and_targets_three_children()
+    assert isinstance(root.post_order_iter(), PostOrderIter)
+    assert [node.name for node in root.post_order_iter()] == ['aa', 'ab', 'ac', 'a', 'ba', 'bb', 'bc', 'b', 'root']
+    assert [node.name for node in root.post_order_iter(depth=1)] == ['a', 'b', 'root']
+
+
+def test_level_order_iter():
+    root, _ = depth_two_tree_and_targets_three_children()
+    assert isinstance(root.level_order_iter(), LevelOrderIter)
+    assert [node.name for node in root.level_order_iter()] == ['root', 'a', 'b', 'aa', 'ab', 'ac', 'ba', 'bb', 'bc']
+    assert [node.name for node in root.level_order_iter(depth=1)] == ['root', 'a', 'b']
+
+
+def test_level_order_group_iter():
+    root, _ = depth_two_tree_and_targets_three_children()
+    assert isinstance(root.level_order_group_iter(), LevelOrderGroupIter)
+    assert str(list(root.level_order_group_iter())) == "[(root,), (a, b), (aa, ab, ac, ba, bb, bc)]"
+    assert str(list(root.level_order_group_iter(depth=1))) == '[(root,), (a, b)]'
+
+
+def test_zig_zag_group_iter():
+    root, _ = depth_two_tree_and_targets_three_children()
+    assert isinstance(root.zig_zag_group_iter(), ZigZagGroupIter)
+    assert str(list(root.zig_zag_group_iter())) == '[(root,), (b, a), (aa, ab, ac, ba, bb, bc)]'
+    assert str(list(root.zig_zag_group_iter(depth=1))) == '[(root,), (b, a)]'
+
+
