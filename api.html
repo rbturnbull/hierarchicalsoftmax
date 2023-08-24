@@ -392,6 +392,20 @@ If <cite>set_indexes</cite> has been yet called on this object then it is perfor
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.level_order_group_iter">
+<span class="sig-name descname"><span class="pre">level_order_group_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.iterators.levelordergroupiter.LevelOrderGroupIter</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.level_order_group_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a level-order iterator with grouping starting at this node.</p>
+<p><a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelordergroupiter.LevelOrderGroupIter">https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelordergroupiter.LevelOrderGroupIter</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.level_order_iter">
+<span class="sig-name descname"><span class="pre">level_order_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.iterators.levelorderiter.LevelOrderIter</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.level_order_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a level-order iterator.</p>
+<p>See <a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelorderiter.LevelOrderIter">https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.levelorderiter.LevelOrderIter</a></p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.parent">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.parent" title="Permalink to this definition"></a></dt>
@@ -444,6 +458,20 @@ to the new node.</p>
 <span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;))</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.post_order_iter">
+<span class="sig-name descname"><span class="pre">post_order_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.iterators.postorderiter.PostOrderIter</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.post_order_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a post-order iterator.</p>
+<p>See <a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.postorderiter.PostOrderIter">https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.postorderiter.PostOrderIter</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.pre_order_iter">
+<span class="sig-name descname"><span class="pre">pre_order_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.iterators.preorderiter.PreOrderIter</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.pre_order_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a pre-order iterator.</p>
+<p>See <a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.preorderiter.PreOrderIter">https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.preorderiter.PreOrderIter</a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -547,6 +575,13 @@ Defaults to 0 which is appropriate for the root of a tree.</p></li>
 <span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hierarchicalsoftmax.nodes.SoftmaxNode.zig_zag_group_iter">
+<span class="sig-name descname"><span class="pre">zig_zag_group_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">anytree.iterators.zigzaggroupiter.ZigZagGroupIter</span></span></span><a class="headerlink" href="#hierarchicalsoftmax.nodes.SoftmaxNode.zig_zag_group_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a zig-zag iterator with grouping starting at this node.</p>
+<p><a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.zigzaggroupiter.ZigZagGroupIter">https://anytree.readthedocs.io/en/latest/api/anytree.iterators.html#anytree.iterators.zigzaggroupiter.ZigZagGroupIter</a></p>
 </dd></dl>
 
 </dd></dl>
