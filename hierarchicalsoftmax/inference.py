@@ -52,7 +52,6 @@ def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
 
 
-
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
