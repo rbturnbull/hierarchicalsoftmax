@@ -20,7 +20,6 @@ class LazyLinearTensor(Tensor):
 
     @cached_property
     def result(self):
-        print('result')
         return F.linear(self.input, self.weight, self.bias)
 
     def __add__(self, other):
@@ -85,3 +84,17 @@ class LazyLinearTensor(Tensor):
     def __iter__(self):
         for i in range(len(self)):
             yield self[i]
+    
+    def float(self):
+        x = super().float()
+        x.input = self.input.float()
+        x.weight = self.weight.float()
+        x.bias = self.bias.float()
+        return x
+    
+    def half(self):
+        x = super().half()
+        x.input = self.input.half()
+        x.weight = self.weight.half()
+        x.bias = self.bias.half()
+        return x    
