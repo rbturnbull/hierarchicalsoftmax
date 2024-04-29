@@ -1,6 +1,7 @@
 from torch import nn
 
 from .nodes import SoftmaxNode
+from .tensors import LazyLinearTensor
 
 class HierarchicalSoftmaxLayerError(RuntimeError):
     pass
@@ -17,6 +18,9 @@ class HierarchicalSoftmaxLayerMixin():
 
         super().__init__(out_features=self.root.layer_size, **kwargs)
 
+    def forward(self, x) -> LazyLinearTensor:
+        return LazyLinearTensor(input=x, weight=self.weight, bias=self.bias)
+    
 
 class HierarchicalSoftmaxLinear(HierarchicalSoftmaxLayerMixin, nn.Linear):
     """

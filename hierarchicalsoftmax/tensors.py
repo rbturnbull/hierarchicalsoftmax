@@ -69,7 +69,7 @@ class LazyLinearTensor():
         return Size( self.input.shape[:-1] + (self.weight.shape[0],) )
 
     def __str__(self) -> str:
-        return f"LazyLinearTensor (shape={self.shape})"
+        return f"LazyLinearTensor (shape={tuple(self.shape)})"
     
     def __repr__(self) -> str:
         return str(self)

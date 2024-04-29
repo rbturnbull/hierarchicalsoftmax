@@ -2,8 +2,12 @@ import pytest
 from torch import nn
 from hierarchicalsoftmax import HierarchicalSoftmaxLinear, HierarchicalSoftmaxLazyLinear
 from hierarchicalsoftmax.layers import HierarchicalSoftmaxLayerError
+from hierarchicalsoftmax.tensors import LazyLinearTensor
+
+import torch
 
 from .util import depth_two_tree, assert_multiline_strings
+
 
 def test_linear_layer():
     layer = HierarchicalSoftmaxLinear(in_features=100, root=depth_two_tree())
@@ -37,3 +41,13 @@ def test_linear_model():
             (2): HierarchicalSoftmaxLinear(in_features=100, out_features=6, bias=True)
         )
     """)
+
+
+def test_forward():
+    layer = HierarchicalSoftmaxLinear(in_features=100, root=depth_two_tree())
+    x = torch.rand(10, 100)
+    result = layer(x)
+    assert result.shape == (10, 6)
+    assert isinstance(result, LazyLinearTensor)
+    assert result.result.shape == (10, 6)
+    
