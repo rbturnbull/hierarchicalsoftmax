@@ -66,3 +66,10 @@ class HierarchicalSoftmaxTensor():
     
     def __repr__(self) -> str:
         return str(self)
+    
+    def __len__(self) -> int:
+        return self.shape[0]
+    
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]

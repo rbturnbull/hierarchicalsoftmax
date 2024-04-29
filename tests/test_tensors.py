@@ -16,12 +16,12 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
     def test_add(self):
         result = self.tensor + 1
         expected = torch.matmul(self.input, self.weight.t()) + self.bias + 1
-        self.assertTrue(torch.allclose(result, expected))
+        assert torch.allclose(result, expected)
 
     def test_sub(self):
         result = self.tensor - 1
         expected = torch.matmul(self.input, self.weight.t()) + self.bias - 1
-        self.assertTrue(torch.allclose(result, expected))
+        assert torch.allclose(result, expected)
 
     def test_shape(self):
         assert self.tensor.shape == (self.batch_size, self.out_features)
@@ -31,4 +31,11 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
         assert isinstance(result, HierarchicalSoftmaxTensor)
         assert result.shape == (self.out_features,)
 
-        
+    def test_get_item_slice(self):
+        result = self.tensor[0]
+        assert torch.allclose(result[:3], self.tensor.result[0,:3])
+        assert torch.allclose(result[3:], self.tensor.result[0,3:])
+
+    def test_get_item(self):
+        assert len(self.tensor) == self.batch_size
+        assert len(self.tensor[0]) == self.out_features
