@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
 
-class HierarchicalSoftmaxTensor():
+class LazyLinearTensor():
     """
     A tensor that is designed to be used with HierarchicalSoftmaxLazyLinear layers.
     """
@@ -55,7 +55,7 @@ class HierarchicalSoftmaxTensor():
 
         my_shape = self.shape
         if len(index) < len(my_shape):
-            return HierarchicalSoftmaxTensor(input=self.input[index], weight=self.weight, bias=self.bias)
+            return LazyLinearTensor(input=self.input[index], weight=self.weight, bias=self.bias)
         if len(index) > len(my_shape):
             raise IndexError(f"Cannot get index '{index}' for LazyLinearTensor of shape {len(my_shape)}")
 

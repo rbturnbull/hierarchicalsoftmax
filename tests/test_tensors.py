@@ -1,9 +1,9 @@
-from hierarchicalsoftmax.tensors import HierarchicalSoftmaxTensor
+from hierarchicalsoftmax.tensors import LazyLinearTensor
 import torch
 import unittest
 
 
-class TestHierarchicalSoftmaxTensor(unittest.TestCase):
+class TestLazyLinearTensor(unittest.TestCase):
     def setUp(self):
         self.batch_size = 2
         self.in_features = 3
@@ -11,7 +11,7 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
         self.weight = torch.nn.Parameter(torch.arange(self.out_features * self.in_features).reshape(self.out_features, self.in_features).float())
         self.bias = torch.nn.Parameter(torch.arange(self.out_features).float())
         self.input = torch.arange(self.batch_size * self.in_features).reshape(self.batch_size, self.in_features).float()
-        self.tensor = HierarchicalSoftmaxTensor(self.input, self.weight, self.bias)
+        self.tensor = LazyLinearTensor(self.input, self.weight, self.bias)
 
     def test_add(self):
         result = self.tensor + 1
@@ -28,12 +28,12 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
 
     def test_get_item(self):
         result = self.tensor[0]
-        assert isinstance(result, HierarchicalSoftmaxTensor)
+        assert isinstance(result, LazyLinearTensor)
         assert result.shape == (self.out_features,)
 
     def test_slice(self):
         result = self.tensor[:,:2]
-        assert not isinstance(result, HierarchicalSoftmaxTensor)
+        assert not isinstance(result, LazyLinearTensor)
 
     def test_get_item_slice(self):
         result = self.tensor[0]
