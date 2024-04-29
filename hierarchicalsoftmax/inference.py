@@ -2,7 +2,6 @@ from typing import List, Optional
 import torch
 from pathlib import Path
 from anytree import PreOrderIter
-from functools import partial
 
 from . import nodes
 from .dotexporter import ThresholdDotExporter
