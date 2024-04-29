@@ -15,6 +15,7 @@ class HierarchicalSoftmaxTensor():
 
     @cached_property
     def result(self):
+        print('result')
         return F.linear(self.input, self.weight, self.bias)
 
     def __add__(self, other):
@@ -46,23 +47,29 @@ class HierarchicalSoftmaxTensor():
     
     def __rmatmul__(self, other):
         return other @ self.result
-    
-    def __slice__(self, start, end):
-        breakpoint()
-        return F.linear(input, self.weight[:, start:end], self.bias[start:end])
-    
+
     def __getitem__(self, index):
-        if len(self.input.shape) == 1:
-            return self.result[index]
-    
-        return HierarchicalSoftmaxTensor(input=self.input[index], weight=self.weight, bias=self.bias)
+        assert isinstance(index, int) or isinstance(index, slice) or isinstance(index, tuple)
+        if not isinstance(index, tuple) or isinstance(index, slice):
+            index = (index,)
+
+        my_shape = self.shape
+        if len(index) < len(my_shape):
+            return HierarchicalSoftmaxTensor(input=self.input[index], weight=self.weight, bias=self.bias)
+        if len(index) > len(my_shape):
+            raise IndexError(f"Cannot get index '{index}' for LazyLinearTensor of shape {len(my_shape)}")
+
+        input = self.input[index[:-1]]
+        weight = self.weight[index[-1]]
+        bias = self.bias[index[-1]]      
+        return F.linear(input, weight, bias)
     
     @property
     def shape(self) -> Size:
         return Size( self.input.shape[:-1] + (self.weight.shape[0],) )
 
     def __str__(self) -> str:
-        return f"Softmax Tensor (shape={self.shape})"
+        return f"LazyLinearTensor (shape={self.shape})"
     
     def __repr__(self) -> str:
         return str(self)

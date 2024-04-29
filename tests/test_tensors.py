@@ -31,6 +31,10 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
         assert isinstance(result, HierarchicalSoftmaxTensor)
         assert result.shape == (self.out_features,)
 
+    def test_slice(self):
+        result = self.tensor[:,:2]
+        assert not isinstance(result, HierarchicalSoftmaxTensor)
+
     def test_get_item_slice(self):
         result = self.tensor[0]
         assert torch.allclose(result[:3], self.tensor.result[0,:3])
@@ -39,3 +43,7 @@ class TestHierarchicalSoftmaxTensor(unittest.TestCase):
     def test_get_item(self):
         assert len(self.tensor) == self.batch_size
         assert len(self.tensor[0]) == self.out_features
+
+    def test_iter_slice(self):
+        for i, tensor in enumerate(self.tensor):
+            assert torch.allclose(tensor[:2], self.tensor[i][:2])
