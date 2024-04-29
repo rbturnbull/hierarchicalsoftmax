@@ -137,3 +137,19 @@ def greedy_accuracy_parent(prediction_tensor, target_tensor, root, max_depth=Non
     return (prediction_parent_ids.to(target_parent_ids.device) == target_parent_ids).float().mean()
 
 
+class GreedyAccuracy():
+    name:str = "greedy"
+
+    def __init__(self, root:nodes.SoftmaxNode, name="greedy_accuracy", max_depth=None):
+        self.max_depth = max_depth
+        self.name = name
+        self.root = root
+
+    @property
+    def __name__(self):
+        """ For using as a FastAI metric. """
+        return self.name
+    
+    def __call__(self, predictions, targets):
+        return greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth)
+

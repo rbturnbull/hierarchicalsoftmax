@@ -8,6 +8,7 @@ from hierarchicalsoftmax.metrics import (
     greedy_accuracy_parent,
     greedy_precision,
     greedy_recall,
+    GreedyAccuracy,
 )
 from torch.testing import assert_allclose
 
@@ -32,6 +33,9 @@ def test_greedy_accuracy():
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
     assert_allclose(greedy_accuracy(predictions, target_tensor, root=root), 0.75)
+
+    metric = GreedyAccuracy(root=root)
+    assert_allclose(metric(predictions, target_tensor), 0.75)
 
 
 def test_greedy_f1_score():
@@ -118,6 +122,18 @@ def test_greedy_accuracy_max_depth_simple():
     assert 0.99 < greedy_accuracy_depth_one(predictions_rearranged, target_tensor, root=root) 
     assert greedy_accuracy_depth_two(predictions_rearranged, target_tensor, root=root) < 0.01
     assert greedy_accuracy(predictions_rearranged, target_tensor, root=root) < 0.01
+
+    depth_one = GreedyAccuracy(root=root, max_depth=1, name="depth_one")
+    assert 0.99 < depth_one(predictions_rearranged, target_tensor)     
+    depth_two = GreedyAccuracy(root=root, max_depth=2, name="depth_two")
+    assert depth_two(predictions_rearranged, target_tensor) < 0.01
+
+    assert depth_one.name == "depth_one"
+    assert depth_one.__name__ == "depth_one"
+    assert depth_two.name == "depth_two"
+    assert depth_two.__name__ == "depth_two"
+
+
 
 
 def test_greedy_accuracy_max_depth_complex():
