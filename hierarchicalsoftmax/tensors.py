@@ -4,12 +4,17 @@ import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
 
-class LazyLinearTensor():
+class LazyLinearTensor(Tensor):
     """
     A tensor that is designed to be used with HierarchicalSoftmaxLazyLinear layers.
     """
-    def __init__(self, input:Tensor, weight:Parameter, bias:Parameter):
-        self.input = input
+    @staticmethod
+    def __new__(cls, x, weight:Parameter, bias:Parameter, *args, **kwargs):
+        return super().__new__(cls, x, *args, **kwargs)
+
+    def __init__(self, x:Tensor, weight:Parameter, bias:Parameter, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input = x
         self.weight = weight
         self.bias = bias
 
@@ -55,7 +60,7 @@ class LazyLinearTensor():
 
         my_shape = self.shape
         if len(index) < len(my_shape):
-            return LazyLinearTensor(input=self.input[index], weight=self.weight, bias=self.bias)
+            return LazyLinearTensor(self.input[index], weight=self.weight, bias=self.bias)
         if len(index) > len(my_shape):
             raise IndexError(f"Cannot get index '{index}' for LazyLinearTensor of shape {len(my_shape)}")
 

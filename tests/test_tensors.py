@@ -99,3 +99,7 @@ class TestLazyLinearTensor(unittest.TestCase):
     def test_index_error(self):
         with self.assertRaises(IndexError):
             self.tensor[0,0,5]
+
+    def test_is_floating_point(self):
+        assert torch.is_floating_point(self.tensor) == True
+        assert self.tensor.is_floating_point() == True
