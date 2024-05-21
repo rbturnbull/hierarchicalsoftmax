@@ -55,7 +55,7 @@ class ThresholdDotExporter(DotExporter):
     def exclude_node(self, node):
         return not node.is_root and node not in self.greedy_nodes and self.probabilities[node.index_in_softmax_layer] < self.threshold
 
-    def _DotExporter__iter_nodes(self, indent, nodenamefunc, nodeattrfunc):
+    def _DotExporter__iter_nodes(self, indent, nodenamefunc, nodeattrfunc, *args, **kwargs):
         for node in PreOrderIter(self.node, maxlevel=self.maxlevel):
             if self.exclude_node(node):
                 continue
@@ -64,7 +64,7 @@ class ThresholdDotExporter(DotExporter):
             nodeattr = " [%s]" % nodeattr if nodeattr is not None else ""
             yield '%s"%s"%s;' % (indent, DotExporter.esc(nodename), nodeattr)
 
-    def _DotExporter__iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc):
+    def _DotExporter__iter_edges(self, indent, nodenamefunc, edgeattrfunc, edgetypefunc, *args, **kwargs):
         maxlevel = self.maxlevel - 1 if self.maxlevel else None
         for node in PreOrderIter(self.node, maxlevel=maxlevel):
             nodename = nodenamefunc(node)

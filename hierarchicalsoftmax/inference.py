@@ -2,7 +2,6 @@ from typing import List, Optional
 import torch
 from pathlib import Path
 from anytree import PreOrderIter
-from functools import partial
 
 from . import nodes
 from .dotexporter import ThresholdDotExporter
@@ -50,7 +49,6 @@ def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     """
     probabilities = node_probabilities(prediction_tensor, root=root)
     return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
-
 
 
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
