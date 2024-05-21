@@ -103,3 +103,19 @@ class TestLazyLinearTensor(unittest.TestCase):
     def test_is_floating_point(self):
         assert torch.is_floating_point(self.tensor) == True
         assert self.tensor.is_floating_point() == True
+
+    def test_tensor_float(self):
+        weight = torch.nn.Parameter(torch.arange(self.out_features * self.in_features).reshape(self.out_features, self.in_features).double())
+        bias = torch.nn.Parameter(torch.arange(self.out_features).double())
+        input = torch.arange(self.batch_size * self.in_features).reshape(self.batch_size, self.in_features).double()
+        tensor = LazyLinearTensor(input, weight, bias)
+        assert tensor.dtype == torch.float64
+        assert tensor.float().dtype == torch.float32
+
+    def test_tensor_half(self):
+        weight = torch.nn.Parameter(torch.arange(self.out_features * self.in_features).reshape(self.out_features, self.in_features).double())
+        bias = torch.nn.Parameter(torch.arange(self.out_features).double())
+        input = torch.arange(self.batch_size * self.in_features).reshape(self.batch_size, self.in_features).double()
+        tensor = LazyLinearTensor(input, weight, bias)
+        assert tensor.dtype == torch.float64
+        assert tensor.half().dtype == torch.float16
