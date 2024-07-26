@@ -18,11 +18,12 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 anytree = "^2.8.0"
 torch = ">=1.10.2"
 rich = ">=10.16.1"
 scikit-learn = "^1.1.1"
+torchmetrics = ">=1.4.0.post0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

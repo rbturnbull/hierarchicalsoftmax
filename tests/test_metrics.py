@@ -8,6 +8,7 @@ from hierarchicalsoftmax.metrics import (
     greedy_accuracy_parent,
     greedy_precision,
     greedy_recall,
+    depth_accurate,
     GreedyAccuracy,
 )
 from torch.testing import assert_allclose
@@ -184,3 +185,27 @@ def test_greedy_accuracy_parent():
             prediction = prediction.parent
 
     assert 0.874 < greedy_accuracy_parent(predictions, target_tensor, root=root) < 0.876
+
+
+def test_depth_accurate():
+    root, targets = depth_three_tree_and_targets()
+
+    root.set_indexes()
+    target_tensor = root.get_node_ids_tensor(targets)
+
+    # set up predictions
+    prediction_nodes = targets.copy()
+    aaa, aab, aba, abb, baa, bab, bba, bbb = targets
+    prediction_nodes[0] = aab # correct parent
+    prediction_nodes[7] = bba # correct parent
+    prediction_nodes[1] = aba # incorrect parent
+
+    predictions = torch.zeros( (len(prediction_nodes), root.layer_size) )
+    for prediction_index, prediction in enumerate(prediction_nodes):
+        while prediction.parent:
+            predictions[ prediction_index, prediction.parent.softmax_start_index + prediction.index_in_parent ] = 20.0
+            prediction = prediction.parent
+
+    result = depth_accurate(predictions, target_tensor, root=root)
+    assert (result == torch.tensor([2, 1, 3, 3, 3, 3, 3, 2])).all()
+

@@ -1,6 +1,9 @@
 from sklearn.metrics import f1_score, precision_score, recall_score
 import torch
+from torchmetrics import Metric
 from . import inference, nodes
+from .inference import ShapeError
+
 
 
 def target_max_depth(target_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:int):
@@ -38,6 +41,51 @@ def greedy_accuracy_depth_one(prediction_tensor, target_tensor, root):
 
 def greedy_accuracy_depth_two(prediction_tensor, target_tensor, root):
     return greedy_accuracy(prediction_tensor, target_tensor, root, max_depth=2)
+
+
+def depth_accurate(prediction_tensor, target_tensor, root:nodes.SoftmaxNode, max_depth:int=0, threshold:float|None=None):
+    """ Returns a tensor of shape (samples,) with the depth of predictions which were accurate """
+    depths = []
+
+    if root.softmax_start_index is None:
+        raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
+
+    if prediction_tensor.shape[-1] != root.layer_size:
+        raise ShapeError(
+            f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
+            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
+        )
+
+    for predictions, target in zip(prediction_tensor, target_tensor):
+        node = root
+        depth = 0
+        target_node = root.node_list[target]
+
+        while (node.children):
+            # This would be better if we could use torch.argmax but it doesn't work with MPS in the production version of pytorch
+            # See https://github.com/pytorch/pytorch/issues/98191
+            # https://github.com/pytorch/pytorch/pull/104374
+            prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
+
+            # Stop if the prediction is below the threshold
+            if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:
+                break
+
+            node = node.children[prediction_child_index]
+            depth += 1
+
+            if node != target_node.path[depth]:
+                depth -= 1
+                break
+            
+            # Stop if we have reached the maximum depth
+            if max_depth and depth >= max_depth:
+                break
+
+        depths.append(depth)
+    
+    return torch.tensor(depths, dtype=int)
+
     
 
 def greedy_f1_score(prediction_tensor:torch.Tensor, target_tensor:torch.Tensor, root:nodes.SoftmaxNode, average:str="macro", max_depth=None) -> float:
@@ -153,3 +201,19 @@ class GreedyAccuracy():
     def __call__(self, predictions, targets):
         return greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth)
 
+
+class GreedyAccuracyTorchMetric(Metric):
+    def __init__(self, root:nodes.SoftmaxNode, name:str="", max_depth=None):
+        super().__init__()
+        self.root = root
+        self.max_depth = max_depth
+        self.name = name or (f"greedy_accuracy_{max_depth}" if max_depth else "greedy_accuracy")
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, predictions, targets):
+        self.total += targets.size(0)
+        self.correct += greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth) * targets.size(0)
+
+    def compute(self):
+        return self.correct / self.total
