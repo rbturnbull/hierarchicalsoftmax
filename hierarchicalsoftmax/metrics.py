@@ -86,7 +86,6 @@ def depth_accurate(prediction_tensor, target_tensor, root:nodes.SoftmaxNode, max
     
     return torch.tensor(depths, dtype=int)
 
-    
 
 def greedy_f1_score(prediction_tensor:torch.Tensor, target_tensor:torch.Tensor, root:nodes.SoftmaxNode, average:str="macro", max_depth=None) -> float:
     """
@@ -217,3 +216,25 @@ class GreedyAccuracyTorchMetric(Metric):
 
     def compute(self):
         return self.correct / self.total
+    
+
+class RankAccuracyTorchMetric(Metric):
+    def __init__(self, root:nodes.SoftmaxNode, ranks:dict[int,str], name:str="rank_accuracy"):
+        super().__init__()
+        self.root = root
+        self.ranks = ranks
+        self.name = name
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
+        for rank_name in ranks.values():
+            self.add_state(rank_name, default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, predictions, targets):
+        self.total += targets.size(0)
+        depth_accurate_tensor = depth_accurate(predictions, targets, self.root)
+        for depth, rank_name in self.ranks.items():
+            accurate_at_depth = (depth_accurate_tensor >= depth).sum()
+            setattr(self, rank_name, getattr(self, rank_name) + accurate_at_depth)
+
+    def compute(self):
+        return {rank_name: getattr(self, rank_name) / self.total for rank_name in self.ranks.values()}
+

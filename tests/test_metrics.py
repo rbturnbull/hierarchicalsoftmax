@@ -1,3 +1,4 @@
+import pytest 
 import torch
 from hierarchicalsoftmax.nodes import SoftmaxNode
 from hierarchicalsoftmax.metrics import (
@@ -10,6 +11,7 @@ from hierarchicalsoftmax.metrics import (
     greedy_recall,
     depth_accurate,
     GreedyAccuracy,
+    RankAccuracyTorchMetric,
 )
 from torch.testing import assert_allclose
 
@@ -165,7 +167,8 @@ def test_greedy_accuracy_max_depth_complex():
     assert greedy_accuracy(predictions_rearranged, target_tensor, root=root) < 0.01
 
 
-def test_greedy_accuracy_parent():
+@pytest.fixture
+def setup_depth_three_tests():
     root, targets = depth_three_tree_and_targets()
 
     root.set_indexes()
@@ -183,29 +186,59 @@ def test_greedy_accuracy_parent():
         while prediction.parent:
             predictions[ prediction_index, prediction.parent.softmax_start_index + prediction.index_in_parent ] = 20.0
             prediction = prediction.parent
+
+    return predictions, target_tensor, root
+
+
+def test_greedy_accuracy_parent(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
 
     assert 0.874 < greedy_accuracy_parent(predictions, target_tensor, root=root) < 0.876
 
 
-def test_depth_accurate():
-    root, targets = depth_three_tree_and_targets()
-
-    root.set_indexes()
-    target_tensor = root.get_node_ids_tensor(targets)
-
-    # set up predictions
-    prediction_nodes = targets.copy()
-    aaa, aab, aba, abb, baa, bab, bba, bbb = targets
-    prediction_nodes[0] = aab # correct parent
-    prediction_nodes[7] = bba # correct parent
-    prediction_nodes[1] = aba # incorrect parent
-
-    predictions = torch.zeros( (len(prediction_nodes), root.layer_size) )
-    for prediction_index, prediction in enumerate(prediction_nodes):
-        while prediction.parent:
-            predictions[ prediction_index, prediction.parent.softmax_start_index + prediction.index_in_parent ] = 20.0
-            prediction = prediction.parent
+def test_depth_accurate(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
 
     result = depth_accurate(predictions, target_tensor, root=root)
     assert (result == torch.tensor([2, 1, 3, 3, 3, 3, 3, 2])).all()
 
+
+def test_rank_accuracy_initialization(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = RankAccuracyTorchMetric(root=root, ranks=ranks)
+    assert metric.root == root
+    assert metric.ranks == ranks
+    assert metric.name == 'rank_accuracy'
+    assert hasattr(metric, 'total')
+    for rank_name in ranks.values():
+        assert hasattr(metric, rank_name)
+        assert getattr(metric, rank_name).item() == 0
+
+
+def test_rank_accuracy_update(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = RankAccuracyTorchMetric(root=root, ranks=ranks)
+    
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    assert metric.total.item() == 8
+    assert metric.rank_2.item() == 7
+    assert metric.rank_3.item() == 5
+
+
+def test_rank_accuracy_compute(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = RankAccuracyTorchMetric(root=root, ranks=ranks)
+    
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    result = metric.compute()
+    
+    assert pytest.approx(result['rank_1'].item()) == 1.0
+    assert pytest.approx(result['rank_2'].item()) == 0.875
+    assert pytest.approx(result['rank_3'].item()) == 0.625
