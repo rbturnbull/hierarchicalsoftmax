@@ -10,6 +10,7 @@ from hierarchicalsoftmax.metrics import (
     greedy_precision,
     greedy_recall,
     depth_accurate,
+    GreedyAccuracyTorchMetric,
     GreedyAccuracy,
     RankAccuracyTorchMetric,
 )
@@ -202,6 +203,39 @@ def test_depth_accurate(setup_depth_three_tests):
     result = depth_accurate(predictions, target_tensor, root=root)
     assert (result == torch.tensor([2, 1, 3, 3, 3, 3, 3, 2])).all()
 
+
+def test_greedy_accuracy_initialization(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    metric = GreedyAccuracyTorchMetric(root=root, max_depth=2)
+    assert metric.root == root
+    assert metric.max_depth == 2
+    assert metric.name == 'greedy_accuracy_2'
+    assert hasattr(metric, 'total')
+    assert hasattr(metric, 'correct')
+
+
+def test_greedy_accuracy_update(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    metric = GreedyAccuracyTorchMetric(root=root, max_depth=2)
+
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    assert metric.total.item() == 8
+    assert metric.correct.item() == 7
+
+
+def test_greedy_accuracy_compute(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = GreedyAccuracyTorchMetric(root=root, max_depth=2)
+    
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    result = metric.compute()
+    assert pytest.approx(result.item()) == 0.875
+    
 
 def test_rank_accuracy_initialization(setup_depth_three_tests):
     predictions, target_tensor, root = setup_depth_three_tests

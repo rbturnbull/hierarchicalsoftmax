@@ -212,7 +212,7 @@ class GreedyAccuracyTorchMetric(Metric):
 
     def update(self, predictions, targets):
         self.total += targets.size(0)
-        self.correct += greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth) * targets.size(0)
+        self.correct += int(greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth) * targets.size(0))
 
     def compute(self):
         return self.correct / self.total
