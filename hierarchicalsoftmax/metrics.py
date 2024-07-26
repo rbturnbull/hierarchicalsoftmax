@@ -67,10 +67,6 @@ def depth_accurate(prediction_tensor, target_tensor, root:nodes.SoftmaxNode, max
             # https://github.com/pytorch/pytorch/pull/104374
             prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
 
-            # Stop if the prediction is below the threshold
-            if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:
-                break
-
             node = node.children[prediction_child_index]
             depth += 1
 

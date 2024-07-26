@@ -1,6 +1,6 @@
 import pytest 
 import torch
-from hierarchicalsoftmax.nodes import SoftmaxNode
+from hierarchicalsoftmax.nodes import IndexNotSetError
 from hierarchicalsoftmax.metrics import (
     greedy_accuracy, 
     greedy_f1_score, 
@@ -14,6 +14,7 @@ from hierarchicalsoftmax.metrics import (
     GreedyAccuracy,
     RankAccuracyTorchMetric,
 )
+from hierarchicalsoftmax.inference import ShapeError
 from torch.testing import assert_allclose
 
 from .util import depth_two_tree_and_targets, depth_three_tree_and_targets, depth_two_tree_and_targets_three_children
@@ -138,8 +139,6 @@ def test_greedy_accuracy_max_depth_simple():
     assert depth_two.__name__ == "depth_two"
 
 
-
-
 def test_greedy_accuracy_max_depth_complex():
     root, targets = depth_three_tree_and_targets()
 
@@ -202,6 +201,32 @@ def test_depth_accurate(setup_depth_three_tests):
 
     result = depth_accurate(predictions, target_tensor, root=root)
     assert (result == torch.tensor([2, 1, 3, 3, 3, 3, 3, 2])).all()
+
+
+def test_depth_accurate_max_depth(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+
+    result = depth_accurate(predictions, target_tensor, root=root, max_depth=2)
+    assert (result == torch.tensor([2, 1, 2, 2, 2, 2, 2, 2])).all()
+
+
+def test_depth_accuracte_set_indexes():
+    root, targets = depth_two_tree_and_targets()
+    predictions = torch.zeros( (len(targets), 6) )
+    targets = torch.zeros( (len(targets),) )
+    with pytest.raises(IndexNotSetError):
+        node_predictions = depth_accurate(predictions, targets, root=root)
+
+
+
+def test_depth_accuracte_shape_error():
+    root, targets = depth_two_tree_and_targets()
+    root.set_indexes()
+    predictions = torch.zeros( (len(targets), 7) )
+    targets = torch.zeros( (len(targets),) )
+    with pytest.raises(ShapeError):
+        node_predictions = depth_accurate(predictions, targets, root=root)
+
 
 
 def test_greedy_accuracy_initialization(setup_depth_three_tests):
