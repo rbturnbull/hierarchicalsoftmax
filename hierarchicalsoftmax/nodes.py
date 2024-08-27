@@ -74,12 +74,16 @@ class SoftmaxNode(Node):
         self.index_in_parent_tensor = torch.as_tensor([index_in_parent], dtype=torch.long) if index_in_parent is not None else None
         
         self.index_in_softmax_layer = self.index_in_parent
-        if self.parent:
-            self.index_in_softmax_layer += self.parent.softmax_start_index
+        if self.parent:           
+            # If the parent has just one child, then this node is skipped in the softmax layer because it isn't needed
+            if len(self.parent.children) == 1:
+                self.index_in_softmax_layer = None
+            else:
+                self.index_in_softmax_layer += self.parent.softmax_start_index
 
         if self.children:
             self.softmax_start_index = current_index
-            current_index += len(self.children)
+            current_index += len(self.children) if len(self.children) > 1 else 0
             self.softmax_end_index = current_index
 
             for child_index, child in enumerate(self.children):
@@ -88,13 +92,9 @@ class SoftmaxNode(Node):
             self.children_softmax_end_index = current_index
         
         # If this is the root, then traverse the tree and make an index of all children
-        if self.softmax_start_index == 0:
-            self.node_list = [None] * len(self.descendants)
-            self.node_to_id = dict()
-            self.softmax_index_to_node = dict()
-            for node in self.descendants:
-                self.node_to_id[node] = node.index_in_softmax_layer
-                self.node_list[node.index_in_softmax_layer] = node
+        if self.parent is None:
+            self.node_list = list(self.descendants)
+            self.node_to_id = {node:i for i, node in enumerate(self.node_list)}
 
             self.leaf_indexes_in_softmax_layer = torch.as_tensor([leaf.index_in_softmax_layer for leaf in self.leaves])
         
