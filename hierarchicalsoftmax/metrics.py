@@ -65,7 +65,7 @@ def depth_accurate(prediction_tensor, target_tensor, root:nodes.SoftmaxNode, max
             # This would be better if we could use torch.argmax but it doesn't work with MPS in the production version of pytorch
             # See https://github.com/pytorch/pytorch/issues/98191
             # https://github.com/pytorch/pytorch/pull/104374
-            if node.children == 1:
+            if len(node.children) == 1:
                 # if this node use just one child, then we don't check the prediction
                 prediction_child_index = 0
             else:

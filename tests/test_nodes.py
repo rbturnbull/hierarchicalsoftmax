@@ -98,11 +98,11 @@ def test_node_list():
     root.set_indexes()
 
     node_names = [node.name for node in root.node_list]
-    assert node_names == ['a', 'aa', 'ab', 'b', 'ba', 'bb']
+    assert node_names == ['a', 'b', 'aa', 'ab', 'ba', 'bb']
     assert root.node_to_id[a] == 0
     assert root.node_to_id[bb] == 5
 
-    assert root.get_node_ids( [bb, aa, ab] ) == [5,1,2]
+    assert root.get_node_ids( [bb, aa, ab] ) == [5,2,3]
 
 
 def test_already_indexed():
