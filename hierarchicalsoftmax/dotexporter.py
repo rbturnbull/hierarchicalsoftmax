@@ -40,6 +40,7 @@ class ThresholdDotExporter(DotExporter):
         self.prediction_color = prediction_color
         self.non_prediction_color = non_prediction_color
         self.threshold = threshold
+        self.excluded_nodes = set()
 
     def _default_nodeattrfunc(self, node):
         return f"color={self.prediction_color}" if node in self.greedy_nodes else ""
@@ -50,10 +51,22 @@ class ThresholdDotExporter(DotExporter):
         child,
     ):
         color = self.prediction_color if child in self.greedy_nodes else self.non_prediction_color
-        return f"label={self.probabilities[child.index_in_softmax_layer]:.2f},color={color}"
+        label = f"{self.probabilities[child.index_in_softmax_layer]:.2f}" if child.index_in_softmax_layer is not None else "x"
+        return f"label={label},color={color}"
 
-    def exclude_node(self, node):
-        return not node.is_root and node not in self.greedy_nodes and self.probabilities[node.index_in_softmax_layer] < self.threshold
+    def exclude_node(self, node) -> bool:
+        if node in self.excluded_nodes:
+            return True
+        
+        if node.index_in_softmax_layer is None:
+            exclude_node = node.parent in self.excluded_nodes
+        else:
+            include_node = node.is_root or node in self.greedy_nodes or self.probabilities[node.index_in_softmax_layer] >= self.threshold
+            exclude_node = not include_node
+            
+        if exclude_node:
+            self.excluded_nodes.add(node)
+        return exclude_node
 
     def _DotExporter__iter_nodes(self, indent, nodenamefunc, nodeattrfunc, *args, **kwargs):
         for node in PreOrderIter(self.node, maxlevel=self.maxlevel):

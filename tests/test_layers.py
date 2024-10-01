@@ -15,6 +15,7 @@ def test_linear_layer():
     assert layer.in_features == 100
     assert layer.out_features == 6
 
+
 def test_lazy_linear_layer():
     layer = HierarchicalSoftmaxLazyLinear(root=depth_two_tree())
 

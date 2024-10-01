@@ -3,7 +3,7 @@ import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 import tempfile
 import torch
-from .util import depth_two_tree, depth_two_tree_and_targets_three_children, correct_predictions
+from .util import depth_two_tree, depth_two_tree_and_targets_three_children, correct_predictions, depth_three_tree_and_targets_only_child
 from anytree import PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
 
 
@@ -180,6 +180,31 @@ def test_render_equal_false():
             └── bb    
     """
     )
+
+
+def test_render_depth_three_tree_and_targets_only_child():
+    root, _ = depth_three_tree_and_targets_only_child()
+    print(root.render())
+    assert root.render_equal("""
+        root
+        ├── a
+        │   └── aa
+        │       ├── aaa
+        │       └── aab
+        └── b
+            └── ba
+                ├── baa
+                └── bab
+    """)
+
+
+def test_render_depth_three_tree_and_targets_layer_size():
+    root, _ = depth_three_tree_and_targets_only_child()
+    root.set_indexes()
+    assert root.layer_size == 6
+    assert len(root.node_list) == 8
+    assert len(root.node_list_softmax) == 6
+    assert [node.name for node in root.node_list_softmax] == ["a", "b", "aaa", "aab", "baa", "bab"]
 
 
 def test_node_indexes():

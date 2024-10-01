@@ -31,17 +31,19 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
             continue
         elif node == root:
             my_probability = 1.0
-        elif len(node.children) == 1:
-            # If this has just one child, then skip it
-            continue
-        else :
+        elif node.index_in_softmax_layer != None:
             my_probability = probabilities[:,node.index_in_softmax_layer]
             my_probability = my_probability[:,None]
-        
+
+        if len(node.children) == 1:
+            # If this has just one child, then skip it
+            continue
+
         softmax_probabilities = torch.softmax(
             prediction_tensor[:,node.softmax_start_index:node.softmax_end_index], 
             dim=1,
         )
+
         probabilities[:,node.softmax_start_index:node.softmax_end_index] = softmax_probabilities * my_probability
     
     return probabilities
