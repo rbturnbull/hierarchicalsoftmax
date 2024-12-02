@@ -77,6 +77,9 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
     """
     prediction_nodes = []
 
+    if isinstance(prediction_tensor, tuple) and len(prediction_tensor) == 1:
+        prediction_tensor = prediction_tensor[0]
+
     if root.softmax_start_index is None:
         raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
 
