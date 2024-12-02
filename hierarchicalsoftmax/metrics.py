@@ -243,6 +243,9 @@ class RankAccuracyTorchMetric(Metric):
             self.add_state(rank_name, default=torch.tensor(0), dist_reduce_fx="sum")
 
     def update(self, predictions, targets):
+        if isinstance(predictions, tuple) and len(predictions) == 1:
+            predictions = predictions[0]
+
         # Ensure tensors match the device
         predictions = predictions.to(self.device)
         targets = targets.to(self.device)
