@@ -86,7 +86,7 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
     if prediction_tensor.shape[-1] != root.layer_size:
         raise ShapeError(
             f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
-            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
+            f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
     for predictions in prediction_tensor:
