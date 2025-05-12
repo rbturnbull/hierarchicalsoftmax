@@ -20,6 +20,9 @@ jobs:
     - name: Install poetry
       run: pipx install poetry
 
+    - name: Setup Graphviz
+      uses: ts-graphviz/setup-graphviz@v1
+      
     - name: Cache Poetry packages
       uses: actions/cache@v3
       with:
