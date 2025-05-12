@@ -152,6 +152,22 @@ class SoftmaxNode(Node):
                 rendered_tree_graph.to_picture(str(filepath))
 
         return rendered
+    
+    def graphviz(self, attr:Optional[str]=None, **kwargs) -> RenderTree:
+        """
+        Renders this node and all its descendants in a tree format using graphviz.
+
+        Useful for Jupyter notebooks.
+        """
+        from graphviz import Source
+        
+        rendered = RenderTree(self, **kwargs)
+        if attr:
+            rendered = rendered.by_attr(attr)
+        
+        dot_string = "\n".join(DotExporter(self))
+
+        return Source(dot_string)
 
     def _pre_attach(self, parent:Node):
         if self.readonly or parent.readonly:

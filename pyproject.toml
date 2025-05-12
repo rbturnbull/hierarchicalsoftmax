@@ -24,6 +24,7 @@ torch = ">=1.10.2"
 rich = ">=10.16.1"
 scikit-learn = ">=1.1.1"
 torchmetrics = ">=1.4.0.post0"
+graphviz = ">=0.20.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=6.2.5"
@@ -39,6 +40,10 @@ pre-commit = ">=2.15.0"
 sphinx-copybutton = ">=0.4.0"
 black = ">=21.10b0"
 sphinx-click = {git = "https://github.com/rbturnbull/sphinx-click.git"}
+lightning = ">=2.5.1.post0"
+torchvision = "^0.22.0"
+ipywidgets = "^8.1.7"
+matplotlib = "^3.10.3"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
