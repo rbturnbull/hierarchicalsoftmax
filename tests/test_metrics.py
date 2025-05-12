@@ -301,3 +301,44 @@ def test_rank_accuracy_compute(setup_depth_three_tests):
     assert pytest.approx(result['rank_1'].item()) == 1.0
     assert pytest.approx(result['rank_2'].item()) == 0.875
     assert pytest.approx(result['rank_3'].item()) == 0.625
+
+
+def test_rank_accuracy_compute_tuple(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = RankAccuracyTorchMetric(root=root, ranks=ranks)
+    
+    predictions_tuple = (predictions, )
+
+    # Patch the depth_accurate function    
+    metric.update(predictions_tuple, target_tensor)
+    
+    result = metric.compute()
+    
+    assert pytest.approx(result['rank_1'].item()) == 1.0
+    assert pytest.approx(result['rank_2'].item()) == 0.875
+    assert pytest.approx(result['rank_3'].item()) == 0.625
+
+
+def test_rank_accuracy_apply(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    ranks = {1: 'rank_1', 2: 'rank_2', 3: 'rank_3'}
+    metric = RankAccuracyTorchMetric(root=root, ranks=ranks)
+    
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    result = metric.compute()
+    
+    assert pytest.approx(result['rank_1'].item()) == 1.0
+    assert pytest.approx(result['rank_2'].item()) == 0.875
+    assert pytest.approx(result['rank_3'].item()) == 0.625
+
+    def multiply_by_10(tensor):
+        return tensor * 10
+
+    metric._apply(multiply_by_10)
+
+    result = metric.compute()
+
+    assert pytest.approx(result['rank_1'].item()) == 10.0
