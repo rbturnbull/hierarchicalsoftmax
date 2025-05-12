@@ -28,6 +28,22 @@ def test_greedy_predictions():
     assert node_predictions == targets
 
 
+def test_greedy_predictions_tuple():
+    root, targets = depth_two_tree_and_targets()
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    predictions_tuple = (predictions, )
+    node_predictions = greedy_predictions(prediction_tensor=predictions_tuple, root=root)
+
+    assert node_predictions == targets
+
+
 def test_unset_indexes():
     root, targets = depth_two_tree_and_targets()
 
