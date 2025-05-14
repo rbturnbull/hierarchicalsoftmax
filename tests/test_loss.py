@@ -88,7 +88,6 @@ def test_read_only():
         b = SoftmaxNode("b", parent=root)
 
 
-
 def test_focal_loss():
     gamma = 2.0
     root = SoftmaxNode("root", gamma=gamma)

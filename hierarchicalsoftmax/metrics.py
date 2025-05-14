@@ -212,58 +212,7 @@ class GreedyAccuracy():
         return greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth)
 
 
-class GreedyAccuracyTorchMetric(Metric):
-    def __init__(self, root:nodes.SoftmaxNode, name:str="", max_depth=None):
-        super().__init__()
-        self.root = root
-        self.max_depth = max_depth
-        self.name = name or (f"greedy_accuracy_{max_depth}" if max_depth else "greedy_accuracy")
-        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
-        self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
-
-    def update(self, predictions, targets):
-        self.total += targets.size(0)
-        self.correct += int(greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth) * targets.size(0))
-
-    def compute(self):
-        return self.correct / self.total
-    
-
-class RankAccuracyTorchMetric(Metric):
-    def __init__(self, root, ranks: dict[int, str], name: str = "rank_accuracy"):
-        super().__init__()
-        self.root = root
-        self.ranks = ranks
-        self.name = name
-
-        # Use `add_state` for metrics to handle distributed reduction and device placement
-        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
-
-        for rank_name in ranks.values():
-            self.add_state(rank_name, default=torch.tensor(0), dist_reduce_fx="sum")
-
-    def update(self, predictions, targets):
-        if isinstance(predictions, tuple) and len(predictions) == 1:
-            predictions = predictions[0]
-
-        # Ensure tensors match the device
-        predictions = predictions.to(self.device)
-        targets = targets.to(self.device)
-
-        self.total += targets.size(0)
-        depth_accurate_tensor = depth_accurate(predictions, targets, self.root)
-
-        for depth, rank_name in self.ranks.items():
-            accurate_at_depth = (depth_accurate_tensor >= depth).sum()
-            setattr(self, rank_name, getattr(self, rank_name) + accurate_at_depth)
-
-    def compute(self):
-        # Compute final metric values
-        return {
-            rank_name: getattr(self, rank_name) / self.total
-            for rank_name in self.ranks.values()
-        }
-
+class HierarchicalSoftmaxTorchMetric(Metric):
     def _apply(self, fn: Callable, exclude_state: Sequence[str] = "") -> Module:
         """Overwrite `_apply` function such that we can also move metric states to the correct device.
 
@@ -310,3 +259,89 @@ class RankAccuracyTorchMetric(Metric):
             this._forward_cache = apply_to_collection(this._forward_cache, Tensor, fn)
 
         return this
+
+
+class GreedyAccuracyTorchMetric(HierarchicalSoftmaxTorchMetric):
+    def __init__(self, root:nodes.SoftmaxNode, name:str="", max_depth=None):
+        super().__init__()
+        self.root = root
+        self.max_depth = max_depth
+        self.name = name or (f"greedy_accuracy_{max_depth}" if max_depth else "greedy_accuracy")
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, predictions, targets):
+        self.total += targets.size(0)
+        self.correct += int(greedy_accuracy(predictions, targets, self.root, max_depth=self.max_depth) * targets.size(0))
+
+    def compute(self):
+        return self.correct / self.total
+    
+
+class RankAccuracyTorchMetric(HierarchicalSoftmaxTorchMetric):
+    def __init__(self, root, ranks: dict[int, str], name: str = "rank_accuracy"):
+        super().__init__()
+        self.root = root
+        self.ranks = ranks
+        self.name = name
+
+        # Use `add_state` for metrics to handle distributed reduction and device placement
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
+
+        for rank_name in ranks.values():
+            self.add_state(rank_name, default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, predictions, targets):
+        if isinstance(predictions, tuple) and len(predictions) == 1:
+            predictions = predictions[0]
+
+        # Ensure tensors match the device
+        predictions = predictions.to(self.device)
+        targets = targets.to(self.device)
+
+        self.total += targets.size(0)
+        depth_accurate_tensor = depth_accurate(predictions, targets, self.root)
+
+        for depth, rank_name in self.ranks.items():
+            accurate_at_depth = (depth_accurate_tensor >= depth).sum()
+            setattr(self, rank_name, getattr(self, rank_name) + accurate_at_depth)
+
+    def compute(self):
+        # Compute final metric values
+        return {
+            rank_name: getattr(self, rank_name) / self.total
+            for rank_name in self.ranks.values()
+        }
+
+
+class LeafAccuracyTorchMetric(HierarchicalSoftmaxTorchMetric):
+    def __init__(self, root:nodes.SoftmaxNode, name:str="", max_depth=None):
+        super().__init__()
+        self.root = root
+        self.max_depth = max_depth
+        self.name = name or (f"leaf_accuracy_{max_depth}" if max_depth else "leaf_accuracy")
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.node_indexes = torch.as_tensor([node.best_index_in_softmax_layer() for node in self.root.node_list])
+        self.leaf_indexes = torch.as_tensor(self.root.leaf_indexes)
+
+    def update(self, predictions, targets):
+        self.total += targets.size(0)
+        
+        # Make sure the tensors are on the same device
+        self.node_indexes = self.node_indexes.to(predictions.device)
+        self.leaf_indexes = self.leaf_indexes.to(predictions.device)
+
+        target_indices = torch.index_select(self.node_indexes.to(targets.device), 0, targets)
+        
+        # get indices of the maximum values along the last dimension
+        probabilities = inference.leaf_probabilities(prediction_tensor=predictions, root=self.root)
+        _, max_indices = torch.max(probabilities, dim=1)
+        predicted_leaf_indices = torch.index_select(self.root.leaf_indexes.to(targets.device), 0, max_indices)
+
+        self.correct += (predicted_leaf_indices == target_indices).sum()
+
+    def compute(self):
+        return self.correct / self.total
+    
+

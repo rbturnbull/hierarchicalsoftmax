@@ -15,7 +15,7 @@ class ShapeError(RuntimeError):
 def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
-    probabilities = torch.zeros_like(prediction_tensor)
+    probabilities = torch.zeros(size=prediction_tensor.shape, device=prediction_tensor.device)
 
     if root.softmax_start_index is None:
         raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
@@ -51,9 +51,10 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
 
 def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
+    Takes the prediction scores for a number of samples and converts it to a list of probabilities of nodes in the tree.
     """
     probabilities = node_probabilities(prediction_tensor, root=root)
-    return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
+    return torch.index_select(probabilities, 1, root.leaf_indexes.to(probabilities.device))
 
 
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:

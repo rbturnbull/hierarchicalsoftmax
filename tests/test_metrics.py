@@ -13,6 +13,7 @@ from hierarchicalsoftmax.metrics import (
     GreedyAccuracyTorchMetric,
     GreedyAccuracy,
     RankAccuracyTorchMetric,
+    LeafAccuracyTorchMetric,
 )
 from hierarchicalsoftmax.inference import ShapeError
 from torch.testing import assert_allclose
@@ -178,8 +179,8 @@ def setup_depth_three_tests():
     prediction_nodes = targets.copy()
     aaa, aab, aba, abb, baa, bab, bba, bbba = targets
     prediction_nodes[0] = aab # correct parent
-    prediction_nodes[5] = baa # correct parent
     prediction_nodes[1] = aba # incorrect parent
+    prediction_nodes[5] = baa # correct parent
 
     predictions = torch.zeros( (len(prediction_nodes), root.layer_size) )
     for prediction_index, prediction in enumerate(prediction_nodes):
@@ -462,4 +463,16 @@ def test_rank_accuracy_apply_forward_cache(setup_depth_three_tests):
     metric._apply(multiply_by_10)
 
     assert metric2.total == 80
+
+
+def test_leaf_accuracy_update(setup_depth_three_tests):
+    predictions, target_tensor, root = setup_depth_three_tests
+    metric = LeafAccuracyTorchMetric(root=root)
+
+    # Patch the depth_accurate function    
+    metric.update(predictions, target_tensor)
+    
+    assert metric.total.item() == 8
+    assert metric.correct.item() == 5
+
 

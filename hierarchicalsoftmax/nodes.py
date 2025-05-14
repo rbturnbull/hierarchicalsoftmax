@@ -109,10 +109,20 @@ class SoftmaxNode(Node):
             
             self.node_list_softmax = self.node_list[:self.children_softmax_end_index] if self.children_softmax_end_index < len(self.node_list) else self.node_list
             self.leaf_list_softmax = [node for node in self.node_list_softmax if not node.children]
-            self.leaf_indexes_in_softmax_layer = torch.as_tensor([leaf.index_in_softmax_layer for leaf in self.leaf_list_softmax])
+            self.node_indexes_in_softmax_layer = torch.as_tensor([node.index_in_softmax_layer for node in self.node_list_softmax])
+            self.leaf_indexes = torch.as_tensor([leaf.best_index_in_softmax_layer() for leaf in self.leaves])
         
         self.readonly = True
         return current_index
+
+    def best_index_in_softmax_layer(self) -> int|None:
+        if self.index_in_softmax_layer is not None:
+            return self.index_in_softmax_layer
+
+        if self.parent:
+            return self.parent.best_index_in_softmax_layer()
+        
+        return None
 
     def set_indexes_if_unset(self) -> None:
         """ 
