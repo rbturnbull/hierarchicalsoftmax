@@ -3,6 +3,7 @@ from anytree.exporter import DotExporter
 from typing import Union
 from pathlib import Path
 import torch
+from graphviz import Source
 from anytree import Node, RenderTree, PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
 from typing import List, Optional
 from rich.console import Console
@@ -153,21 +154,32 @@ class SoftmaxNode(Node):
 
         return rendered
     
-    def graphviz(self, attr:Optional[str]=None, **kwargs) -> RenderTree:
+    def graphviz(
+        self,
+        options=None,
+        horizontal:bool=True,
+    ) -> Source:
         """
         Renders this node and all its descendants in a tree format using graphviz.
-
-        Useful for Jupyter notebooks.
         """
-        from graphviz import Source
-        
-        rendered = RenderTree(self, **kwargs)
-        if attr:
-            rendered = rendered.by_attr(attr)
-        
-        dot_string = "\n".join(DotExporter(self))
+        options = options or []
+        if horizontal:
+            options.append('rankdir="LR";')
+
+        dot_string = "\n".join(DotExporter(self, options=options))
 
         return Source(dot_string)
+
+    def svg(
+        self,
+        options=None,
+        horizontal:bool=True,
+    ) -> str:
+        """
+        Renders this node and all its descendants in a tree format using graphviz.
+        """
+        source = self.graphviz(options=options, horizontal=horizontal)
+        return source.pipe(format="svg").decode("utf-8")
 
     def _pre_attach(self, parent:Node):
         if self.readonly or parent.readonly:

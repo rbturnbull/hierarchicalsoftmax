@@ -17,6 +17,7 @@ A Hierarchical Softmax Framework for PyTorch.
    :caption: Contents:
 
    quickstart
+   cifar
    api
    credits
 

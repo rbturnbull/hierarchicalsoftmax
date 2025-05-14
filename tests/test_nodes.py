@@ -270,3 +270,12 @@ def test_pre_order_iter_non_root():
     assert isinstance(node.pre_order_iter(), PreOrderIter)
     assert [n.name for n in node.pre_order_iter()] == ['a', 'aa', 'ab', 'ac']
     assert [n.name for n in node.pre_order_iter(depth=1)] == ['a', 'aa', 'ab', 'ac']
+
+
+def test_svg():
+    root, _ = depth_two_tree_and_targets_three_children()
+    output = root.svg()
+    assert output.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+    assert output.strip().endswith('</svg>')
+    assert '<text text-anchor="middle" x="207"' in output
+
