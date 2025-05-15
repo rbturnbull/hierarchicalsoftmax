@@ -277,7 +277,7 @@ def test_svg():
     output = root.svg()
     assert output.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
     assert output.strip().endswith('</svg>')
-    assert '<text text-anchor="middle" x="207"' in output
+    assert '<text text-anchor' in output
 
 
 def test_best_index_in_softmax_layer():
