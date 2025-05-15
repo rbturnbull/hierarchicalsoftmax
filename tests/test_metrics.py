@@ -16,7 +16,7 @@ from hierarchicalsoftmax.metrics import (
     LeafAccuracyTorchMetric,
 )
 from hierarchicalsoftmax.inference import ShapeError
-from torch.testing import assert_allclose
+from torch.testing import assert_close
 
 from .util import depth_two_tree_and_targets, depth_three_tree_and_targets, depth_three_tree_and_targets_extra_branch, depth_two_tree_and_targets_three_children
 
@@ -33,15 +33,15 @@ def test_greedy_accuracy():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert_allclose(greedy_accuracy(predictions, target_tensor, root=root), 1.0)
+    assert greedy_accuracy(predictions, target_tensor, root=root) == 1.0
 
     for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert_allclose(greedy_accuracy(predictions, target_tensor, root=root), 0.75)
+    assert greedy_accuracy(predictions, target_tensor, root=root) == 0.75
 
     metric = GreedyAccuracy(root=root)
-    assert_allclose(metric(predictions, target_tensor), 0.75)
+    assert metric(predictions, target_tensor) == 0.75
 
 
 def test_greedy_f1_score():
@@ -57,12 +57,12 @@ def test_greedy_f1_score():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert_allclose(greedy_f1_score(predictions, target_tensor, root=root), 1.0)
+    assert_close(greedy_f1_score(predictions, target_tensor, root=root), 1.0)
 
     for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert_allclose(greedy_f1_score(predictions, target_tensor, root=root), 0.7611111111111111)
+    assert_close(greedy_f1_score(predictions, target_tensor, root=root), 0.7611111111111111)
 
 
 def test_greedy_precision():
@@ -77,12 +77,12 @@ def test_greedy_precision():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert_allclose(greedy_precision(predictions, target_tensor, root=root), 1.0)
+    assert_close(greedy_precision(predictions, target_tensor, root=root), 1.0)
 
     for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert_allclose(greedy_precision(predictions, target_tensor, root=root), 0.8055555555555555)
+    assert_close(greedy_precision(predictions, target_tensor, root=root), 0.8055555555555555)
 
 
 def test_greedy_recall():
@@ -98,12 +98,12 @@ def test_greedy_recall():
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
-    assert_allclose(greedy_recall(predictions, target_tensor, root=root), 1.0)
+    assert_close(greedy_recall(predictions, target_tensor, root=root), 1.0)
 
     for target_index, target in enumerate(targets[:3]):
         predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = -20.0
 
-    assert_allclose(greedy_recall(predictions, target_tensor, root=root), 0.5)
+    assert_close(greedy_recall(predictions, target_tensor, root=root), 0.5)
 
 
 def test_greedy_accuracy_max_depth_simple():
@@ -474,5 +474,6 @@ def test_leaf_accuracy_update(setup_depth_three_tests):
     
     assert metric.total.item() == 8
     assert metric.correct.item() == 5
+    assert metric.compute() == 0.625
 
 

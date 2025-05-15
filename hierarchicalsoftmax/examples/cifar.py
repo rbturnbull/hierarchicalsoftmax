@@ -138,18 +138,16 @@ def _(mo):
 def _(train_data):
     import torch
     from torch import nn
-    from torchmetrics import Accuracy
-    import lightning as L
-
-    import torch
-    import torch.nn as nn
     import torch.nn.functional as F
+    import lightning as L
+    from torchmetrics import Accuracy
 
     class BasicBlock(nn.Module):
-        def __init__(self, in_planes, out_planes, stride, dropout_rate=0.0):
+        def __init__(self, in_planes, out_planes, stride, dropout_rate=0.3):
             super().__init__()
             self.bn1 = nn.BatchNorm2d(in_planes)
             self.conv1 = nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False)
+            self.dropout = nn.Dropout(p=dropout_rate) if dropout_rate > 0 else nn.Identity()
             self.bn2 = nn.BatchNorm2d(out_planes)
             self.conv2 = nn.Conv2d(out_planes, out_planes, kernel_size=3, stride=1, padding=1, bias=False)
 
@@ -159,13 +157,14 @@ def _(train_data):
 
         def forward(self, x):
             out = self.conv1(F.relu(self.bn1(x)))
+            out = self.dropout(out)
             out = self.conv2(F.relu(self.bn2(out)))
             out += self.shortcut(x)
             return out
 
 
     class WideResNetBody(nn.Module):
-        def __init__(self, depth=16, width_factor=8):
+        def __init__(self, depth:int=28, width_factor:int=10, dropout_rate:float=0.3):
             super().__init__()
             assert (depth - 4) % 6 == 0, "Depth should be 6n+4"
             n = (depth - 4) // 6
@@ -173,21 +172,19 @@ def _(train_data):
             k = width_factor
             self.in_planes = 16
 
-            # Initial conv
             self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
 
-            # 3 groups
-            self.layer1 = self._make_layer(16*k, n, stride=1)
-            self.layer2 = self._make_layer(32*k, n, stride=2)
-            self.layer3 = self._make_layer(64*k, n, stride=2)
+            self.layer1 = self._make_layer(16*k, n, stride=1, dropout_rate=dropout_rate)
+            self.layer2 = self._make_layer(32*k, n, stride=2, dropout_rate=dropout_rate)
+            self.layer3 = self._make_layer(64*k, n, stride=2, dropout_rate=dropout_rate)
 
             self.bn = nn.BatchNorm2d(64*k)
 
-        def _make_layer(self, out_planes, blocks, stride):
+        def _make_layer(self, out_planes, blocks, stride, dropout_rate):
             strides = [stride] + [1]*(blocks-1)
             layers = []
             for s in strides:
-                layers.append(BasicBlock(self.in_planes, out_planes, s))
+                layers.append(BasicBlock(self.in_planes, out_planes, s, dropout_rate))
                 self.in_planes = out_planes
             return nn.Sequential(*layers)
 
@@ -203,10 +200,10 @@ def _(train_data):
 
 
     class BasicImageClassifier(L.LightningModule):
-        def __init__(self):
+        def __init__(self, depth:int=28, width_factor:int=10, dropout_rate:float=0.3):
             super().__init__()
             self.model = nn.Sequential(
-                WideResNetBody(),
+                WideResNetBody(depth=depth, width_factor=width_factor, dropout_rate=dropout_rate),
                 nn.LazyLinear(out_features=len(train_data.classes))
             )
             self.loss_fn = nn.CrossEntropyLoss()
@@ -243,7 +240,7 @@ def _(train_data):
         def configure_optimizers(self):
             return torch.optim.Adam(self.parameters(), lr=1e-3)
 
-    basic_model = BasicImageClassifier()
+    basic_model = BasicImageClassifier(depth=16, width_factor=8, dropout_rate=0.3)
     basic_model
     return BasicImageClassifier, L, WideResNetBody, basic_model, nn, torch
 
@@ -257,11 +254,12 @@ def _(mo):
 @app.cell
 def _(L, basic_model, epochs, test_loader, train_loader):
     from lightning.pytorch.loggers import CSVLogger
+    from lightning.pytorch.callbacks import TQDMProgressBar
 
     basic_logger = CSVLogger(save_dir="lightning_logs", name="basic_model")
-    basic_trainer = L.Trainer(max_epochs=epochs, accelerator="auto", enable_checkpointing=False, logger=basic_logger)
+    basic_trainer = L.Trainer(max_epochs=epochs, accelerator="auto", enable_checkpointing=False, logger=basic_logger, callbacks=[TQDMProgressBar(leave=True, refresh_rate=20)])
     basic_trainer.fit(basic_model, train_dataloaders=train_loader, val_dataloaders=test_loader)
-    return CSVLogger, basic_logger
+    return CSVLogger, TQDMProgressBar, basic_logger
 
 
 @app.cell
@@ -409,10 +407,10 @@ def _(
 
     class HierarchicalImageClassifier(BasicImageClassifier):
         # Just overriding the init - keep the rest of the code
-        def __init__(self, root: SoftmaxNode):
+        def __init__(self, root: SoftmaxNode, depth:int=28, width_factor:int=10, dropout_rate:float=0.3):
             super().__init__()
             self.model = nn.Sequential(
-                WideResNetBody(),
+                WideResNetBody(depth=depth, width_factor=width_factor, dropout_rate=dropout_rate),
                 HierarchicalSoftmaxLazyLinear(root=root)
             )
             self.loss_fn = HierarchicalSoftmaxLoss(root)
@@ -425,7 +423,7 @@ def _(
             ]
             self.root = root
 
-    hierarchical_model = HierarchicalImageClassifier(root)        
+    hierarchical_model = HierarchicalImageClassifier(root, depth=16, width_factor=8, dropout_rate=0.3)        
     hierarchical_model
     return (hierarchical_model,)
 
@@ -434,13 +432,14 @@ def _(
 def _(
     CSVLogger,
     L,
+    TQDMProgressBar,
     epochs,
     hierarchical_model,
     hierarchical_test_loader,
     hierarchical_train_loader,
 ):
     hierarchical_logger = CSVLogger(save_dir="lightning_logs", name="hierarchical_model")
-    hierarchical_trainer = L.Trainer(max_epochs=epochs, accelerator="auto", enable_checkpointing=False, logger=hierarchical_logger)
+    hierarchical_trainer = L.Trainer(max_epochs=epochs, accelerator="auto", enable_checkpointing=False, logger=hierarchical_logger, callbacks=[TQDMProgressBar(leave=True, refresh_rate=20)])
     hierarchical_trainer.fit(hierarchical_model, train_dataloaders=hierarchical_train_loader, val_dataloaders=hierarchical_test_loader)
     return (hierarchical_logger,)
 

@@ -279,3 +279,13 @@ def test_svg():
     assert output.strip().endswith('</svg>')
     assert '<text text-anchor="middle" x="207"' in output
 
+
+def test_best_index_in_softmax_layer():
+    root, _ = depth_two_tree_and_targets_three_children()
+    root.set_indexes()
+
+    assert root.best_index_in_softmax_layer() == None
+    for node in root.pre_order_iter():
+        if node == root:
+            continue
+        assert node.best_index_in_softmax_layer() == node.index_in_softmax_layer
