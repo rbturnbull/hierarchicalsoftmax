@@ -289,3 +289,10 @@ def test_best_index_in_softmax_layer():
         if node == root:
             continue
         assert node.best_index_in_softmax_layer() == node.index_in_softmax_layer
+
+
+def test_set_indexes_leaf_indexes_leaf_no_parent():
+    root = SoftmaxNode("root")
+    leaf = SoftmaxNode("leaf", parent=root)
+    root.set_indexes()
+    assert root.leaf_indexes == [None]

@@ -1,6 +1,7 @@
 import pytest
 import pickle
 from pathlib import Path
+from unittest.mock import patch
 from tempfile import TemporaryDirectory
 from collections import Counter
 from anytree import RenderTree
@@ -276,3 +277,12 @@ def test_app_pickle_tree(tmp_path):
     assert result.exit_code == 0
     tree = pickle.loads(out_path.read_bytes())
     assert tree.name == "root"
+
+
+def test_app_sunburst_show(tmp_path):
+    path, _ = make_and_save_treedict(tmp_path)
+
+    with patch("plotly.graph_objects.Figure.show") as mock_show:
+        result = runner.invoke(app, ["sunburst", str(path), "--show"])
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
