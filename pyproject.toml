@@ -24,12 +24,12 @@ rich = ">=10.16.1"
 scikit-learn = ">=1.1.1"
 torchmetrics = ">=1.4.0.post0"
 graphviz = ">=0.20.3"
+plotly = ">=5.0.0"
 
 [tool.poetry.group.examples.dependencies]
 lightning = ">=2.5.1.post0"
 torchvision = ">=0.22.0"
 pandas = ">=2.2.3"
-plotly = ">=6.0.1"
 marimo = ">=0.13.7"
 
 [tool.poetry.group.dev.dependencies]

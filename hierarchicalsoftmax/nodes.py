@@ -110,7 +110,11 @@ class SoftmaxNode(Node):
             self.node_list_softmax = self.node_list[:self.children_softmax_end_index] if self.children_softmax_end_index < len(self.node_list) else self.node_list
             self.leaf_list_softmax = [node for node in self.node_list_softmax if not node.children]
             self.node_indexes_in_softmax_layer = torch.as_tensor([node.index_in_softmax_layer for node in self.node_list_softmax])
-            self.leaf_indexes = torch.as_tensor([leaf.best_index_in_softmax_layer() for leaf in self.leaves])
+            self.leaf_indexes = [leaf.best_index_in_softmax_layer() for leaf in self.leaves]
+            try:
+                self.leaf_indexes = torch.as_tensor(self.leaf_indexes, dtype=torch.long)
+            except TypeError:
+                pass
         
         self.readonly = True
         return current_index
@@ -157,7 +161,9 @@ class SoftmaxNode(Node):
 
             rendered_tree_graph = DotExporter(self)
             
-            if filepath.suffix == ".dot":
+            if filepath.suffix == ".txt":
+                filepath.write_text(str(rendered))
+            elif filepath.suffix == ".dot":
                 rendered_tree_graph.to_dotfile(str(filepath))
             else:
                 rendered_tree_graph.to_picture(str(filepath))
