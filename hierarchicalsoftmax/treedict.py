@@ -13,6 +13,14 @@ from .nodes import SoftmaxNode
 
 @define
 class NodeDetail:
+    """
+    Stores metadata for a key in the TreeDict.
+
+    Attributes:
+        partition (int): The partition ID this key belongs to.
+        node (SoftmaxNode): The node in the classification tree associated with the key.
+        node_id (int): The index of the node in the tree (used during pickling).
+    """
     partition:int
     node:SoftmaxNode = field(default=None, eq=False)
     node_id:int = None
@@ -31,10 +39,31 @@ class AlreadyExists(Exception):
 
 class TreeDict(UserDict):
     def __init__(self, classification_tree:SoftmaxNode|None=None):
+        """
+        Initialize a TreeDict.
+
+        Args:
+            classification_tree (SoftmaxNode, optional): The root of the classification tree.
+                If not provided, a new root node named "root" will be created.
+        """
         super().__init__()
         self.classification_tree = classification_tree or SoftmaxNode("root")
 
-    def add(self, key:str, node:SoftmaxNode, partition:int):
+    def add(self, key:str, node:SoftmaxNode, partition:int) -> NodeDetail:
+        """
+        Associate a key with a node and a partition.
+
+        Args:
+            key (str): The unique identifier for the item.
+            node (SoftmaxNode): The node in the classification tree to associate with the key.
+            partition (int): The partition index for the key.
+
+        Raises:
+            AlreadyExists: If the key already exists with a different node.
+
+        Returns:
+            NodeDetail: The metadata object for the added key.
+        """
         assert node.root == self.classification_tree
         if key in self:
             old_node = self.node(key)
@@ -49,12 +78,21 @@ class TreeDict(UserDict):
         return detail
 
     def set_indexes(self):
+        """
+        Ensure the tree has assigned node indexes, and record the node_id for each key.
+        """
         self.classification_tree.set_indexes_if_unset()
         for detail in self.values():
             if detail.node:
                 detail.node_id = self.classification_tree.node_to_id[detail.node]
 
     def save(self, path:Path):
+        """
+        Save the TreeDict to a pickle file.
+
+        Args:
+            path (Path): The file path to save the TreeDict.
+        """
         path = Path(path)
         path.parent.mkdir(exist_ok=True, parents=True)
 
@@ -64,26 +102,70 @@ class TreeDict(UserDict):
 
     @classmethod
     def load(self, path:Path):
+        """
+        Load a TreeDict from a pickle file.
+
+        Args:
+            path (Path): The path to the serialized TreeDict.
+
+        Returns:
+            TreeDict: The loaded TreeDict instance.
+        """
         with open(path, 'rb') as handle:
             return pickle.load(handle)
 
     def node(self, key:str):
+        """
+        Retrieve the node associated with a key.
+
+        Args:
+            key (str): The key for which to retrieve the node.
+
+        Returns:
+            SoftmaxNode: The node corresponding to the key.
+        """
         detail = self[key]
         if detail.node is not None:
             return detail.node
         return self.classification_tree.node_list[detail.node_id]
     
     def keys_in_partition(self, partition:int):
+        """
+        Yield all keys that belong to a given partition.
+
+        Args:
+            partition (int): The partition to filter by.
+
+        Yields:
+            str: Keys in the specified partition.
+        """
         for key, detail in self.items():
             if detail.partition == partition:
                 yield key
 
     def keys(self, partition:int|None = None):
+        """
+        Return keys in the TreeDict, optionally filtering by partition.
+
+        Args:
+            partition (int | None): The partition to filter keys by. If None, return all keys.
+
+        Returns:
+            Iterator[str]: An iterator over the keys.
+        """
         return super().keys() if partition is None else self.keys_in_partition(partition)
     
     def truncate(self, max_depth:int) -> "TreeDict":
         """
-        Prunes the tree to a maximum depth.
+        Truncate the classification tree to a specified maximum depth and return a new TreeDict.
+
+        Keys deeper than the depth limit will be reassigned to the ancestor node at that depth.
+
+        Args:
+            max_depth (int): The maximum number of ancestor levels to keep.
+
+        Returns:
+            TreeDict: A new truncated TreeDict.
         """
         self.classification_tree.set_indexes_if_unset()
         classification_tree = copy.deepcopy(self.classification_tree)
@@ -110,7 +192,9 @@ class TreeDict(UserDict):
         return new_treedict
                 
     def add_counts(self):
-        """ Adds a count to each node in the tree. """
+        """
+        Count the number of keys assigned to each node, and store the count in each node.
+        """
         for node in self.classification_tree.post_order_iter():
             node.count = 0
 
@@ -119,7 +203,9 @@ class TreeDict(UserDict):
             node.count += 1
 
     def add_partition_counts(self):
-        """ Adds a count to each node in the tree. """
+        """
+        Count the number of keys in each partition per node and store it in the node.
+        """
         for node in self.classification_tree.post_order_iter():
             node.partition_counts = Counter()
 
@@ -129,7 +215,17 @@ class TreeDict(UserDict):
             node.partition_counts[partition] += 1
 
     def render(self, count:bool=False, partition_counts:bool=False, **kwargs):
-        """ Renders the TreeDict. """
+        """
+        Render the tree as text, optionally showing key counts or partition counts.
+
+        Args:
+            count (bool): If True, show the number of keys at each node.
+            partition_counts (bool): If True, show partition-wise key counts at each node.
+            **kwargs: Additional arguments passed to the underlying tree render method.
+
+        Returns:
+            anytree.RenderTree or str: The rendered tree.
+        """
         if partition_counts:
             self.add_partition_counts()
             for node in self.classification_tree.post_order_iter():
@@ -147,11 +243,15 @@ class TreeDict(UserDict):
     
     def sunburst(self, **kwargs) -> go.Figure:
         """
-        Renders the TreeDict as a sunburst plot.
+        Generate a Plotly sunburst plot based on the TreeDict.
 
-        The count of keys at each node is used as the value.
+        Node values are based on the number of keys mapped to each node.
 
-        Returns a plotly figure.
+        Args:
+            **kwargs: Additional keyword arguments passed to Plotly layout.
+
+        Returns:
+            plotly.graph_objects.Figure: A sunburst plot.
         """
         self.add_counts()
         labels = []
@@ -174,12 +274,23 @@ class TreeDict(UserDict):
         return fig
 
     def keys_to_file(self, file:Path) -> None:
-        """ Writes all the keys of this TreeDict to a file. """
+        """
+        Write all keys to a text file, one per line.
+
+        Args:
+            file (Path): Path to the output text file.
+        """
         with open(file, "w") as f:
             for key in self.keys():
                 print(key, file=f)
 
     def pickle_tree(self, output:Path):
+        """
+        Save only the classification tree (not the key-to-node mapping) to a pickle file.
+
+        Args:
+            output (Path): Path to the output file.
+        """
         with open(output, 'wb') as pickle_file:
             pickle.dump(self.classification_tree, pickle_file)
 
@@ -205,18 +316,24 @@ def keys(
 def render(
     treedict:Path = typer.Argument(...,help="The path to the TreeDict."), 
     output:Path|None = typer.Option(None, help="The path to save the rendered tree."),
-    print:bool = typer.Option(True, help="Whether or not to print the tree to the screen."),
+    print_tree:bool = typer.Option(True, help="Whether or not to print the tree to the screen."),
     count:bool = typer.Option(False, help="Whether or not to print the count of keys at each node."),
     partition_counts:bool = typer.Option(False, help="Whether or not to print the count of each partition at each node."),
 ):
+    """
+    Render the tree as text, optionally showing key counts or partition counts.
+    """
     treedict = TreeDict.load(treedict)
-    treedict.render(filepath=output, print=print, count=count, partition_counts=partition_counts)
+    treedict.render(filepath=output, print=print_tree, count=count, partition_counts=partition_counts)
 
 
 @app.command()
 def count(
     treedict:Path = typer.Argument(...,help="The path to the TreeDict."), 
 ):
+    """
+    Prints the number of keys in the TreeDict.
+    """
     treedict = TreeDict.load(treedict)
     print(len(treedict))
 
@@ -229,6 +346,9 @@ def sunburst(
     width:int = typer.Option(1000, help="The width of the plot."),
     height:int = typer.Option(0, help="The height of the plot. If 0 then it will be calculated based on the width."),
 ):
+    """
+    Renders the TreeDict as a sunburst plot.
+    """
     treedict = TreeDict.load(treedict)
     height = height or width
 
@@ -259,7 +379,7 @@ def truncate(
     output:Path = typer.Argument(...,help="The path to the output file."),
 ):
     """
-    Prunes the tree to a maximum depth.
+    Truncates the tree to a maximum depth.
     """
     treedict = TreeDict.load(treedict)
     new_tree = treedict.truncate(max_depth)
@@ -282,5 +402,8 @@ def pickle_tree(
     treedict:Path = typer.Argument(...,help="The path to the TreeDict."),    
     output:Path = typer.Argument(...,help="The path to the output pickle file."),     
 ):
+    """
+    Pickles the classification tree to a file.
+    """
     treedict = TreeDict.load(treedict)
     treedict.pickle_tree(output)
