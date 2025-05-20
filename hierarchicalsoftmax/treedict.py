@@ -6,7 +6,6 @@ import pickle
 from collections import Counter
 from rich.progress import track
 import typer
-from plotly import graph_objects as go
 
 from .nodes import SoftmaxNode
 
@@ -241,7 +240,7 @@ class TreeDict(UserDict):
 
         return self.classification_tree.render(**kwargs)
     
-    def sunburst(self, **kwargs) -> go.Figure:
+    def sunburst(self, **kwargs) -> "go.Figure":
         """
         Generate a Plotly sunburst plot based on the TreeDict.
 
@@ -253,6 +252,8 @@ class TreeDict(UserDict):
         Returns:
             plotly.graph_objects.Figure: A sunburst plot.
         """
+        import plotly.graph_objects as go
+
         self.add_counts()
         labels = []
         parents = []
