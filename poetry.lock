@@ -1894,7 +1894,6 @@ files = [
     {file = "narwhals-1.39.0-py3-none-any.whl", hash = "sha256:50b6778f4b4249eb86c88dd17c3907dd004a16ec25b02d5effaf226a2bcfb940"},
     {file = "narwhals-1.39.0.tar.gz", hash = "sha256:6f114def701fc6a23b0523ad53700ae545ad3f5ece041c64dc3ad59e699da43f"},
 ]
-markers = {main = "extra == \"examples\""}
 
 [package.extras]
 cudf = ["cudf (>=24.10.0)"]
@@ -2621,7 +2620,6 @@ description = "An open-source interactive data visualization library for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"examples\""
 files = [
     {file = "plotly-6.0.1-py3-none-any.whl", hash = "sha256:4714db20fea57a435692c548a4eb4fae454f7daddf15f8d8ba7e1045681d7768"},
     {file = "plotly-6.0.1.tar.gz", hash = "sha256:dd8400229872b6e3c964b099be699f8d00c489a974f2cfccfad5e8240873366b"},
@@ -4567,9 +4565,9 @@ multidict = ">=4.0"
 propcache = ">=0.2.1"
 
 [extras]
-examples = ["plotly"]
+examples = []
 
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "54e62840b159f743156a828f4b7a908656085c1f289d1ca153b2ee5bcab8eabc"
+content-hash = "8b5fed171ea1753e4fb75afa5680b89f1c714a6c7ce2bea4a16a7e09283c81e3"

@@ -48,7 +48,7 @@ black = ">=21.10b0"
 sphinx-click = {git = "https://github.com/rbturnbull/sphinx-click.git"}
 
 [tool.poetry.extras]
-examples = ["lightning", "torchvision", "pandas", "plotly", "marimo"]
+examples = ["lightning", "torchvision", "pandas", "marimo"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
