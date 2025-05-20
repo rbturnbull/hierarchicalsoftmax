@@ -22,6 +22,7 @@ hierarchicalsoftmax
 
 A Hierarchical Softmax Framework for PyTorch.
 
+Documentation available here: `https://rbturnbull.github.io/hierarchicalsoftmax/ <https://rbturnbull.github.io/hierarchicalsoftmax/>`_.
 
 .. start-quickstart
 
@@ -151,6 +152,19 @@ For example, the loss for the first level of classification (under the `root` no
     ba = SoftmaxNode("ba", parent=b)
     bb = SoftmaxNode("bb", parent=b)
 
+
+Example Usage
+==================================
+
+In the documentation, we provide `an example of how to use this package with the CIFAR-10 and CIFAR-100 datasets <https://rbturnbull.github.io/hierarchicalsoftmax/cifar.html>`_.:
+
+
+TreeDict
+==================================
+
+We provide a helper class to create a dictionary where items point to the nodes in the tree.
+This is useful for creating a dataloader in a machine learning model.
+See the `TreeDict documentation <https://rbturnbull.github.io/hierarchicalsoftmax/cifar.html>`_ for more information.
 
 Label Smoothing
 ==================================
