@@ -3,6 +3,7 @@ from anytree.exporter import DotExporter
 from typing import Union
 from pathlib import Path
 import torch
+from graphviz import Source
 from anytree import Node, RenderTree, PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
 from typing import List, Optional
 from rich.console import Console
@@ -74,12 +75,16 @@ class SoftmaxNode(Node):
         self.index_in_parent_tensor = torch.as_tensor([index_in_parent], dtype=torch.long) if index_in_parent is not None else None
         
         self.index_in_softmax_layer = self.index_in_parent
-        if self.parent:
-            self.index_in_softmax_layer += self.parent.softmax_start_index
+        if self.parent:           
+            # If the parent has just one child, then this node is skipped in the softmax layer because it isn't needed
+            if len(self.parent.children) == 1:
+                self.index_in_softmax_layer = None
+            else:
+                self.index_in_softmax_layer += self.parent.softmax_start_index
 
         if self.children:
             self.softmax_start_index = current_index
-            current_index += len(self.children)
+            current_index += len(self.children) if len(self.children) > 1 else 0
             self.softmax_end_index = current_index
 
             for child_index, child in enumerate(self.children):
@@ -88,18 +93,40 @@ class SoftmaxNode(Node):
             self.children_softmax_end_index = current_index
         
         # If this is the root, then traverse the tree and make an index of all children
-        if self.softmax_start_index == 0:
+        if self.parent is None:
             self.node_list = [None] * len(self.descendants)
             self.node_to_id = dict()
-            self.softmax_index_to_node = dict()
+            non_softmax_index = self.children_softmax_end_index
             for node in self.descendants:
-                self.node_to_id[node] = node.index_in_softmax_layer
-                self.node_list[node.index_in_softmax_layer] = node
-
-            self.leaf_indexes_in_softmax_layer = torch.as_tensor([leaf.index_in_softmax_layer for leaf in self.leaves])
+                if node.index_in_softmax_layer is None:
+                    node_id = non_softmax_index
+                    non_softmax_index += 1
+                else:
+                    node_id = node.index_in_softmax_layer
+                
+                self.node_to_id[node] = node_id
+                self.node_list[node_id] = node
+            
+            self.node_list_softmax = self.node_list[:self.children_softmax_end_index] if self.children_softmax_end_index < len(self.node_list) else self.node_list
+            self.leaf_list_softmax = [node for node in self.node_list_softmax if not node.children]
+            self.node_indexes_in_softmax_layer = torch.as_tensor([node.index_in_softmax_layer for node in self.node_list_softmax])
+            self.leaf_indexes = [leaf.best_index_in_softmax_layer() for leaf in self.leaves]
+            try:
+                self.leaf_indexes = torch.as_tensor(self.leaf_indexes, dtype=torch.long)
+            except TypeError:
+                pass
         
         self.readonly = True
         return current_index
+
+    def best_index_in_softmax_layer(self) -> int|None:
+        if self.index_in_softmax_layer is not None:
+            return self.index_in_softmax_layer
+
+        if self.parent:
+            return self.parent.best_index_in_softmax_layer()
+        
+        return None
 
     def set_indexes_if_unset(self) -> None:
         """ 
@@ -134,12 +161,41 @@ class SoftmaxNode(Node):
 
             rendered_tree_graph = DotExporter(self)
             
-            if filepath.suffix == ".dot":
+            if filepath.suffix == ".txt":
+                filepath.write_text(str(rendered))
+            elif filepath.suffix == ".dot":
                 rendered_tree_graph.to_dotfile(str(filepath))
             else:
                 rendered_tree_graph.to_picture(str(filepath))
 
         return rendered
+    
+    def graphviz(
+        self,
+        options=None,
+        horizontal:bool=True,
+    ) -> Source:
+        """
+        Renders this node and all its descendants in a tree format using graphviz.
+        """
+        options = options or []
+        if horizontal:
+            options.append('rankdir="LR";')
+
+        dot_string = "\n".join(DotExporter(self, options=options))
+
+        return Source(dot_string)
+
+    def svg(
+        self,
+        options=None,
+        horizontal:bool=True,
+    ) -> str:
+        """
+        Renders this node and all its descendants in a tree format using graphviz.
+        """
+        source = self.graphviz(options=options, horizontal=horizontal)
+        return source.pipe(format="svg").decode("utf-8")
 
     def _pre_attach(self, parent:Node):
         if self.readonly or parent.readonly:

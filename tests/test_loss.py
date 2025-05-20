@@ -22,6 +22,8 @@ def test_loss():
 
     predictions = torch.zeros( (len(targets), root.layer_size) )
 
+    assert root.layer_size == 6
+
     # Test blank is inaccurate
     value = loss(predictions, target_tensor)
     assert value > 1.38
@@ -29,6 +31,43 @@ def test_loss():
     # Test accurate
     for target_index, target in enumerate(targets):
         while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    value = loss(predictions, target_tensor)
+    assert value < 0.0001
+
+
+def test_loss_with_single_child():
+    root = SoftmaxNode("root")
+    a_parent = SoftmaxNode("a_parent", parent=root)
+    a = SoftmaxNode("a", parent=a_parent)
+    aa = SoftmaxNode("aa", parent=a)
+    ab = SoftmaxNode("ab", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    ba = SoftmaxNode("ba", parent=b)
+    bb = SoftmaxNode("bb", parent=b)
+
+    loss = HierarchicalSoftmaxLoss(root)
+
+    targets = [aa,ba,bb, ab]
+    target_tensor = root.get_node_ids_tensor(targets)
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+
+    assert root.layer_size == 6
+
+    # Test blank is inaccurate
+    value = loss(predictions, target_tensor)
+    assert value > 1.38
+
+    # Test accurate
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            # If the parent has only one child, then skip it
+            if len(target.parent.children) == 1:
+                target = target.parent
+                continue
             predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
@@ -47,7 +86,6 @@ def test_read_only():
 
     with pytest.raises(ReadOnlyError):
         b = SoftmaxNode("b", parent=root)
-
 
 
 def test_focal_loss():

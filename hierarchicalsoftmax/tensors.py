@@ -98,3 +98,10 @@ class LazyLinearTensor(Tensor):
         x.weight = self.weight.half()
         x.bias = self.bias.half()
         return x    
+    
+    def to(self, *args, **kwargs):
+        x = super().to(*args, **kwargs)
+        x.input = self.input.to(*args, **kwargs)
+        x.weight = self.weight.to(*args, **kwargs)
+        x.bias = self.bias.to(*args, **kwargs)
+        return x

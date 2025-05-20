@@ -3,7 +3,7 @@ import pytest
 from hierarchicalsoftmax.nodes import SoftmaxNode, ReadOnlyError, AlreadyIndexedError
 import tempfile
 import torch
-from .util import depth_two_tree, depth_two_tree_and_targets_three_children, correct_predictions
+from .util import depth_two_tree, depth_two_tree_and_targets_three_children, correct_predictions, depth_three_tree_and_targets_only_child
 from anytree import PreOrderIter, PostOrderIter, LevelOrderIter, LevelOrderGroupIter, ZigZagGroupIter
 
 
@@ -182,6 +182,31 @@ def test_render_equal_false():
     )
 
 
+def test_render_depth_three_tree_and_targets_only_child():
+    root, _ = depth_three_tree_and_targets_only_child()
+    print(root.render())
+    assert root.render_equal("""
+        root
+        ├── a
+        │   └── aa
+        │       ├── aaa
+        │       └── aab
+        └── b
+            └── ba
+                ├── baa
+                └── bab
+    """)
+
+
+def test_render_depth_three_tree_and_targets_layer_size():
+    root, _ = depth_three_tree_and_targets_only_child()
+    root.set_indexes()
+    assert root.layer_size == 6
+    assert len(root.node_list) == 8
+    assert len(root.node_list_softmax) == 6
+    assert [node.name for node in root.node_list_softmax] == ["a", "b", "aaa", "aab", "baa", "bab"]
+
+
 def test_node_indexes():
     root, targets = depth_two_tree_and_targets_three_children()
     root.set_indexes()
@@ -245,3 +270,29 @@ def test_pre_order_iter_non_root():
     assert isinstance(node.pre_order_iter(), PreOrderIter)
     assert [n.name for n in node.pre_order_iter()] == ['a', 'aa', 'ab', 'ac']
     assert [n.name for n in node.pre_order_iter(depth=1)] == ['a', 'aa', 'ab', 'ac']
+
+
+def test_svg():
+    root, _ = depth_two_tree_and_targets_three_children()
+    output = root.svg()
+    assert output.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+    assert output.strip().endswith('</svg>')
+    assert '<text text-anchor' in output
+
+
+def test_best_index_in_softmax_layer():
+    root, _ = depth_two_tree_and_targets_three_children()
+    root.set_indexes()
+
+    assert root.best_index_in_softmax_layer() == None
+    for node in root.pre_order_iter():
+        if node == root:
+            continue
+        assert node.best_index_in_softmax_layer() == node.index_in_softmax_layer
+
+
+def test_set_indexes_leaf_indexes_leaf_no_parent():
+    root = SoftmaxNode("root")
+    leaf = SoftmaxNode("leaf", parent=root)
+    root.set_indexes()
+    assert root.leaf_indexes == [None]

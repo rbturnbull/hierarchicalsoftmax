@@ -15,7 +15,7 @@ class ShapeError(RuntimeError):
 def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
     """
-    probabilities = torch.zeros_like(prediction_tensor)
+    probabilities = torch.zeros(size=prediction_tensor.shape, device=prediction_tensor.device)
 
     if root.softmax_start_index is None:
         raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
@@ -23,7 +23,7 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     if prediction_tensor.shape[-1] != root.layer_size:
         raise ShapeError(
             f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
-            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
+            f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
     for node in PreOrderIter(root):
@@ -31,14 +31,19 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
             continue
         elif node == root:
             my_probability = 1.0
-        else :
+        elif node.index_in_softmax_layer != None:
             my_probability = probabilities[:,node.index_in_softmax_layer]
             my_probability = my_probability[:,None]
-        
+
+        if len(node.children) == 1:
+            # If this has just one child, then skip it
+            continue
+
         softmax_probabilities = torch.softmax(
             prediction_tensor[:,node.softmax_start_index:node.softmax_end_index], 
             dim=1,
         )
+
         probabilities[:,node.softmax_start_index:node.softmax_end_index] = softmax_probabilities * my_probability
     
     return probabilities
@@ -46,9 +51,10 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
 
 def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
     """
+    Takes the prediction scores for a number of samples and converts it to a list of probabilities of nodes in the tree.
     """
     probabilities = node_probabilities(prediction_tensor, root=root)
-    return torch.index_select(probabilities, 1, root.leaf_indexes_in_softmax_layer)
+    return torch.index_select(probabilities, 1, root.leaf_indexes.to(probabilities.device))
 
 
 def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
@@ -72,23 +78,30 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
     """
     prediction_nodes = []
 
+    if isinstance(prediction_tensor, tuple) and len(prediction_tensor) == 1:
+        prediction_tensor = prediction_tensor[0]
+
     if root.softmax_start_index is None:
         raise nodes.IndexNotSetError(f"The index of the root node {root} has not been set. Call `set_indexes` on this object.")
 
     if prediction_tensor.shape[-1] != root.layer_size:
         raise ShapeError(
             f"The predictions tensor given to {__name__} has final dimensions of {prediction_tensor.shape[-1]}. "
-            "That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
+            f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
     for predictions in prediction_tensor:
         node = root
         depth = 1
         while (node.children):
-            # This would be better if we could use torch.argmax but it doesn't work with MPS in the production version of pytorch
-            # See https://github.com/pytorch/pytorch/issues/98191
-            # https://github.com/pytorch/pytorch/pull/104374
-            prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
+            if len(node.children) == 1:
+                # if this has just one child, then we don't check the prediction
+                prediction_child_index = 0
+            else:
+                # This would be better if we could use torch.argmax but it doesn't work with MPS in the production version of pytorch
+                # See https://github.com/pytorch/pytorch/issues/98191
+                # https://github.com/pytorch/pytorch/pull/104374
+                prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
 
             # Stop if the prediction is below the threshold
             if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:

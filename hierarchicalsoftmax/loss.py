@@ -56,6 +56,11 @@ class HierarchicalSoftmaxLoss(nn.Module):
         for prediction, target_node in zip(batch_predictions, target_nodes):
             node = target_node
             while node.parent:
+                # if this is the sole child, then skip it
+                if len(node.parent.children) == 1:
+                    node = node.parent
+                    continue
+                
                 node.index_in_parent_tensor = node.index_in_parent_tensor.to(device) # can this be done elsewhere?
                 logits = torch.unsqueeze(prediction[node.parent.softmax_start_index:node.parent.softmax_end_index], dim=0)
                 label = node.index_in_parent_tensor                

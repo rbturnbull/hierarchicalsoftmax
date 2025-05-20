@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hierarchicalsoftmax"
-version = "1.1.0"
+version = "1.4.1"
 description = "A Hierarchical Softmax Framework for PyTorch."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
 license = "Apache-2.0"
@@ -16,28 +16,39 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 
-
 [tool.poetry.dependencies]
-python = "^3.8"
-anytree = "^2.8.0"
+python = "^3.10"
+anytree = ">=2.8.0"
 torch = ">=1.10.2"
 rich = ">=10.16.1"
-scikit-learn = "^1.1.1"
+scikit-learn = ">=1.1.1"
+torchmetrics = ">=1.4.0.post0"
+graphviz = ">=0.20.3"
+plotly = ">=5.0.0"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
-ipykernel = "^6.6.1"
-coverage = "^5.5"
-autopep8 = "^1.5.7"
-Sphinx = "^4.2.0"
-nbsphinx = "^0.8.7"
-sphinx-rtd-theme = "^1.0.0"
-sphinx-autobuild = "^2021.3.14"
-myst-parser = "^0.15.2"
-pre-commit = "^2.15.0"
-sphinx-copybutton = "^0.4.0"
-black = "^21.10b0"
+[tool.poetry.group.examples.dependencies]
+lightning = ">=2.5.1.post0"
+torchvision = ">=0.22.0"
+pandas = ">=2.2.3"
+marimo = ">=0.13.7"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=6.2.5"
+ipykernel = ">=6.6.1"
+coverage = ">=5.5"
+autopep8 = ">=1.5.7"
+Sphinx = ">=4.2.0"
+nbsphinx = ">=0.8.7"
+sphinx-rtd-theme = ">=1.0.0"
+sphinx-autobuild = ">=2021.3.14"
+myst-parser = ">=0.15.2"
+pre-commit = ">=2.15.0"
+sphinx-copybutton = ">=0.4.0"
+black = ">=21.10b0"
 sphinx-click = {git = "https://github.com/rbturnbull/sphinx-click.git"}
+
+[tool.poetry.extras]
+examples = ["lightning", "torchvision", "pandas", "marimo"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -48,3 +59,6 @@ testpaths = [
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+treedict = "hierarchicalsoftmax.treedict:app"
