@@ -285,6 +285,20 @@ class TreeDict(UserDict):
             for key in self.keys():
                 print(key, file=f)
 
+    def csv(self, file:Path) -> None:
+        """
+        Write all keys, node names and partitions to a CSV file.
+
+        Args:
+            file (Path): Path to the output text file.
+        """
+        with open(file, "w") as f:
+            print("key,node,partition", file=f)
+            for key in self.keys():
+                detail = self[key]
+                node = self.node(key)
+                print(f"{key},{node.name.strip()},{detail.partition}", file=f)
+
     def pickle_tree(self, output:Path):
         """
         Save only the classification tree (not the key-to-node mapping) to a pickle file.
@@ -311,6 +325,18 @@ def keys(
     treedict = TreeDict.load(treedict)
     for key in treedict.keys(partition=partition):
         print(key)
+    
+
+@app.command()
+def csv(
+    treedict:Path = typer.Argument(...,help="The path to the TreeDict."), 
+    csv:Path = typer.Argument(...,help="The path to the output CSV file."),
+):
+    """ 
+    Writes a CSV file with the key, node name and partition. 
+    """
+    treedict = TreeDict.load(treedict)
+    treedict.csv(csv)
     
 
 @app.command()

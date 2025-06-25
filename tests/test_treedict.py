@@ -221,6 +221,16 @@ def test_app_keys_partition(tmp_path):
     assert "b" not in result.output
 
 
+def test_app_csv(tmp_path):
+    path, _ = make_and_save_treedict(tmp_path)
+    csv_path = tmp_path / "treedict.csv"
+    result = runner.invoke(app, ["csv", str(path), str(csv_path)])
+    assert result.exit_code == 0
+    assert csv_path.exists()
+    contents = csv_path.read_text()
+    assert contents == 'key,node,partition\na,aaa,0\nb,aaa,1\n'
+
+
 def test_app_render(tmp_path):
     path, _ = make_and_save_treedict(tmp_path)
     out_path = tmp_path / "render.txt"
