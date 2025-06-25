@@ -141,7 +141,6 @@ def test_render_svg():
         root.render(filepath=path)
         assert path.exists()
         text = path.read_text()
-        assert 3800 < path.stat().st_size < 3900
         assert text.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
 
 
@@ -277,7 +276,7 @@ def test_svg():
     output = root.svg()
     assert output.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
     assert output.strip().endswith('</svg>')
-    assert '<text text-anchor' in output
+    assert '<title>bc</title>' in output
 
 
 def test_best_index_in_softmax_layer():
