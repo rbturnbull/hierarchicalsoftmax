@@ -2,6 +2,7 @@ from typing import List, Optional
 import torch
 from pathlib import Path
 from anytree import PreOrderIter
+from rich.progress import track
 
 from . import nodes
 from .dotexporter import ThresholdDotExporter
@@ -120,7 +121,13 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
     return prediction_nodes
 
 
-def greedy_lineage_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
+def greedy_lineage_probabilities(
+        prediction_tensor:torch.Tensor, 
+        root:nodes.SoftmaxNode, 
+        max_depth:Optional[int]=None, 
+        threshold:Optional[float]=None,
+        progress_bar:bool=False,
+    ) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 
@@ -153,7 +160,7 @@ def greedy_lineage_probabilities(prediction_tensor:torch.Tensor, root:nodes.Soft
             f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
-    for predictions in prediction_tensor:
+    for predictions in track(prediction_tensor) if progress_bar else prediction_tensor:
         node = root
         depth = 1
         probability = 1.0 # Start with the root node having a probability of 1.0
