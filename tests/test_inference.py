@@ -7,6 +7,7 @@ from hierarchicalsoftmax.inference import (
     node_probabilities, 
     leaf_probabilities, 
     render_probabilities,
+    greedy_lineage_probabilities,
 )
 from pathlib import Path
 import tempfile
@@ -26,6 +27,97 @@ def test_greedy_predictions():
     node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)
 
     assert node_predictions == targets
+
+
+def test_greedy_lineage_probabilities():
+    root, targets = depth_two_tree_and_targets()
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 1.0
+            target = target.parent
+
+    results = greedy_lineage_probabilities(prediction_tensor=predictions, root=root)
+    for target, result, in zip(targets, results):
+        prediction_node, probability = result[-1]
+        assert isinstance(prediction_node, SoftmaxNode)
+        assert prediction_node == target
+        assert isinstance(probability, float)
+        for node, probability in result:
+            assert isinstance(node, SoftmaxNode)
+            assert isinstance(probability, float)
+            assert 0.5 <= probability <= 1.0
+
+
+def test_greedy_lineage_probabilities_only_child():
+    root, targets = depth_three_tree_and_targets_only_child()
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            if len(target.parent.children) > 1:
+                predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            target = target.parent
+
+    results = greedy_lineage_probabilities(prediction_tensor=predictions, root=root)
+    for target, result, in zip(targets, results):
+        prediction_node, probability = result[-1]
+        assert isinstance(prediction_node, SoftmaxNode)
+        assert prediction_node == target
+        assert isinstance(probability, float)
+        for node, probability in result:
+            assert isinstance(node, SoftmaxNode)
+            assert isinstance(probability, float)
+            assert 0.5 <= probability <= 1.0
+
+
+
+def test_greedy_lineage_probabilities_threshold():
+    root, targets = depth_two_tree_and_targets()
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 1.0
+            target = target.parent
+
+    results = greedy_lineage_probabilities(prediction_tensor=(predictions,), root=root, threshold=0.7)
+    for target, result, in zip(targets, results):
+        prediction_node, probability = result[-1]
+        assert isinstance(prediction_node, SoftmaxNode)
+        assert prediction_node == target.parent
+        assert isinstance(probability, float)
+        for node, probability in result:
+            assert isinstance(node, SoftmaxNode)
+            assert isinstance(probability, float)
+            assert 0.7 <= probability <= 1.0
+
+
+def test_greedy_lineage_probabilities_max_depth():
+    root, targets = depth_two_tree_and_targets()
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size) )
+    for target_index, target in enumerate(targets):
+        while target.parent:
+            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 1.0
+            target = target.parent
+
+    results = greedy_lineage_probabilities(prediction_tensor=(predictions,), root=root, max_depth=1)
+    for target, result, in zip(targets, results):
+        prediction_node, probability = result[-1]
+        assert isinstance(prediction_node, SoftmaxNode)
+        assert prediction_node == target.parent
+        assert isinstance(probability, float)
+        assert len(result) == 1
+        for node, probability in result:
+            assert isinstance(node, SoftmaxNode)
+            assert isinstance(probability, float)
+            assert 0.7 <= probability <= 1.0
 
 
 def test_greedy_predictions_tuple():
@@ -53,14 +145,24 @@ def test_unset_indexes():
         greedy_predictions(prediction_tensor=predictions, root=root)
 
 
-def test_greedy_predictions():
+def test_greedy_predictions_shape_error():
     root, targets = depth_two_tree_and_targets()
 
     root.set_indexes()
 
     predictions = torch.zeros( (len(targets), root.layer_size + 1) )
     with pytest.raises(ShapeError):
-        node_predictions = greedy_predictions(prediction_tensor=predictions, root=root)
+        greedy_predictions(prediction_tensor=predictions, root=root)
+
+
+def test_greedy_lineage_probabilities_shape_error():
+    root, targets = depth_two_tree_and_targets()
+
+    root.set_indexes()
+
+    predictions = torch.zeros( (len(targets), root.layer_size + 1) )
+    with pytest.raises(ShapeError):
+        greedy_lineage_probabilities(prediction_tensor=predictions, root=root)
 
 
 def test_max_depth_simple():
@@ -130,10 +232,6 @@ def test_greedy_predictions_threshold():
     assert [str(node) for node in node_predictions] == ["root", "root", "root", "root", "root", "root", "root", "root"]
 
 
-
-
-
-
 def test_leaf_probabilities():
     root, targets = depth_three_tree_and_targets()
 
@@ -183,7 +281,8 @@ def test_render_probabilities_depth_three_tree_and_targets_only_child():
     predictions = torch.zeros( (len(targets), root.layer_size) )
     for target_index, target in enumerate(targets):
         while target.parent:
-            predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
+            if len(target.parent.children) > 1:
+                predictions[ target_index, target.parent.softmax_start_index + target.index_in_parent ] = 20.0
             target = target.parent
 
     with tempfile.TemporaryDirectory() as tmpdirname:
@@ -222,4 +321,13 @@ def test_node_probabilities_index_error():
 
     with pytest.raises(IndexNotSetError):
         node_probabilities(prediction_tensor=predictions, root=root)
+
+
+def test_greedy_lineage_probabilities_index_error():
+    root, targets = depth_two_tree_and_targets()
+
+    predictions = torch.zeros( (len(targets), 10) )
+
+    with pytest.raises(IndexNotSetError):
+        greedy_lineage_probabilities(prediction_tensor=predictions, root=root)
 
