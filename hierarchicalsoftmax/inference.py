@@ -13,8 +13,9 @@ class ShapeError(RuntimeError):
     Raised when the shape of a tensor is different to what is expected.
     """
 
-def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -> torch.Tensor:
+def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, progress_bar:bool=False) -> torch.Tensor:
     """
+    Takes the prediction scores for a number of samples and converts it to a list of probabilities of nodes in the tree.
     """
     probabilities = torch.zeros(size=prediction_tensor.shape, device=prediction_tensor.device)
 
@@ -27,7 +28,7 @@ def node_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
             f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
-    for node in PreOrderIter(root):
+    for node in track(PreOrderIter(root)) if progress_bar else PreOrderIter(root):
         if node.is_leaf:
             continue
         elif node == root:
@@ -58,7 +59,13 @@ def leaf_probabilities(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode) -
     return torch.index_select(probabilities, 1, root.leaf_indexes.to(probabilities.device))
 
 
-def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None, threshold:Optional[float]=None) -> List[nodes.SoftmaxNode]:
+def greedy_predictions(
+        prediction_tensor:torch.Tensor, 
+        root:nodes.SoftmaxNode, 
+        max_depth:Optional[int]=None, 
+        threshold:Optional[float]=None,
+        progress_bar:bool=False,
+    ) -> List[nodes.SoftmaxNode]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 
@@ -91,7 +98,7 @@ def greedy_predictions(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, m
             f"That is not compatible with the root node which expects prediciton tensors to have a final dimension of {root.layer_size}."
         )
 
-    for predictions in prediction_tensor:
+    for predictions in track(prediction_tensor) if progress_bar else prediction_tensor:
         node = root
         depth = 1
         while (node.children):
@@ -201,7 +208,13 @@ def greedy_lineage_probabilities(
     return prediction_lineages
 
 
-def greedy_prediction_node_ids(prediction_tensor:torch.Tensor, root:nodes.SoftmaxNode, max_depth:Optional[int]=None) -> List[int]:
+def greedy_prediction_node_ids(
+        prediction_tensor:torch.Tensor, 
+        root:nodes.SoftmaxNode, 
+        max_depth:Optional[int]=None,
+        threshold:Optional[float]=None,
+        progress_bar:bool=False,
+    ) -> List[int]:
     """
     Takes the prediction scores for a number of samples and converts it to a list of predictions of nodes in the tree.
 
@@ -215,7 +228,12 @@ def greedy_prediction_node_ids(prediction_tensor:torch.Tensor, root:nodes.Softma
     Returns:
         List[int]: A list of node IDs predicted for each sample.
     """
-    prediction_nodes = greedy_predictions(prediction_tensor=prediction_tensor, root=root, max_depth=max_depth)
+    prediction_nodes = greedy_predictions(
+        prediction_tensor=prediction_tensor, 
+        root=root, 
+        max_depth=max_depth,
+        threshold=threshold,
+        progress_bar=progress_bar,)
     return root.get_node_ids(prediction_nodes)
 
 
