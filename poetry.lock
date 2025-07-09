@@ -226,7 +226,7 @@ version = "25.3.0"
 description = "Classes Without Boilerplate"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev", "examples"]
+groups = ["main", "dev", "examples"]
 files = [
     {file = "attrs-25.3.0-py3-none-any.whl", hash = "sha256:427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3"},
     {file = "attrs-25.3.0.tar.gz", hash = "sha256:75d7cefc7fb576747b2c81b4442d4d4a1ce0900973527c011d1030fd3bf4af1b"},
@@ -4570,4 +4570,4 @@ examples = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "8b5fed171ea1753e4fb75afa5680b89f1c714a6c7ce2bea4a16a7e09283c81e3"
+content-hash = "9c376a5bef20052f15417d28e8327530b076c78ac00aa79d8cb259c6ff88cd0b"
