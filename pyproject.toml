@@ -26,6 +26,7 @@ torchmetrics = ">=1.4.0.post0"
 graphviz = ">=0.20.3"
 plotly = ">=5.0.0"
 attrs = ">=25.3.0"
+typer = ">=0.15.4"
 
 [tool.poetry.group.examples.dependencies]
 lightning = ">=2.5.1.post0"
