@@ -4570,4 +4570,4 @@ examples = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "1aa45ad3e9213649b8a8b536a513794535862dd8ca2898812d28a2f862f9e0dc"
+content-hash = "bb589a29d125ba6e81a3b046b32325ed0069753b973e7a0b3773ec238d884d16"
