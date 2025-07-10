@@ -24,14 +24,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install poetry
+      run: pipx install poetry
+
     - name: Initialise Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: poetry
-
-    - name: Install poetry
-      run: pipx install poetry
 
     - name: Setup Graphviz
       uses: ts-graphviz/setup-graphviz@v1
