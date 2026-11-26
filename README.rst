@@ -4,9 +4,12 @@ hierarchicalsoftmax
 
 .. start-badges
 
-|pypi badge| |conda badge| |testing badge| |coverage badge| |docs badge| |black badge|
+|pypi badge| |python badge| |conda badge| |testing badge| |coverage badge| |docs badge| |black badge|
 
 .. |pypi badge| image:: https://img.shields.io/pypi/v/hierarchicalsoftmax?color=blue
+    :target: https://pypi.org/project/hierarchicalsoftmax/
+
+.. |python badge| image:: https://img.shields.io/pypi/pyversions/hierarchicalsoftmax
     :target: https://pypi.org/project/hierarchicalsoftmax/
 
 .. |conda badge| image:: https://img.shields.io/conda/vn/conda-forge/hierarchicalsoftmax.svg
