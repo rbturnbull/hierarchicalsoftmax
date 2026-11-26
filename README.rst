@@ -4,10 +4,13 @@ hierarchicalsoftmax
 
 .. start-badges
 
-|pypi badge| |testing badge| |coverage badge| |docs badge| |black badge|
+|pypi badge| |conda badge| |testing badge| |coverage badge| |docs badge| |black badge|
 
 .. |pypi badge| image:: https://img.shields.io/pypi/v/hierarchicalsoftmax?color=blue
     :target: https://pypi.org/project/hierarchicalsoftmax/
+
+.. |conda badge| image:: https://img.shields.io/conda/vn/conda-forge/hierarchicalsoftmax.svg
+    :target: https://anaconda.org/conda-forge/hierarchicalsoftmax
 
 .. |testing badge| image:: https://github.com/rbturnbull/hierarchicalsoftmax/actions/workflows/testing.yml/badge.svg
     :target: https://github.com/rbturnbull/hierarchicalsoftmax/actions
@@ -38,6 +41,12 @@ hierarchicalsoftmax can be installed from PyPI:
 .. code-block:: bash
 
     pip install hierarchicalsoftmax
+
+It is also available on `conda-forge <https://anaconda.org/conda-forge/hierarchicalsoftmax>`_:
+
+.. code-block:: bash
+
+    conda install -c conda-forge hierarchicalsoftmax
 
 
 Alternatively, hierarchicalsoftmax can be installed using pip from the git repository:

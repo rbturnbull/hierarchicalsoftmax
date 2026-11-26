@@ -27,7 +27,7 @@ jobs:
       uses: ts-graphviz/setup-graphviz@v2
 
     - name: Install uv and Python
-      uses: astral-sh/setup-uv@v10
+      uses: astral-sh/setup-uv@v10.4.0
       with:
         python-version: "3.13"
         enable-cache: true
