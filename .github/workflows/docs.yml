@@ -17,53 +17,47 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11"]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Install poetry
-      run: pipx install poetry
-
-    - name: Initialise Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: poetry
+    - uses: actions/checkout@v7
 
     - name: Setup Graphviz
-      uses: ts-graphviz/setup-graphviz@v1
-            
+      uses: ts-graphviz/setup-graphviz@v2
+
+    - name: Install uv and Python
+      uses: astral-sh/setup-uv@v10
+      with:
+        python-version: "3.13"
+        enable-cache: true
+
     - name: Install dependencies
-      run: |
-        poetry env use "${{ matrix.python-version }}"
-        poetry install
+      run: uv sync --locked
 
     - name: Build Sphinx docs
-      run: poetry run sphinx-build -b html docs gh-pages
+      run: uv run sphinx-build -b html docs gh-pages
 
     - name: Run tests and generate coverage report
       run: |
-        poetry run coverage run -m pytest
-        echo "COVERAGE=$(poetry run coverage report --precision 2 | grep TOTAL | tr -s ' ' | cut -f 4 -d " ")" >> $GITHUB_ENV
-        poetry run coverage html --directory gh-pages/coverage
+        uv run coverage run -m pytest
+        echo "COVERAGE=$(uv run coverage report --precision 2 | grep TOTAL | tr -s ' ' | cut -f 4 -d " ")" >> $GITHUB_ENV
+        uv run coverage html --directory gh-pages/coverage
 
     - name: Setup Pages
-      uses: actions/configure-pages@v3
+      uses: actions/configure-pages@v6
 
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v5
       with:
         path: 'gh-pages'
 
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v5
 
     - name: Create Coverage Badge
-      uses: schneegans/dynamic-badges-action@v1.1.0
+      uses: schneegans/dynamic-badges-action@v1.9.0
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: f99aea7ea203d16edd063a8dd5ed395f

@@ -9,7 +9,8 @@ softmax applications.
 TreeDict extends the regular Python dictionary class and provides additional methods to:
 
 - Add and retrieve nodes associated with keys
-- Track partition membership
+- Track partition membership and reassign partitions by key pattern
+- Merge two TreeDicts, combining their trees by node name
 - Render or visualize the tree structure
 - Serialize and deserialize the tree and key mapping
 - Truncate the tree to a specific depth
@@ -55,6 +56,19 @@ You can also get the actual node object:
 
    node = tree.node("item_aa_1")
 
+Reassign the partition of every key matching a shell-style pattern:
+
+.. code-block:: python
+
+   tree.set_partition("item_aa_*", 1)
+
+Merge another TreeDict into this one. Nodes with the same name under the same parent are shared,
+and any missing branches are added. Where a key is in both, the entry from the other TreeDict wins.
+
+.. code-block:: python
+
+   tree.merge(other_tree)
+
 
 Classes
 -------
@@ -94,6 +108,7 @@ This CLI provides several subcommands:
 
       $ treedict render data/tree.pkl --count
       $ treedict render data/tree.pkl --partition-counts --output out.txt
+      $ treedict render data/tree.pkl --alphabetical
 
 ``count``
    Print the total number of keys in the TreeDict.
@@ -130,3 +145,17 @@ This CLI provides several subcommands:
    .. code-block:: console
 
       $ treedict pickle-tree data/tree.pkl out/tree-only.pkl
+
+``set-partition``
+   Set the partition for every key matching a shell-style pattern and save the result to a new file.
+
+   .. code-block:: console
+
+      $ treedict set-partition data/tree.pkl "NC_*" 2 out/tree-partitioned.pkl
+
+``merge``
+   Merge a second TreeDict into the first and save the result to a new file. The input files are not changed.
+
+   .. code-block:: console
+
+      $ treedict merge data/tree.pkl data/other.pkl out/tree-merged.pkl

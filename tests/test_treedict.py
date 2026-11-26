@@ -5,6 +5,7 @@ from unittest.mock import patch
 from tempfile import TemporaryDirectory
 from collections import Counter
 from anytree import RenderTree
+from hierarchicalsoftmax import SoftmaxNode
 from hierarchicalsoftmax.treedict import TreeDict, NodeDetail, AlreadyExists, app
 from typer.testing import CliRunner
 
@@ -296,3 +297,172 @@ def test_app_sunburst_show(tmp_path):
         result = runner.invoke(app, ["sunburst", str(path), "--show"])
         assert result.exit_code == 0
         mock_show.assert_called_once()
+
+
+def test_set_partition():
+    root = depth_three_tree()
+    leaf = root.leaves[0]
+    treedict = TreeDict(root)
+    treedict.add("NC_1", leaf, 0)
+    treedict.add("NC_2", leaf, 1)
+    treedict.add("NZ_1", leaf, 2)
+
+    treedict.set_partition("NC_*", 5)
+    assert set(treedict.keys(partition=5)) == {"NC_1", "NC_2"}
+    assert treedict["NZ_1"].partition == 2
+
+
+def test_render_alphabetical():
+    root = SoftmaxNode("root")
+    SoftmaxNode("b", parent=root)
+    SoftmaxNode("a", parent=root)
+    treedict = TreeDict(root)
+
+    unsorted_lines = str(treedict.render()).splitlines()
+    assert [line.split()[-1] for line in unsorted_lines[1:]] == ["b", "a"]
+
+    sorted_lines = str(treedict.render(alphabetical=True)).splitlines()
+    assert [line.split()[-1] for line in sorted_lines[1:]] == ["a", "b"]
+
+
+def test_truncate_preserves_subclass():
+    class MyTreeDict(TreeDict):
+        pass
+
+    root = depth_three_tree()
+    treedict = MyTreeDict(root)
+    treedict.add("a", root.leaves[0], 0)
+    truncated = treedict.truncate(2)
+    assert type(truncated) is MyTreeDict
+    assert truncated.node("a").name == "a"
+    # The original tree is not modified
+    assert treedict.node("a") is root.leaves[0]
+    assert len(root.leaves[0].ancestors) == 3
+
+
+def test_merge(tmp_path):
+    treedict = TreeDict()
+    bacteria = SoftmaxNode("Bacteria", parent=treedict.classification_tree)
+    shared = SoftmaxNode("Shared", parent=bacteria)
+    treedict.add("existing", shared, 0)
+    treedict.add("duplicate", bacteria, 0)
+
+    other = TreeDict()
+    other_bacteria = SoftmaxNode("Bacteria", parent=other.classification_tree)
+    other_shared = SoftmaxNode("Shared", parent=other_bacteria)
+    new_child = SoftmaxNode("New", parent=other_bacteria)
+    virus = SoftmaxNode("Virus", parent=other.classification_tree)
+    different_parent = SoftmaxNode("Shared", parent=virus)
+    SoftmaxNode("Unused", parent=virus)
+    other.add("matching", other_shared, 1)
+    other.add("new", new_child, 2)
+    other.add("different-parent", different_parent, 3)
+    other.add("duplicate", virus, 4)
+
+    # Exercise read-only indexed trees and details containing only node IDs.
+    treedict.save(tmp_path / "self.pkl")
+    other.save(tmp_path / "other.pkl")
+    treedict = TreeDict.load(tmp_path / "self.pkl")
+    other = TreeDict.load(tmp_path / "other.pkl")
+    existing_node = treedict.node("existing")
+    treedict.merge(other)
+
+    assert set(treedict) == {"existing", "duplicate", "matching", "new", "different-parent"}
+    assert treedict.node("existing") is existing_node
+    assert treedict.node("matching") is existing_node
+    assert treedict.node("different-parent") is not existing_node
+    assert treedict.node("different-parent").parent.name == "Virus"
+    assert treedict.node("new").parent is existing_node.parent
+    assert treedict.node("duplicate").name == "Virus"
+    assert [treedict[key].partition for key in
+            ("existing", "matching", "new", "different-parent", "duplicate")] == [0, 1, 2, 3, 4]
+    assert treedict.classification_tree.render_equal("""
+        root
+        ├── Bacteria
+        │   ├── Shared
+        │   └── New
+        └── Virus
+            ├── Shared
+            └── Unused
+    """)
+    assert other.node("matching").root is other.classification_tree
+    assert other["matching"].node is None
+    assert len(other.classification_tree.descendants) == 6
+
+    treedict.save(tmp_path / "merged.pkl")
+    restored = TreeDict.load(tmp_path / "merged.pkl")
+    for key in treedict:
+        assert restored[key].partition == treedict[key].partition
+        assert [node.name for node in restored.node(key).path] == [
+            node.name for node in treedict.node(key).path]
+
+
+def test_merge_different_roots():
+    treedict = TreeDict()
+    other = TreeDict(SoftmaxNode("other-root"))
+    with pytest.raises(ValueError, match="different root names"):
+        treedict.merge(other)
+
+
+def test_app_merge(tmp_path):
+    treedict = TreeDict()
+    bacteria = SoftmaxNode("Bacteria", parent=treedict.classification_tree)
+    treedict.add("existing", bacteria, 0)
+    treedict.add("duplicate", bacteria, 0)
+
+    other = TreeDict()
+    other_bacteria = SoftmaxNode("Bacteria", parent=other.classification_tree)
+    virus = SoftmaxNode("Virus", parent=other.classification_tree)
+    other.add("matching", other_bacteria, 1)
+    other.add("new", virus, 2)
+    other.add("duplicate", virus, 3)
+
+    treedict_path = tmp_path / "self.pkl"
+    other_path = tmp_path / "other.pkl"
+    output = tmp_path / "output" / "merged.pkl"
+    treedict.save(treedict_path)
+    other.save(other_path)
+    input_bytes = [path.read_bytes() for path in (treedict_path, other_path)]
+
+    result = runner.invoke(app, ["merge", str(treedict_path), str(other_path), str(output)])
+
+    assert result.exit_code == 0, (result.output, result.exception)
+    merged = TreeDict.load(output)
+    assert set(merged) == {"existing", "matching", "new", "duplicate"}
+    assert merged.node("matching") is merged.node("existing")
+    assert merged.node("new").name == "Virus"
+    assert merged.node("duplicate") is merged.node("new")
+    assert [merged[key].partition for key in
+            ("existing", "matching", "new", "duplicate")] == [0, 1, 2, 3]
+    assert merged.classification_tree.render_equal("""
+        root
+        ├── Bacteria
+        └── Virus
+    """)
+    assert [path.read_bytes() for path in (treedict_path, other_path)] == input_bytes
+
+
+def test_app_set_partition(tmp_path):
+    path, _ = make_and_save_treedict(tmp_path)
+    output = tmp_path / "partitioned.pkl"
+    result = runner.invoke(app, ["set-partition", str(path), "a*", "9", str(output)])
+    assert result.exit_code == 0, (result.output, result.exception)
+    loaded = TreeDict.load(output)
+    assert list(loaded.keys(partition=9)) == ["a"]
+    assert loaded["b"].partition == 1
+
+
+def test_app_render_alphabetical(tmp_path):
+    root = SoftmaxNode("root")
+    SoftmaxNode("Virus", parent=root)
+    SoftmaxNode("Bacteria", parent=root)
+    treedict = TreeDict(root)
+    path = tmp_path / "tree.pkl"
+    treedict.save(path)
+    output = tmp_path / "render.txt"
+
+    result = runner.invoke(app, ["render", str(path), "--no-print-tree", "--output", str(output), "--alphabetical"])
+    assert result.exit_code == 0, (result.output, result.exception)
+    assert "Virus" not in result.output
+    text = output.read_text()
+    assert text.index("Bacteria") < text.index("Virus")

@@ -1,4 +1,5 @@
 import copy
+import fnmatch
 from pathlib import Path
 from attrs import define, field
 from collections import UserDict
@@ -153,6 +154,64 @@ class TreeDict(UserDict):
             Iterator[str]: An iterator over the keys.
         """
         return super().keys() if partition is None else self.keys_in_partition(partition)
+
+    def set_partition(self, pattern:str, partition:int) -> None:
+        """
+        Assign a partition to every key matching a shell-style pattern.
+
+        Args:
+            pattern (str): A pattern for keys, using the syntax of `fnmatch` (e.g. ``"NC_*"``).
+            partition (int): The partition to assign to the matching keys.
+        """
+        for key in super().keys():
+            if fnmatch.fnmatch(key, pattern):
+                self[key].partition = partition
+
+    def merge(self, other:"TreeDict") -> None:
+        """
+        Merge another TreeDict into this one in place.
+
+        Nodes with the same name under matching parents are shared and missing branches are added.
+        The roots must have the same name. Where a key exists in both, the entry from `other` takes precedence,
+        keeping its partition and with its node remapped into this tree. `other` is left unchanged.
+
+        Args:
+            other (TreeDict): The TreeDict to merge into this one.
+
+        Raises:
+            ValueError: If the roots of the two classification trees have different names.
+        """
+        if self.classification_tree.name != other.classification_tree.name:
+            raise ValueError("Cannot merge classification trees with different root names.")
+
+        # Resolve saved node IDs before changing the tree's indexes.
+        existing_nodes = {key: self.node(key) for key in self}
+        incoming = [(key, other.node(key), detail.partition) for key, detail in other.items()]
+        source_nodes = list(other.classification_tree.pre_order_iter())
+        for node in self.classification_tree.pre_order_iter():
+            node.readonly = False
+            node.softmax_start_index = None
+
+        node_map = {other.classification_tree: self.classification_tree}
+        for node in source_nodes[1:]:
+            parent = node_map[node.parent]
+            match = next((child for child in parent.children if child.name == node.name), None)
+            if match is None:
+                match = SoftmaxNode(
+                    node.name,
+                    parent=parent,
+                    alpha=node.alpha,
+                    weight=node.weight,
+                    label_smoothing=node.label_smoothing,
+                    gamma=node.gamma,
+                )
+            node_map[node] = match
+
+        for key, node in existing_nodes.items():
+            self[key].node = node
+        for key, node, partition in incoming:
+            self[key] = NodeDetail(partition=partition, node=node_map[node])
+        self.set_indexes()
     
     def truncate(self, max_depth:int) -> "TreeDict":
         """
@@ -164,11 +223,11 @@ class TreeDict(UserDict):
             max_depth (int): The maximum number of ancestor levels to keep.
 
         Returns:
-            TreeDict: A new truncated TreeDict.
+            TreeDict: A new truncated TreeDict of the same class as this one.
         """
         self.classification_tree.set_indexes_if_unset()
         classification_tree = copy.deepcopy(self.classification_tree)
-        new_treedict = TreeDict(classification_tree)
+        new_treedict = type(self)(classification_tree)
         for key in track(self.keys()):
             original_node = self.node(key)
             node_id = self.classification_tree.node_to_id[original_node]
@@ -213,18 +272,22 @@ class TreeDict(UserDict):
             partition = detail.partition
             node.partition_counts[partition] += 1
 
-    def render(self, count:bool=False, partition_counts:bool=False, **kwargs):
+    def render(self, count:bool=False, partition_counts:bool=False, alphabetical:bool=False, **kwargs):
         """
         Render the tree as text, optionally showing key counts or partition counts.
 
         Args:
             count (bool): If True, show the number of keys at each node.
             partition_counts (bool): If True, show partition-wise key counts at each node.
+            alphabetical (bool): If True, sort the children of each node by name.
             **kwargs: Additional arguments passed to the underlying tree render method.
 
         Returns:
             anytree.RenderTree or str: The rendered tree.
         """
+        if alphabetical:
+            kwargs.setdefault("childiter", lambda children: sorted(children, key=lambda child: child.name))
+
         if partition_counts:
             self.add_partition_counts()
             for node in self.classification_tree.post_order_iter():
@@ -346,12 +409,13 @@ def render(
     print_tree:bool = typer.Option(True, help="Whether or not to print the tree to the screen."),
     count:bool = typer.Option(False, help="Whether or not to print the count of keys at each node."),
     partition_counts:bool = typer.Option(False, help="Whether or not to print the count of each partition at each node."),
+    alphabetical:bool = typer.Option(False, help="Whether or not to sort the children of each node alphabetically."),
 ):
     """
     Render the tree as text, optionally showing key counts or partition counts.
     """
     treedict = TreeDict.load(treedict)
-    treedict.render(filepath=output, print=print_tree, count=count, partition_counts=partition_counts)
+    treedict.render(filepath=output, print=print_tree, count=count, partition_counts=partition_counts, alphabetical=alphabetical)
 
 
 @app.command()
@@ -434,3 +498,35 @@ def pickle_tree(
     """
     treedict = TreeDict.load(treedict)
     treedict.pickle_tree(output)
+
+
+@app.command()
+def set_partition(
+    treedict:Path = typer.Argument(...,help="The path to the TreeDict."),
+    pattern:str = typer.Argument(...,help="A shell-style pattern to match keys (e.g. 'NC_*')."),
+    partition:int = typer.Argument(...,help="The partition to set for matching keys."),
+    output:Path = typer.Argument(...,help="The path to the output file."),
+):
+    """
+    Sets the partition for keys matching a shell-style pattern and saves the result.
+    """
+    treedict = TreeDict.load(treedict)
+    treedict.set_partition(pattern, partition)
+    treedict.save(output)
+
+
+@app.command()
+def merge(
+    treedict:Path = typer.Argument(...,help="The path to the TreeDict."),
+    other:Path = typer.Argument(...,help="The path to the other TreeDict to merge in."),
+    output:Path = typer.Argument(...,help="The path to the output file."),
+):
+    """
+    Merges another TreeDict into this one and saves the result.
+
+    Where a key exists in both, the entry from the other TreeDict takes precedence.
+    """
+    treedict = TreeDict.load(treedict)
+    other = TreeDict.load(other)
+    treedict.merge(other)
+    treedict.save(output)

@@ -1,56 +1,64 @@
-[tool.poetry]
+[project]
 name = "hierarchicalsoftmax"
-version = "1.4.5"
+version = "1.5.0"
 description = "A Hierarchical Softmax Framework for PyTorch."
-authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
+authors = [{ name = "Robert Turnbull", email = "robert.turnbull@unimelb.edu.au" }]
 license = "Apache-2.0"
 readme = "README.rst"
-homepage = "https://github.com/rbturnbull/hierarchicalsoftmax"
-repository = "https://github.com/rbturnbull/hierarchicalsoftmax"
-documentation = "https://rbturnbull.github.io/hierarchicalsoftmax/"
+requires-python = ">=3.10"
 keywords = ["pytorch", "softmax"]
 classifiers = [
-    "License :: OSI Approved :: Apache Software License",
     "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anytree>=2.8.0",
+    "torch>=1.10.2",
+    "rich>=10.16.1",
+    "scikit-learn>=1.1.1",
+    "torchmetrics>=1.4.0.post0",
+    "graphviz>=0.20.3",
+    "plotly>=5.0.0",
+    "attrs>=25.3.0",
+    "typer>=0.15.4",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-anytree = ">=2.8.0"
-torch = ">=1.10.2"
-rich = ">=10.16.1"
-scikit-learn = ">=1.1.1"
-torchmetrics = ">=1.4.0.post0"
-graphviz = ">=0.20.3"
-plotly = ">=5.0.0"
-attrs = ">=25.3.0"
-typer = ">=0.15.4"
+[project.optional-dependencies]
+examples = [
+    "lightning>=2.5.1.post0",
+    "torchvision>=0.22.0",
+    "pandas>=2.2.3",
+    "marimo>=0.13.7",
+]
 
-[tool.poetry.group.examples.dependencies]
-lightning = ">=2.5.1.post0"
-torchvision = ">=0.22.0"
-pandas = ">=2.2.3"
-marimo = ">=0.13.7"
+[project.urls]
+Homepage = "https://github.com/rbturnbull/hierarchicalsoftmax"
+Repository = "https://github.com/rbturnbull/hierarchicalsoftmax"
+Documentation = "https://rbturnbull.github.io/hierarchicalsoftmax/"
 
-[tool.poetry.group.dev.dependencies]
-pytest = ">=6.2.5"
-ipykernel = ">=6.6.1"
-coverage = ">=5.5"
-autopep8 = ">=1.5.7"
-Sphinx = ">=4.2.0"
-nbsphinx = ">=0.8.7"
-sphinx-rtd-theme = ">=1.0.0"
-sphinx-autobuild = ">=2021.3.14"
-myst-parser = ">=0.15.2"
-pre-commit = ">=2.15.0"
-sphinx-copybutton = ">=0.4.0"
-black = ">=21.10b0"
-sphinx-click = {git = "https://github.com/rbturnbull/sphinx-click.git"}
+[project.scripts]
+treedict = "hierarchicalsoftmax.treedict:app"
 
-[tool.poetry.extras]
-examples = ["lightning", "torchvision", "pandas", "marimo"]
+[dependency-groups]
+dev = [
+    "pytest>=6.2.5",
+    "ipykernel>=6.6.1",
+    "coverage>=5.5",
+    "autopep8>=1.5.7",
+    "Sphinx>=4.2.0",
+    "nbsphinx>=0.8.7",
+    "sphinx-rtd-theme>=1.0.0",
+    "sphinx-autobuild>=2021.3.14",
+    "myst-parser>=0.15.2",
+    "pre-commit>=2.15.0",
+    "sphinx-copybutton>=0.4.0",
+    "black>=21.10b0",
+    "sphinx-click",
+]
+
+[tool.uv.sources]
+sphinx-click = { git = "https://github.com/rbturnbull/sphinx-click.git" }
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -59,8 +67,16 @@ testpaths = [
 ]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry.scripts]
-treedict = "hierarchicalsoftmax.treedict:app"
+[tool.hatch.build.targets.wheel]
+packages = ["hierarchicalsoftmax"]
+
+[tool.hatch.build]
+# These tracked example files match bare patterns in .gitignore, so include them explicitly
+artifacts = [
+    "hierarchicalsoftmax/examples/cifar.py",
+    "hierarchicalsoftmax/examples/__marimo__/cifar.html",
+    "hierarchicalsoftmax/examples/__marimo__/cifar.ipynb",
+]
