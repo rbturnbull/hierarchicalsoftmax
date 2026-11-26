@@ -112,7 +112,8 @@ def greedy_predictions(
                 prediction_child_index = torch.max(predictions[node.softmax_start_index:node.softmax_end_index], dim=0).indices
 
             # Stop if the prediction is below the threshold
-            if threshold and predictions[node.softmax_start_index+prediction_child_index] < threshold:
+            # A single child has no slot in the softmax layer (it carries its parent's probability), so skip the check
+            if threshold and len(node.children) > 1 and predictions[node.softmax_start_index+prediction_child_index] < threshold:
                 break
             
             node = node.children[prediction_child_index]

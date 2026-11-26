@@ -331,3 +331,54 @@ def test_greedy_lineage_probabilities_index_error():
     with pytest.raises(IndexNotSetError):
         greedy_lineage_probabilities(prediction_tensor=predictions, root=root)
 
+
+
+def test_greedy_predictions_threshold_single_child_last():
+    """
+    A single-child node that comes last in pre-order has softmax_start_index == layer_size.
+    The threshold check must not index into the predictions for it (previously raised IndexError).
+    """
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    a1 = SoftmaxNode("a1", parent=a)
+    a2 = SoftmaxNode("a2", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    c = SoftmaxNode("c", parent=b)
+    root.set_indexes()
+
+    assert b.softmax_start_index == root.layer_size
+
+    probabilities = torch.zeros((1, root.layer_size))
+    probabilities[0, a.index_in_softmax_layer] = 0.1
+    probabilities[0, b.index_in_softmax_layer] = 0.9
+    probabilities[0, a1.index_in_softmax_layer] = 0.05
+    probabilities[0, a2.index_in_softmax_layer] = 0.05
+
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.7)
+    assert node_predictions == [c]
+
+
+def test_greedy_predictions_threshold_single_child_not_last():
+    """
+    A single-child node that is not last in pre-order shares its softmax_start_index with another node's slot.
+    The threshold check must not read that unrelated value and stop the descent early.
+    """
+    root = SoftmaxNode("root")
+    a = SoftmaxNode("a", parent=root)
+    c = SoftmaxNode("c", parent=a)
+    b = SoftmaxNode("b", parent=root)
+    b1 = SoftmaxNode("b1", parent=b)
+    b2 = SoftmaxNode("b2", parent=b)
+    root.set_indexes()
+
+    # The single-child node's start index points at another node's slot
+    assert a.softmax_start_index == b1.index_in_softmax_layer
+
+    probabilities = torch.zeros((1, root.layer_size))
+    probabilities[0, a.index_in_softmax_layer] = 0.9
+    probabilities[0, b.index_in_softmax_layer] = 0.1
+    probabilities[0, b1.index_in_softmax_layer] = 0.05
+    probabilities[0, b2.index_in_softmax_layer] = 0.05
+
+    node_predictions = greedy_predictions(prediction_tensor=probabilities, root=root, threshold=0.7)
+    assert node_predictions == [c]
